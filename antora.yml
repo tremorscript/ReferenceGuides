@@ -1,0 +1,7 @@
+name: referenceguides 
+title: Reference Guides
+version: 0.1
+start_page: index.adoc
+nav:
+- modules/ROOT/nav.adoc
+- modules/FSharp/nav.adoc
