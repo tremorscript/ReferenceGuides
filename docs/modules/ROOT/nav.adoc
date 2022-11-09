@@ -1,1 +1,1 @@
-* xref:FSharp:overview.adoc[]
+* xref:index.adoc[]
