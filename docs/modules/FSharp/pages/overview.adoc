@@ -1,0 +1,8 @@
+
+== FSharp Reference
+
+This is my personal reference guide to FSharp.
+People from whom I have shamelessly and blatantly copied.
+- fsharpforfunandprofit
+- Kit Eason
+- Mark Seeman
