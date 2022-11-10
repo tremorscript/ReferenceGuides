@@ -1,4 +1,3 @@
-
 = FSharp Reference
 
 This is my personal reference guide to FSharp.
