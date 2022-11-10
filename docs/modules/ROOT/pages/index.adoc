@@ -1,5 +1,5 @@
 = Reference Guides 
-:navtitle: Welcome
+:navtitle: Reference Guides 
 
 Welcome to my personal list of reference guides.
 This is where I try to document what I learn.
