@@ -1,0 +1,53 @@
+= Yield Method 
+:title: Yield Method
+:navtitle: Yield Method
+:source-highlighter: highlight.js
+:highlightjs-languages: fsharp
+
+The MSDN documentation says that it has the signature 'T -> M<'T>, which is exactly the same as the signature for the Return method. 
+It must take an unwrapped value and wrap it.
+
+[source,fsharp]
+----
+type TraceBuilder() =
+
+    member this.Bind(x,f) =
+        match x with
+        | None ->
+            printfn "Binding with None. Exiting"
+        | Some a ->
+            printfn "Binding with Some(%A). Continuing" a
+        Option.bind f x
+
+    member this.Return(x) =
+        printfn "Returning an unwrapped %A as an option" x
+        Some x
+
+    member this.ReturnFrom(x) =
+        printfn "Returning an option (%A) directly" x
+        x
+
+    member this.Zero() =
+        printfn "Zero"
+        None
+
+    member this.Yield(x) =
+        printfn "Yield an unwrapped %A as an option" x
+        Some x
+
+    member this.YieldFrom(x) =
+        printfn "Yield an option (%A) directly" x
+        x
+
+//make a new instance
+let trace = new TraceBuilder()
+
+    //test
+    trace {
+        yield! Some 1
+    } |> printfn "Result for yield: %A"
+----
+
+If return and yield are basically the same thing, why are there two different keywords? +
+The answer is mainly so that you can enforce appropriate syntax by implementing one but not the other. +
+For example, the seq expression does allow yield but doesn’t allow return, while the async does allow return, but does not allow yield.

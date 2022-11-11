@@ -1,0 +1,50 @@
+= Computation Expression Composition 
+:title: Composition of computation expression 
+:navtitle: Composition of computation expression 
+:source-highlighter: highlight.js
+:highlightjs-languages: fsharp
+
+
+One of the major uses of computation expressions is to implicitly unwrap and rewrap values that are stored in some sort of wrapper type.
+
+Every computation expression must have an associated wrapper type. +
+This wrapper type is used in both Bind and Return, which leads to a key benefit: +
+the output of a Return can be fed to the input of a Bind
+
+In other words, because a workflow returns a wrapper type, and because let! consumes a wrapper type, you can put a “child” workflow on the right hand side of a let! expression.
+
+[source,fsharp]
+----
+let subworkflow0 = myworkflow { return 42 }
+let subworkflow1 = myworkflow { return 43 }
+
+let aWrappedValue =
+    myworkflow {
+        let! unwrappedValue1 = subworkflow1
+        let! unwrappedValue2 = subworkflow2
+        return unwrappedValue1 + unwrappedValue2
+        }
+
+let aWrappedValue =
+myworkflow {
+    let! unwrappedValue1 = myworkflow {
+        let! x = myworkflow { return 1 }
+        return x
+        }
+    let! unwrappedValue2 = myworkflow {
+        let! y = myworkflow { return 2 }
+        return y
+        }
+    return unwrappedValue1 + unwrappedValue2
+    }
+----
+
+Sometimes we have a function that already returns a wrapped value, and we want to return it directly.
+return is no good for this, because it requires an unwrapped type as input.
+
+The solution is a variant on return called return!, which takes a wrapped type as input and returns it.
+
+The corresponding method in the “builder” class is called ReturnFrom.
+Typically the implementation just returns the wrapped type “as is”
+
+

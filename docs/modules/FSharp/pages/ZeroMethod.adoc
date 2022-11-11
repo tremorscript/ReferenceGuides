@@ -1,0 +1,62 @@
+= Zero Method 
+:title: Zero Method 
+:navtitle: Zero Method 
+:source-highlighter: highlight.js
+:highlightjs-languages: fsharp
+
+What value should you use for Zero?
+
+- Does the workflow have a concept of “success” or “failure”? If so, use the “failure” value for Zero. 
+- Does the workflow have a concept of “sequential processing”? That is, in your workflow you do one step and then another, with some processing behind the scenes. In normal F# code, an expression that did not return anything explicitly would evaluate to unit. So to parallel this case, your Zero should be the wrapped version of unit. 
+- Is the workflow primarily concerned with manipulating data structures? If so, Zero should be the “empty” data structure.
+
+[source,fsharp]
+----
+module Sample3_IntroducingZero =
+    type TraceBuilder() =
+
+        member this.Bind(x,f) =
+            match x with
+            | None ->
+                printfn "Binding with None. Exiting"
+            | Some a ->
+                printfn "Binding with Some(%A). Continuing" a
+            Option.bind f x
+
+        member this.Return(x) =
+            printfn "Returning an unwrapped %A as an option" x
+            Some x
+
+        member this.ReturnFrom(x) =
+            printfn "Returning an option (%A) directly" x
+            x
+
+        member this.Zero() =
+            printfn "Zero"
+            None
+
+    // make an instance of the workflow
+    let trace = new TraceBuilder()
+
+    //test
+    trace {
+        printfn "hello world"
+    } |> printfn "Result for simple expression: %A"
+
+    trace {
+        if false then return 1
+    } |> printfn "Result for if without else: %A"
+----
+
+The test code makes it clear that Zero is being called behind the scenes. 
+And None is the return value for the expression as whole.
+
+You not required to have a Zero, but only if it makes sense in the context of the workflow. 
+For example seq does not allow zero, but async does:
+
+[source,fsharp]
+----
+//let s = seq {printfn "zero" }    // Error
+let a = async {printfn "zero" }  // OK
+----
+

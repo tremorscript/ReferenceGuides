@@ -1,0 +1,67 @@
+= Log Builder
+:title: Log Builder
+:navtitle: Log Builder
+:source-highlighter: highlight.js
+:highlightjs-languages: fsharp
+
+Let's say we have some code, and we want to log each step.
+
+[source,fsharp]
+----
+let loggedWorkflow =
+    let x = 42
+    log x
+    let y = 43
+    log y
+    let z = x + y
+    log z
+    //return
+    z
+----
+
+But it is annoying to have to explicitly write all the log statements each time.
+Is there a way to hide them?
+A computation expression can do that.
+
+[source,fsharp]
+----
+type LoggingBuilder() =
+    let log p = printfn "expression is %A" p
+
+    member this.Bind(x, f) =
+        log x
+        f x
+
+    member this.Return(x) =
+        x
+----
+
+Next we create an instance of the type, logger in this case.
+
+[source,fsharp]
+----
+let logger = new LoggingBuilder()
+----
+
+So with this logger value, we can rewrite the original logging example like this:
+
+[souce,fsharp]
+----
+let loggedWorkflow1 =
+    logger {
+        let! x = 42
+        let! y = 43
+        let! z = x + y
+        return z
+    }
+----
+
+F# internally converts this to the following:
+
+[source,fsharp]
+----
+let value = logger.Bind(42, fun x ->
+                                logger.Bind(43, fun y ->
+                                    logger.Bind(x + y, fun z -> z)
+                                    ))
+----
