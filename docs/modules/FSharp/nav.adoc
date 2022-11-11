@@ -10,3 +10,4 @@
 *** xref:IdentityWrapperTypes.adoc[]
 *** xref:DoMethod.adoc[]
 *** xref:YieldMethod.adoc[]
+*** xref:CombineMethod.adoc[]

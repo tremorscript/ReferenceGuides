@@ -1,0 +1,219 @@
+= Combine Method 
+:title: Combine method 
+:navtitle: Combine method 
+:source-highlighter: highlight.js
+:highlightjs-languages: fsharp
+
+[source,fsharp]
+----
+type TraceBuilder() =
+
+    member this.Bind(x,f) =
+        match x with
+        | None ->
+            printfn "Binding with None. Exiting"
+        | Some a ->
+            printfn "Binding with Some(%A). Continuing" a
+        Option.bind f x
+
+    member this.Return(x) =
+        printfn "Returning an unwrapped %A as an option" x
+        Some x
+
+    member this.ReturnFrom(x) =
+        printfn "Returning an option (%A) directly" x
+        x
+
+    member this.Zero() =
+        printfn "Zero"
+        None
+
+    member this.Yield(x) =
+        printfn "Yield an unwrapped %A as an option" x
+        Some x
+
+    member this.YieldFrom(x) =
+        printfn "Yield an option (%A) directly" x
+        x
+    member this.Combine(a,b) =
+        match a,b with
+           | Some a', Some b' ->
+               printfn "combining %A and %A" a' b'
+               Some (a' + b')
+           | Some a', None ->
+               printfn "combining %A with None" a'
+               Some a'
+           | None, Some b' ->
+               printfn "combining None with %A" b'
+               Some b'
+           | None, None ->
+               printfn "combining None with None"
+               None
+
+    member this.Delay(f) =
+        printfn "Delay"
+        f()
+
+//make a new instance
+let trace = new TraceBuilder()
+
+let trace2 x y = trace.Delay(fun () ->
+                    trace.Combine(trace.Yield(x), trace.Delay(fun () ->
+                        trace.Yield(y))))
+
+//test
+trace {
+    yield 1
+    yield 2
+} |> printfn "Result for yield then yield: %A"
+
+let value1 = trace2 1 2
+----
+
+The Combine method only has two parameters. So what happens when you combine more than two values? +
+A subtle but important point is that they are combined “backwards”, starting from the last value.
+
+[source,fsharp]
+----
+module ListBuilder =
+
+    type ListBuilder() =
+        member this.Bind(m, f) =
+            m |> List.collect f
+
+        member this.Zero() =
+            printfn "Zero"
+            []
+
+        member this.Yield(x) =
+            printfn "Yield an unwrapped %A as a list" x
+            [x]
+
+        member this.YieldFrom(m) =
+            printfn "Yield a list (%A) directly" m
+            m
+
+        member this.For(m,f) =
+            printfn "For %A" m
+            this.Bind(m,f)
+
+        member this.Combine (a,b) =
+            printfn "combining %A and %A" a b
+            List.concat [a;b]
+
+        member this.Delay(f) =
+            printfn "Delay"
+            f()
+
+    // make an instance of the workflow
+    let listbuilder = new ListBuilder()
+
+    listbuilder {
+        yield 1
+        yield 2
+        yield 3
+        yield 4
+        } |> printfn "Result for yield x 4: %A"
+
+    let listBuilder4 x y a b = listbuilder.Delay(fun () ->
+                                            listbuilder.Combine(listbuilder.Yield(x), listbuilder.Delay(fun () ->
+                                            listbuilder.Combine(listbuilder.Yield(y), listbuilder.Delay(fun () ->
+                                            listbuilder.Combine(listbuilder.Yield(a), listbuilder.Delay(fun () ->
+                                            listbuilder.Yield(b))))))))
+    let value2 = listBuilder4 1 2 3 4
+----
+
+== Implementing Combine for workflows with "success" or "failure"
+
+If the workflow has some concept of "success" or "failure", then a standard approach is: +
+- If the first expression "succeeds" then use that value. +
+- Otherwise use the value of the second expression. +
+
+This approach is useful for chaining together a series of "or else" expressions where the first success "wins" and becomes the overall result.
+
+== Implementing Combine for worflows with sequential steps
+
+If the workflow has the concept of sequential steps, then the overall result is just the value of the last step, and all the previous steps are evaluated only for their side effects.
+
+In normal F#, this would be written: +
+do some expression +
+do some other expression +
+final expression
+
+In normal F#, each expression (other than the last) evaluates to the unit value.
+
+The equivalent approach for computation expression is to treat each expression (other than the last) as a wrapped unit value, and "pass it into" the next expression, and so on, until you reach the last expression.
+
+[source,fsharp]
+----
+module TraceBuilder1 =
+
+    type TraceBuilder1 () =
+
+        member this.Bind(x,f) =
+            match x with
+            | None ->
+                printfn "Binding with None. Exiting"
+            | Some a ->
+                printfn "Binding with Some(%A). Continuing" a
+            Option.bind f x
+
+        member this.Return(x) =
+            Some x
+
+        member this.Zero() =
+            printfn "Zero"
+            this.Return () //unit not None
+
+        member this.Combine(a,b) =
+            printfn "Combining %A with %A" a b
+            this.Bind(a, fun () -> b)
+
+        member this.Delay(f) =
+            printfn "Delay"
+            f()
+
+    // make a new instance
+    let trace = new TraceBuilder1()
+
+    trace {
+       if true then printfn "hello......"
+       if false then printfn ".......world"
+       return 1
+    } |> printfn "Result for sequential combine: %A"
+
+----
+
+F# converts the above code to:
+
+[source,fsharp]
+----
+//What F# converts to
+let expr1 = fun () ->
+                if false then printfn "hello......"; 
+                trace.Zero();
+let expr2 = fun () ->
+                if true then printfn "......world"; 
+                trace.Zero();
+
+let value1 = trace.Delay(fun () -> 
+                        trace.Combine(expr1(), trace.Delay(fun () -> 
+                            trace.Combine(expr2(), trace.Delay(fun () -> 
+                                trace.Return(1))))))
+----
+
+== Implementing combine for workflows that build data structures
+
+In this case, Combine should merge the two data structures in whatever way is appropriate. +
+And the Zero method should create an empty data structure, if needed.
+
+== Guidelines for mixing "Combine" and "Zero"
+
+We have looked at different implementations for Combine for option types. +
+- The first one used options as "success/failure" indicators, when the first success "won". +
+  In this case Zero was defined as None +
+- The second one was sequential. In this case Zero was defined as Some ()
+
+There is a useful rule that connects Zero and Combine +
+Rule:- Combine(a,Zero) should be the same as Combine(Zero,a) which should be the same as just a
+
