@@ -115,12 +115,18 @@ module ListBuilder =
         yield 4
         } |> printfn "Result for yield x 4: %A"
 
-    let listBuilder4 x y a b = listbuilder.Delay(fun () ->
-                                            listbuilder.Combine(listbuilder.Yield(x), listbuilder.Delay(fun () ->
-                                            listbuilder.Combine(listbuilder.Yield(y), listbuilder.Delay(fun () ->
-                                            listbuilder.Combine(listbuilder.Yield(a), listbuilder.Delay(fun () ->
-                                            listbuilder.Yield(b))))))))
-    let value2 = listBuilder4 1 2 3 4
+----
+
+What F# converts to:
+
+[source,fsharp]
+----
+let listBuilder4 x y a b = listbuilder.Delay(fun () ->
+                                        listbuilder.Combine(listbuilder.Yield(x), listbuilder.Delay(fun () ->
+                                        listbuilder.Combine(listbuilder.Yield(y), listbuilder.Delay(fun () ->
+                                        listbuilder.Combine(listbuilder.Yield(a), listbuilder.Delay(fun () ->
+                                        listbuilder.Yield(b))))))))
+let value2 = listBuilder4 1 2 3 4
 ----
 
 == Implementing Combine for workflows with "success" or "failure"
