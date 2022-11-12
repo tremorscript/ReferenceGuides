@@ -8,8 +8,6 @@
 == List Workflow
 
 The bind function “unwraps” the type, and applies the continuation function to the unwrapped value. +
-But there is nothing in the definition that says that there has to be only one unwrapped value. +
-There is no reason that we can’t apply the continuation function to each item of the list in turn.
 
 The continuation function passed into bind is required to have a certain signature. +
 It takes an unwrapped type, but it produces a wrapped type.
@@ -18,7 +16,7 @@ In other words, the continuation function must always create a new list as its r
 
 We can now create a “list workflow”.
 
-Bind applies the continuation function to each element of the passed in list, and then flattens the resulting list of lists into a one-level list. List.collect is a library function that does exactly that.
+Bind applies the continuation function to each element of the passed in list, and then flattens the resulting list of lists into a one-level list. List.collect is a library function that does exactly that. +
 Return converts from unwrapped to wrapped. In this case, that just means wrapping a single element in a list.
 
 [source,fsharp]
