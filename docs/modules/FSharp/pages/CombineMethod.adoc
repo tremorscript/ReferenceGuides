@@ -4,6 +4,11 @@
 :source-highlighter: highlight.js
 :highlightjs-languages: fsharp
 
+
+== Why do we need combine method
+
+=== The problem with 2 yields
+
 [source,fsharp]
 ----
 type TraceBuilder() =

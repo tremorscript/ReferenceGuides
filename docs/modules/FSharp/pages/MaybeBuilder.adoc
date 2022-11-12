@@ -7,13 +7,6 @@
 
 MaybeBuilder is useful if you have a chain of if/else statements.
 
-Say we want to divide a series of numbers, one after another but one of them might be zero. +
-We can create a helper function that does the division and gives us back an int option. +
-If everything is OK, we get a Some and if the division fails, we get a None.
-
-Then we chain the divisions together and keep going only if it was successful.
-
-This is what it looks like:
 
 [source,fsharp]
 ----
