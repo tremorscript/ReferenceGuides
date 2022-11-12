@@ -40,9 +40,6 @@ let good = divideByWorkflow 12 3 2 1
 let bad = divideByWorkflow 12 3 0 1
 ----
 
-This continual testing and branching is really ugly! +
-Does turning it into computation expression help?
-
 Once more we define a new type(MaybeBuilder) and make an instance of the type (maybe)
 
 [source,fsharp]
