@@ -167,7 +167,7 @@ The important thing to notice here is that Git has copied changes made in one pl
 
 === Using 'git cherry-pick' to Simulate 'git rebase' 
 
-Again being lazy, but very well explained here.
+Again being lazy and since it is very well explained here. +
 https://think-like-a-git.net/sections/rebase-from-the-ground-up/using-git-cherry-pick-to-simulate-git-rebase.html
 
 === A Helpful Mnemonic for 'git rebase' Arguments
