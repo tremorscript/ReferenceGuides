@@ -5,3 +5,4 @@ start_page: index.adoc
 nav:
 - modules/ROOT/nav.adoc
 - modules/FSharp/nav.adoc
+- modules/Git/nav.adoc
