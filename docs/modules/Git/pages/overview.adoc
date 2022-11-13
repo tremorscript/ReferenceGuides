@@ -1,5 +1,5 @@
 = Git Notes 
-:title: Git notes 
+:title: Git Notes 
 :navtitle: Git Notes 
 :source-highlighter: highlight.js
 :highlightjs-languages: shell, console
