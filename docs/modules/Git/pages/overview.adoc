@@ -83,12 +83,13 @@ However, you don't see commits here. Every git tool hides commits.
 Imagine this scenario: you write some code and check it in. Then, you realize you forgot to run the tests, so you run them, and they uncover a syntax error. 
 Or you spot a typo. For whatever reason, you weren't done when you thought you were done. 
 
-Git gives you an option to tack the new change on to the previous commit using `git commit --amend`.
+Git gives you an option to tack the new change on to the previous commit using: +
+`git commit --amend`. +
 This keeps all your related changes bundled together in one commit.
 
 A git commit is a SHA-1 hash of the contents of the commit, and the IDs of its parent commits.
 
-Which means that, when you use git commit --amend, you're actually building a completely different commit, and pointing your local branch reference to it instead. +
+Which means that, when you use `git commit --amend`, you're actually building a completely different commit, and pointing your local branch reference to it instead. +
 *The first commit you made is still there on disk, and you can still get back to it*
 
 Git will decide that it's time to run garbage collection. +
