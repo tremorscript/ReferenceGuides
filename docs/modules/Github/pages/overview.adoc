@@ -1,0 +1,198 @@
+= Git Notes 
+:title: Git notes 
+:navtitle: Git Notes 
+:source-highlighter: highlight.js
+:highlightjs-languages: shell, console
+:sectlinks:
+
+This is my personal short notes from https://think-like-a-git.net/ and various other sources. +
+If I learn something new in git, I intend to put them here. +
+Everything in one page, so that I do not have to search for git related stuff when I need to remember something.
+
+== Basics
+
+A git repository is one giant graph.
+
+At the surface level, a git commit consists of 2 things:-
+- a pointer to the state of your code at some moment in time.
+- zero or more pointers to "parent" commits
+
+.Source: think-like-a-git.net, Git commits (simplified view)
+image::https://think-like-a-git.net/assets/images2/graphs-and-git.png[]
+
+*A Git commit is a node in a graph*, and each one points to the node that came before them.
+
+
+== git log 
+
+To list all commits in your repository: +
+`git log --oneline --abbrev-commit --all`
+
+.Source: think-like-a-git.net
+image::https://think-like-a-git.net/assets/images2/textual-git-log.png[]
+
+To list all commits in your repository but with a graph view: +
+`git log --oneline --abbrev-commit --all --graph`
+
+.Source: think-like-a-git.net
+image::https://think-like-a-git.net/assets/images2/textual-git-graph.png[]
+
+If you want to see branch and tag labels, add `--decorate`: +
+`git log --oneline --abbrev-commit --all --graph --decorate --color`
+
+You can setup a git alias to do the same thing:
+`git config --global alias.graph "log --graph --oneline –decorate=short"`
+
+
+== References
+
+GitX shows the logs as follows:-
+
+.Source: think-like-a-git.net
+image::https://think-like-a-git.net/assets/images2/gitx-visualization.png[]
+
+The very colourful labels are called *references*.
+
+*References are pointers to commits*
+
+There are three types of references: *local branch*, *remote branch*, and *tag*.
+
+On disk, a local branch reference consists of a file that contains the 40-byte identifier of the commit that the reference points to. +
+This file is created at the project's `.git/refs/head` directory. +
+Creating a branch in Git just means writing 40 bytes to disk, which is why `git branch foo`` is so fast.
+
+There are a few different kinds of references, and they all point to commits in your repository. +
+The only difference between them is how and when they move. +
+(When I say that a reference moves, I mean that the ID of the commit that it points to is updated.)
+
+*Local branch references* are specific to a single local repository. +
+Commands that affect local branch references include *commit*, *merge*, *rebase*, and *reset*.
+
+*Remote branch references* are also specific to a single repository, but one that's previously been defined as a remote. +
+Commands that affect remote branch references include *fetch* and *push*. 
+
+*Tag references* are branch references that never move. +
+*Once you've created a tag, it will never change* +
+This behavior makes them useful for marking specific versions of a software package, or marking exactly what got deployed to a production server on a particular date. +
+Only one command affects the tag and i.e *tag*
+
+Now look at the display:-
+
+.Source: think-like-a-git.net
+image::https://think-like-a-git.net/assets/images2/gitx-visualization-annotated.png[]
+
+However, you don't see commits here. Every git tool hides commits.
+
+== Garbage collection
+Imagine this scenario: you write some code and check it in. Then, you realize you forgot to run the tests, so you run them, and they uncover a syntax error. 
+Or you spot a typo. For whatever reason, you weren't done when you thought you were done. 
+
+Git gives you an option to tack the new change on to the previous commit using `git commit --amend`.
+This keeps all your related changes bundled together in one commit.
+
+A git commit is a SHA-1 hash of the contents of the commit, and the IDs of its parent commits.
+
+Which means that, when you use git commit --amend, you're actually building a completely different commit, and pointing your local branch reference to it instead. +
+*The first commit you made is still there on disk, and you can still get back to it*
+
+Git will decide that it's time to run garbage collection. +
+You can trigger this process yourself, using `git gc`.
+
+*Starting from every branch and every tag, Git walks back through the graph, building a list of every commit it can reach. Once it's reached the end of every path, it deletes all the commits it didn't visit.*
+
+The Secret Of Git can fit it into these four words:
+*References make commits reachable.*
+
+== References make commits reachable
+
+*References* `...` whether they are local branches, remote branches, or tags `...`
+
+*Make commits* `...` which are nodes in a graph `...`
+
+*Reachable* `...` so that you can get back to them, and so that Git will not delete them when it decides it is time for spring cleaning.
+
+== Brances as savepoints
+
+Because *references make commits reachable*, creating a branch is a way to "nail down" part of the graph that you might want to come back to later.
+
+Neither `git merge` nor `git rebase` will change your existing commits (remember, a commit's ID is a hash of its contents _*and its history*_), you can create a temporary branch any time you want to try something you're even just a little bit unsure about.
+
+*Creating a branch before you try a merge or a rebase is like saving your game before you battle the boss.*
+
+== git merge
+
+=== the scout pattern
+
+Use this pattern if you are unsure or unclear on exactly what `git merge` does.
+
+Being lazy since it very well explained here without any fluff. +
+https://think-like-a-git.net/sections/testing-out-merges/the-scout-pattern.html
+
+=== the savepoint pattern
+
+Being lazy since it very well explained here without any fluff. +
+https://think-like-a-git.net/sections/testing-out-merges/the-scout-pattern.html
+
+==== Black belt merging
+
+Being lazy since it very well explained here without any fluff. +
+https://think-like-a-git.net/sections/testing-out-merges/black-belt-merging.html
+
+
+== git rebase
+
+Before you start using rebase in a shared repository, make sure everyone who works on your project is comfortable working with rebase. You might also consider changing everyone's default pull strategy to "rebase" instead of "merge"
+
+=== git cherry-pick
+Given one or more existing commits, apply the change each one introduces, recording a new commit for each.
+
+Git commit's ID is a hash of both its contents and its history. So, even if you have two commits that introduce the exact same change, if they point to different parent commits, they'll have different IDs.
+
+What `git cherry-pick` does, basically, is take a commit from somewhere else, and "play it back" wherever you are right now. \
+Because this introduces the same change with a different parent, Git builds a new commit with a different ID.
+
+=== Example
+Source: think-like-a-git.net
+image::https://think-like-a-git.net/assets/images2/reachability-example.png[]
+
+If you were at node H in this graph, and you typed `git cherry-pick E`, you get a copy of commit E, let's call it E', that pointed to H as its parent.
+
+Source: think-like-a-git.net
+image::https://think-like-a-git.net/assets/images2/cherry-pick-example-1.png[]
+
+Or if you typed something like `git cherry-pick C D E`, you get the following:
+
+Source: think-like-a-git.net
+image::https://think-like-a-git.net/assets/images2/cherry-pick-example-2.png[]
+
+The important thing to notice here is that Git has copied changes made in one place, and replayed them somewhere else.
+
+=== Using 'git cherry-pick' to Simulate 'git rebase' 
+
+Again being lazy, but very well explained here.
+https://think-like-a-git.net/sections/rebase-from-the-ground-up/using-git-cherry-pick-to-simulate-git-rebase.html
+
+=== A Helpful Mnemonic for 'git rebase' Arguments
+
+To summarize the previous section, this:
+
+----
+git checkout foo
+git checkout -b newbar
+git cherry-pick C D E
+git checkout bar
+git reset --hard newbar
+git branch -d newbar 
+----
+
+is equivalent to this:
+
+----
+git rebase foo bar 
+----
+
+When you do a rebase, you are rewriting history. You are, in effect, saying to Git, "Hey, you know those things that happened over there on that completely different timeline? I want you to pretend that they happened here instead."
+
+Here's how I think of it: in English, we read from left to right. On most charts that show the change in something over time, time is shown on the x-axis of the graph, with time increasing from left to right. When you issue commands to the shell, you can put several of them on one line, and they'll be executed in order from left to right.
+
+So when I use git rebase, I (almost) always give it two arguments: the name of the place I want to start from, and the name of the place I want to end up. Or, to put it another way, I tell rebase the sequence of events I want it to create, from left to right: git rebase first_this then_this
