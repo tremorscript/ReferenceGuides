@@ -57,13 +57,9 @@ The very colourful labels are called *references*.
 
 There are three types of references: *local branch*, *remote branch*, and *tag*.
 
-On disk, a local branch reference consists of a file that contains the 40-byte identifier of the commit that the reference points to. +
+A *local branch reference* consists of a file that contains the 40-byte identifier of the commit that the reference points to. +
 This file is created at the project's `.git/refs/head` directory. +
 Creating a branch in Git just means writing 40 bytes to disk, which is why `git branch foo`` is so fast.
-
-There are a few different kinds of references, and they all point to commits in your repository. +
-The only difference between them is how and when they move. +
-(When I say that a reference moves, I mean that the ID of the commit that it points to is updated.)
 
 *Local branch references* are specific to a single local repository. +
 Commands that affect local branch references include *commit*, *merge*, *rebase*, and *reset*.
@@ -111,7 +107,7 @@ The Secret Of Git can fit it into these four words:
 
 *Reachable* `...` so that you can get back to them, and so that Git will not delete them when it decides it is time for spring cleaning.
 
-== Brances as savepoints
+== Branches as savepoints
 
 Because *references make commits reachable*, creating a branch is a way to "nail down" part of the graph that you might want to come back to later.
 
@@ -151,18 +147,19 @@ Git commit's ID is a hash of both its contents and its history. So, even if you 
 What `git cherry-pick` does, basically, is take a commit from somewhere else, and "play it back" wherever you are right now. \
 Because this introduces the same change with a different parent, Git builds a new commit with a different ID.
 
-=== Example
-Source: think-like-a-git.net
+.Example
+
+.Source: think-like-a-git.net
 image::https://think-like-a-git.net/assets/images2/reachability-example.png[]
 
 If you were at node H in this graph, and you typed `git cherry-pick E`, you get a copy of commit E, let's call it E', that pointed to H as its parent.
 
-Source: think-like-a-git.net
+.Source: think-like-a-git.net
 image::https://think-like-a-git.net/assets/images2/cherry-pick-example-1.png[]
 
 Or if you typed something like `git cherry-pick C D E`, you get the following:
 
-Source: think-like-a-git.net
+.Source: think-like-a-git.net
 image::https://think-like-a-git.net/assets/images2/cherry-pick-example-2.png[]
 
 The important thing to notice here is that Git has copied changes made in one place, and replayed them somewhere else.
