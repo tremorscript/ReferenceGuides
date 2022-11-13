@@ -122,17 +122,17 @@ Neither `git merge` nor `git rebase` will change your existing commits (remember
 
 Use this pattern if you are unsure or unclear on exactly what `git merge` does.
 
-Being lazy since it very well explained here without any fluff. +
+Being lazy and since it very well explained here without any fluff. +
 https://think-like-a-git.net/sections/testing-out-merges/the-scout-pattern.html
 
 === the savepoint pattern
 
-Being lazy since it very well explained here without any fluff. +
+Being lazy and since it very well explained here without any fluff. +
 https://think-like-a-git.net/sections/testing-out-merges/the-scout-pattern.html
 
 ==== Black belt merging
 
-Being lazy since it very well explained here without any fluff. +
+Being lazy and since it very well explained here without any fluff. +
 https://think-like-a-git.net/sections/testing-out-merges/black-belt-merging.html
 
 
