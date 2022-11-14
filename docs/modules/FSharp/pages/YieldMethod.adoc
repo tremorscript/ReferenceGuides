@@ -3,6 +3,7 @@
 :navtitle: Yield Method
 :source-highlighter: highlight.js
 :highlightjs-languages: fsharp
+:sectlinks:
 
 The MSDN documentation says that it has the signature 'T -> M<'T>, which is exactly the same as the signature for the Return method. 
 It must take an unwrapped value and wrap it.

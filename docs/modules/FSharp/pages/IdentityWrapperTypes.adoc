@@ -3,6 +3,7 @@
 :navtitle: Identity Wrapper Types 
 :source-highlighter: highlight.js
 :highlightjs-languages: fsharp
+:sectlinks:
 
 Every computation expression must have an associated wrapper type.
 

@@ -1,5 +1,6 @@
-= Reference Guides 
-:navtitle: Reference Guides 
+= Study Notes 
+:navtitle: Study Notes
+:title: Study Notes 
 
 Welcome to my personal list of reference guides.
 This is where I try to document what I learn.

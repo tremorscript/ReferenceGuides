@@ -3,6 +3,7 @@
 :navtitle: Introducing Bind
 :source-highlighter: highlight.js
 :highlightjs-languages: fsharp
+:sectlinks:
 
 The let! expression is syntactic sugar for a Bind method.
 

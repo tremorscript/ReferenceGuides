@@ -3,6 +3,7 @@
 :navtitle: Delay and Run Method 
 :source-highlighter: highlight.js
 :highlightjs-languages: fsharp
+:sectlinks:
 
 Avoiding unnecessary evaluations.
 
