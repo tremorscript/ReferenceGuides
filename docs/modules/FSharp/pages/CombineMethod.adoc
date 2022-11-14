@@ -75,7 +75,8 @@ trace {
 let value1 = trace2 1 2
 ----
 
-The Combine method only has two parameters. So what happens when you combine more than two values? +
+The Combine method only has two parameters. + 
+So what happens when you combine more than two values? +
 A subtle but important point is that they are combined “backwards”, starting from the last value.
 
 [source,fsharp]
@@ -201,10 +202,10 @@ F# converts the above code to:
 ----
 //What F# converts to
 let expr1 = fun () ->
-                if false then printfn "hello......"; 
+                if true then printfn "hello......"; 
                 trace.Zero();
 let expr2 = fun () ->
-                if true then printfn "......world"; 
+                if false then printfn "......world"; 
                 trace.Zero();
 
 let value1 = trace.Delay(fun () -> 
