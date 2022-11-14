@@ -6,14 +6,14 @@
 :sectlinks:
 
 
-Operations with and without '!'
+Operations with and without *'!'*
 
-Operations without a “!” always have unwrapped types on the right hand side, +
-while the ones with a “!” always have wrapped types.
+Operations without a *“!”* always have unwrapped types on the right hand side, +
+while the ones with a *“!”* always have wrapped types.
 
-In normal F#, do is just like let, except that the expression returns a unit value). +
-Inside a computation expression, do! is very similar. +
-Just as let! passes a wrapped result to the Bind method, so does do!, except that in the case of do! the “result” is the unit value, and so a wrapped version of unit is passed to the bind method.
+In normal F#, *do* is just like *let*, except that the expression returns a unit value. +
+Inside a computation expression, *do!* is very similar. +
+Just as *let!* passes a wrapped result to the Bind method, so does *do!*, except that in the case of *do!* the “result” is the unit value, and so a wrapped version of unit is passed to the bind method.
 
 
 [source,fsharp]
