@@ -3,7 +3,7 @@
 :navtitle: Combine method 
 :source-highlighter: highlight.js
 :highlightjs-languages: fsharp
-
+:sectlinks:
 
 == Why do we need combine method
 
