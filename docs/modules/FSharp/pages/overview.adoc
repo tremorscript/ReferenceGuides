@@ -4,8 +4,7 @@
 
 This is my personal study notes for FSharp.
 People from whom I have shamelessly and blatantly copied.
+
 * https://fsharpforfunandprofit.com/[Scott Wlaschin]
-
 * https://www.udemy.com/user/kit-eason/[Kit Eason]
-
 * https://blog.ploeh.dk/about/[Mark Seemann]
