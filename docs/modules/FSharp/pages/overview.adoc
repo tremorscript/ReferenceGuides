@@ -1,7 +1,7 @@
-= FSharp Reference
+= FSharp Notes 
 
-This is my personal reference guide to FSharp.
+This is my personal study notes for FSharp.
 People from whom I have shamelessly and blatantly copied.
-- fsharpforfunandprofit
-- Kit Eason
-- Mark Seeman
+* https://fsharpforfunandprofit.com/[Scott Wlaschin]
+* https://www.udemy.com/user/kit-eason/[Kit Eason]
+* https://blog.ploeh.dk/about/[Mark Seemann]
