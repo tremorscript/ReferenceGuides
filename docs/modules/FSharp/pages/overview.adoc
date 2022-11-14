@@ -1,4 +1,6 @@
-= FSharp Notes 
+= FSharp Notes
+:navtitle: FSharp Notes
+:title: FSharp Notes
 
 This is my personal study notes for FSharp.
 People from whom I have shamelessly and blatantly copied.
