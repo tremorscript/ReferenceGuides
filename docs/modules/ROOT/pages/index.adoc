@@ -2,5 +2,6 @@
 :navtitle: Study Notes
 :title: Study Notes 
 
-Welcome to my personal list of reference guides.
-This is where I try to document what I learn.
+This is the study notes section on the website.
+
+This is where I try to document my notes on a topic.
