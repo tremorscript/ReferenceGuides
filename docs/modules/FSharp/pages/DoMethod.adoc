@@ -15,7 +15,6 @@ In normal F#, *do* is just like *let*, except that the expression returns a unit
 Inside a computation expression, *do!* is very similar. +
 Just as *let!* passes a wrapped result to the Bind method, so does *do!*, except that in the case of *do!* the “result” is the unit value, and so a wrapped version of unit is passed to the bind method.
 
-
 [source,fsharp]
 ----
 type TraceBuilder() =

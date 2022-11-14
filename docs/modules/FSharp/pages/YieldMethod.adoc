@@ -49,6 +49,6 @@ let trace = new TraceBuilder()
     } |> printfn "Result for yield: %A"
 ----
 
-If return and yield are basically the same thing, why are there two different keywords? +
+If *return* and *yield* are basically the same thing, why are there two different keywords? +
 The answer is mainly so that you can enforce appropriate syntax by implementing one but not the other. +
-For example, the seq expression does allow yield but doesn’t allow return, while the async does allow return, but does not allow yield.
+For example, the *seq* expression does allow yield but doesn’t allow return, while the *async* does allow return, but does not allow yield.
