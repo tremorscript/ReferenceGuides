@@ -194,3 +194,20 @@ When you do a rebase, you are rewriting history. You are, in effect, saying to G
 Here's how I think of it: in English, we read from left to right. On most charts that show the change in something over time, time is shown on the x-axis of the graph, with time increasing from left to right. When you issue commands to the shell, you can put several of them on one line, and they'll be executed in order from left to right.
 
 So when I use git rebase, I (almost) always give it two arguments: the name of the place I want to start from, and the name of the place I want to end up. Or, to put it another way, I tell rebase the sequence of events I want it to create, from left to right: git rebase first_this then_this
+
+
+== How to change git remote origin
+
+There may be a time when you would like to change the origin url of your git repository to point to another url.
+
+You can use the following sequence of commands to do that:
+
+[source,console]
+----
+git remote rename origin upstream # <1>
+git remote add origin https://github.com/<GitHub_username>/simple-feed-reader/ # <2>
+git push -u origin main # <3>
+----
+<1> Rename the existing origin remote to upstream
+<2> Add a new origin remote pointing to your copy of the repository on GitHub.
+<3> Publish your local Git repository to the newly created GitHub repository.
