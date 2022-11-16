@@ -65,7 +65,7 @@ az webapp deployment slot swap --name $webappname --resource-group AzureTutorial
 . Create a new Create an Azure DevOps organization. https://go.microsoft.com/fwlink/?LinkId=307137
 . Create a team project in Azure DevOps organization
 . Configure a self-hosted agent if necessary. Organization Settings and then Pipelines > Parallel jobs. If you see value 0 under Microsoft-hosted that means you need a Self-hosted agent to run your pipeline
-. https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#grant-azure-devops-access-to-the-github-repository[Grant Azure DevOps access to the GitHub repository]
-. https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#create-the-build-definition[Create the build definition]
-. https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#create-the-release-pipeline[Create the release pipeline]
-. https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#commit-changes-to-github-and-automatically-deploy-to-azure[Commit changes to GitHub and automatically deploy to Azure]
+. https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#grant-azure-devops-access-to-the-github-repository[Grant Azure DevOps access to the GitHub repository,window=_blank]
+. https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#create-the-build-definition[Create the build definition,window=_blank]
+. https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#create-the-release-pipeline[Create the release pipeline,window=_blank]
+. https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#commit-changes-to-github-and-automatically-deploy-to-azure[Commit changes to GitHub and automatically deploy to Azure,window=_blank]
