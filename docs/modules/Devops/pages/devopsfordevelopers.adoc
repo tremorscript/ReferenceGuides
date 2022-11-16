@@ -62,7 +62,7 @@ az webapp deployment slot swap --name $webappname --resource-group AzureTutorial
 
 == Azure Devops Pipeline
 
-. Create a new Create an Azure DevOps organization. https://go.microsoft.com/fwlink/?LinkId=307137
+. Create a new Create an Azure DevOps organization. https://go.microsoft.com/fwlink/?LinkId=307137[window=_blank]
 . Create a team project in Azure DevOps organization
 . Configure a self-hosted agent if necessary. Organization Settings and then Pipelines > Parallel jobs. If you see value 0 under Microsoft-hosted that means you need a Self-hosted agent to run your pipeline
 . https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#grant-azure-devops-access-to-the-github-repository[Grant Azure DevOps access to the GitHub repository,window=_blank]
