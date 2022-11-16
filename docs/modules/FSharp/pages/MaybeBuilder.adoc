@@ -3,7 +3,7 @@
 :navtitle: Maybe Builder
 :source-highlighter: highlight.js
 :highlightjs-languages: fsharp
-:sectlinks:
+
 
 
 MaybeBuilder is useful if you have a chain of if/else statements.

@@ -3,7 +3,7 @@
 :navtitle: List Wrapper Types 
 :source-highlighter: highlight.js
 :highlightjs-languages: fsharp
-:sectlinks:
+
 
 
 == List Workflow

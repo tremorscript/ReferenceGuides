@@ -3,7 +3,7 @@
 :navtitle: Wrapper Types 
 :source-highlighter: highlight.js
 :highlightjs-languages: fsharp
-:sectlinks:
+
 
 One of the major uses of computation expressions is to implicitly unwrap and rewrap values that are stored in some sort of wrapper type.
 

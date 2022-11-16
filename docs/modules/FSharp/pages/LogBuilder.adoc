@@ -3,7 +3,7 @@
 :navtitle: Log Builder
 :source-highlighter: highlight.js
 :highlightjs-languages: fsharp
-:sectlinks:
+
 
 Let's say we have some code, and we want to log each step.
 

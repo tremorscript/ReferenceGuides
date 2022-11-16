@@ -3,7 +3,7 @@
 :navtitle: OrElse Builder
 :source-highlighter: highlight.js
 :highlightjs-languages: fsharp
-:sectlinks:
+
 
 OrElseBuilder is useful if you have chains of "or/else" statements.
 

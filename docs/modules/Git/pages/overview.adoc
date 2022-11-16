@@ -3,7 +3,7 @@
 :navtitle: Git Notes 
 :source-highlighter: highlight.js
 :highlightjs-languages: shell, console
-:sectlinks:
+
 
 This is my personal short notes from https://think-like-a-git.net/ and various other sources. +
 If I learn something new in git, I intend to put them here. +

@@ -3,7 +3,7 @@
 :navtitle: Zero Method 
 :source-highlighter: highlight.js
 :highlightjs-languages: fsharp
-:sectlinks:
+
 
 What value should you use for Zero?
 
