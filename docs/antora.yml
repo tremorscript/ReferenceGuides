@@ -6,3 +6,4 @@ nav:
 - modules/ROOT/nav.adoc
 - modules/FSharp/nav.adoc
 - modules/Git/nav.adoc
+- modules/Devops/nav.adoc
