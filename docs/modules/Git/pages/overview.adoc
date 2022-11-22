@@ -207,3 +207,57 @@ git push -u origin main # <3>
 <1> Rename the existing origin remote to upstream
 <2> Add a new origin remote pointing to your copy of the repository on GitHub.
 <3> Publish your local Git repository to the newly created GitHub repository.
+
+
+== Commit Best Practices
+
+.commit guidelines
+* Make small commits and commit often.
+* Commit complete and well tested code.
+* Don't mix whitespace changes with functional code changes.
+* Write good commit messages.
+
+.commit message guidelines
+* Why is it necessary? (Fix a bug, increase performance, add a feature)
+* How does it address the issue? For short and obvious changes, this can be omitted.
+* What effects does this change have? (may include benchmarks, side effects etc)
+* What limitations does the current code have? (not necessary, but helps if you can think about it)
+
+.commit message considerations
+* Don't assume that the code is self-evident/self-documenting.
+* Finding it difficult to summarize your commit? Maybe it includes more than one bug fix or logical change. Consider splitting the commits using `git add -p`
+* It should be possible to review a change request without reading the contents of the bug or task. Don't assume the reviwer understands the problem.
+
+.commit message structure
+* Separate subject from body with a blank line
+* Limit the subject line to 50 characters
+* Capitalize the subject line
+* Do not end the subject line with period
+* Use the imperative mood in the subject line (Fix typo in log vs. Fixed typo in log or Misc fixes in log code)
+* Wrap the body at 72 characters
+* Use the body to explain what and why vs. how
+* Reference fixed issues with https://docs.github.com/en/enterprise/2.16/user/github/managing-your-work-on-github/closing-issues-using-keywords[closing keywords,window=_blank]
+
+.commit message sample
+===
+Add code review recipe for Go
+
+- Helps teams automate linting and build verification for go projects.
+- Also gives a list of items to verify for go code reviews.
+
+The PR does not add info about VS Code extensions for go, this will
+be added in issue #124
+
+Closes: #123
+===
+
+You can specify which editor you would like to use for commit messages.
+[source, console]
+----
+git config --global core.editor "code --wait"
+----
+
+.sample contributing.md files
+* https://github.com/thoughtbot/factory_bot_rails/blob/master/CONTRIBUTING.md[Factory Bot rails]
+* https://github.com/puppetlabs/puppet/blob/main/CONTRIBUTING.md[Puppet]
+
