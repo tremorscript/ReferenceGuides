@@ -53,11 +53,11 @@ image::https://think-like-a-git.net/assets/images2/gitx-visualization.png[]
 
 The very colourful labels are called *references*.
 
-*References are pointers to commits*
+*References are pointers to commits.*
 
 There are three types of references: *local branch*, *remote branch*, and *tag*.
 
-A *local branch reference* consists of a file that contains the 40-byte identifier of the commit that the reference points to. +
+A *local branch reference* is a file that contains a 40-byte identifier of the commit that the reference points to. +
 This file is created at the project's `.git/refs/head` directory. +
 Creating a branch in Git just means writing 40 bytes to disk, which is why `git branch foo`` is so fast.
 
@@ -70,7 +70,7 @@ Commands that affect remote branch references include *fetch* and *push*.
 *Tag references* are branch references that never move. +
 *Once you've created a tag, it will never change* +
 This behavior makes them useful for marking specific versions of a software package, or marking exactly what got deployed to a production server on a particular date. +
-Only one command affects the tag and i.e *tag*
+Only one command affects the tag and i.e *git tag*
 
 Now look at the display:-
 
@@ -123,17 +123,17 @@ Neither `git merge` nor `git rebase` will change your existing commits (remember
 Use this pattern if you are unsure or unclear on exactly what `git merge` does.
 
 Being lazy and since it very well explained here without any fluff. +
-https://think-like-a-git.net/sections/testing-out-merges/the-scout-pattern.html
+https://think-like-a-git.net/sections/testing-out-merges/the-scout-pattern.html[window=_blank]
 
 === the savepoint pattern
 
 Being lazy and since it very well explained here without any fluff. +
-https://think-like-a-git.net/sections/testing-out-merges/the-scout-pattern.html
+https://think-like-a-git.net/sections/testing-out-merges/the-savepoint-pattern.html[window=_blank]
 
 ==== Black belt merging
 
 Being lazy and since it very well explained here without any fluff. +
-https://think-like-a-git.net/sections/testing-out-merges/black-belt-merging.html
+https://think-like-a-git.net/sections/testing-out-merges/black-belt-merging.html[window=_blank]
 
 
 == git rebase
