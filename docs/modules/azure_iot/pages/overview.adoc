@@ -1,4 +1,4 @@
-= Devops for Asp.Net Core developers
+= Azure for Asp.Net Core developers
 :title: Devops for Asp.Net Core developers 
 :navtitle: Devops for Asp.Net Core developers 
 :source-highlighter: highlight.js
