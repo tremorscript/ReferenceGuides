@@ -1,0 +1,71 @@
+= Azure IoT 
+:title: Azure IoT 
+:navtitle: Azure IoT 
+:source-highlighter: highlight.js
+:highlightjs-languages: shell, console
+
+This is my study notes for the book https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/[DevOps for ASP.NET Core Developers]
+
+
+
+== Create a web service app
+
+[,console]
+----
+webappname=mywebapp$RANDOM # <1>
+az group create --location centralus --name AzureTutorial # <2>
+az appservice plan create --name $webappname --resource-group AzureTutorial --sku S1 # <3>
+az webapp create --name $webappname --resource-group AzureTutorial --plan $webappname # <4>
+----
+<1> Declare a variable to store your web app's name.
+<2> Create a resource group.
+<3> Create an App Service plan in the S1 tier.
+<4> Create the web app resource
+
+== Deploy from local git repository to azure web app
+
+[,console]
+----
+az webapp config appsettings set --name $webappname --resource-group AzureTutorial --settings DEPLOYMENT_BRANCH=main # <1>
+az webapp deployment user set --user-name REPLACE_WITH_USER_NAME --password REPLACE_WITH_PASSWORD # <2>
+echo Git deployment URL: $(az webapp deployment source config-local-git --name $webappname --resource-group AzureTutorial --query url --output tsv) # <3>
+echo Web app URL: http://$webappname.azurewebsites.net # <4>
+git remote add azure-prod GIT_DEPLOYMENT_URL # <5>
+git push azure-prod main # <6>
+----
+<1> Set the deployment branch to main in the appsettings configuration.
+<2> Set the deployment credentials. These deployment credentials apply to all the web apps in your subscription.
+<3> Configure the web app to accept deployments from local Git and display the Git deployment URL.
+<4> Display the web app URL. Browse to this URL to see the blank web app.
+<5> Add the remote URL to the local repository.
+<6> Push the local default branch (main) to the azure-prod remote's deployment branch (main).
+
+== Deploy using deployment slots
+
+[,console]
+----
+az webapp deployment slot create --name $webappname --resource-group AzureTutorial --slot staging # <1>
+az webapp config appsettings set --name $webappname --resource-group AzureTutorial --slot staging --settings DEPLOYMENT_BRANCH=main # <2>
+echo Git deployment URL for staging: $(az webapp deployment source config-local-git --name $webappname --resource-group AzureTutorial --slot staging --query url --output tsv) # <3>
+echo Staging web app URL: http://$webappname-staging.azurewebsites.net # <4>
+git remote add azure-staging <Git_staging_deployment_URL> # <5>
+git push azure-staging main # <6>
+az webapp deployment slot swap --name $webappname --resource-group AzureTutorial --slot staging # <7>
+----
+<1> Create a deployment slot with the name staging. 
+<2> Set the deployment branch to main in the appsettings configuration.
+<3> Configure the staging slot to use deployment from local Git and get the staging deployment URL.
+<4> Display the staging slot's URL. Browse to the URL to see the empty staging slot.
+<5> Add the remote URL for staging to the local Git repository.
+<6> Push the local default branch (main) to the azure-staging remote's deployment branch (main).
+<7> swap the verified/warmed-up staging slot into production.
+
+== Azure Devops Pipeline
+
+. Create a new Create an Azure DevOps organization. https://go.microsoft.com/fwlink/?LinkId=307137[window=_blank]
+. Create a team project in Azure DevOps organization
+. Configure a self-hosted agent if necessary. Organization Settings and then Pipelines > Parallel jobs. If you see value 0 under Microsoft-hosted that means you need a Self-hosted agent to run your pipeline
+. https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#grant-azure-devops-access-to-the-github-repository[Grant Azure DevOps access to the GitHub repository,window=_blank]
+. https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#create-the-build-definition[Create the build definition,window=_blank]
+. https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#create-the-release-pipeline[Create the release pipeline,window=_blank]
+. https://learn.microsoft.com/en-us/dotnet/architecture/devops-for-aspnet-developers/cicd#commit-changes-to-github-and-automatically-deploy-to-azure[Commit changes to GitHub and automatically deploy to Azure,window=_blank]
