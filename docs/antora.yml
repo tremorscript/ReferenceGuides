@@ -6,4 +6,3 @@ nav:
 - modules/ROOT/nav.adoc
 - modules/FSharp/nav.adoc
 - modules/Git/nav.adoc
-- modules/Azureiot/nav.doc
