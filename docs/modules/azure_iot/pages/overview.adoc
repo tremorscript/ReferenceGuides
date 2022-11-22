@@ -1,8 +1,7 @@
-= Azure for Asp.Net Core developers
-:title: Azure for Asp.Net Core developers 
-:navtitle: Azure for Asp.Net Core developers 
+= Azure IoT 
+:title: Azure IoT
+:navtitle: Azure IoT
 :source-highlighter: highlight.js
 :highlightjs-languages: shell, console
 
-== Create a web service app
-Test is a test
+== Overview 
