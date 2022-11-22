@@ -6,21 +6,21 @@
 
 
 This is my personal short notes from https://think-like-a-git.net/ and various other sources. +
-If I learn something new in git, I intend to put them here. +
-Everything in one page, so that I do not have to search for git related stuff when I need to remember something.
+If I learn something new in git, I intend to put it here. +
 
 == Basics
 
 A git repository is one giant graph.
 
 At the surface level, a git commit consists of 2 things:-
-- a pointer to the state of your code at some moment in time.
-- zero or more pointers to "parent" commits
+
+* a pointer to the state of your code at some moment in time.
+* zero or more pointers to "parent" commits
+
+*A Git commit is a node in a graph*, and each one points to the node that came before them.
 
 .Source: think-like-a-git.net, Git commits (simplified view)
 image::https://think-like-a-git.net/assets/images2/graphs-and-git.png[]
-
-*A Git commit is a node in a graph*, and each one points to the node that came before them.
 
 
 == git log 
