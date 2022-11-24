@@ -6,16 +6,13 @@
 
 == Subsystems of IoT
 
-[discrete]
 === Core Subsystems
-The Internet of Things is a network of Internet connected devices that communicate embedded sensor data to the cloud for centralized processing.
-
 An IoT solution architecture consists of the following subsystems:
 
 * Devices securely connecting to the cloud.
 * Devices sending and receiving data from the cloud.
 * A cloud gateway service, or hub, that provides device management capabilities.
-* The gateway service, or hub, must securely accept data from the devices.
+* The cloud gateway service, or hub, must securely accept data from the devices.
 * Stream processors consume data from the hub.
 * Stream processors also integrate with business processes.
 * They also place the data into storage.
@@ -23,22 +20,21 @@ An IoT solution architecture consists of the following subsystems:
 
 Below diagram illustrates the core subsystems of IoT
 
-.Source: Micorsoft Learn, Core Subsystems
+.Source: Microsoft Learn, Core Subsystems
 image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-solution-architecture/media/m01-l02-core-subsystems-iot-architecture-8158ad9e.png[]
 
 
-[discrete]
 === Optional Subsystems
 Many IoT apps will include subsystems for the following:
 
-* *Edge devices* to manage access and information flow
+* *IoT Edge Devices* to manage access and information flow
 * They may help with device provisioning, data filtering, batching and aggregation, buffering of data, protocol translation, event rules processing etc.
-* *Data transformation subsystem* for manipulation and aggregation of the telemetry stream either before or after it is received by the cloud gateway service (the IoT hub).
+* *Data Transformation Subsystem* for manipulation and aggregation of the telemetry stream either before or after it is received by the cloud gateway service (the IoT hub).
 * Manipulation can include protocol transformation (for example, converting binary data to json) etc.
-* *Bulk device provisioning* for deploying fleet of devices.
-* *User management subsystem* for specifying groups and users who can perform action on devices (for example, updating firmware etc).
-* *ML subsystem* to learn from data and experiences and to act without being explicitly programmed.
-* Hot/warm/cold storage paths.
+* *Bulk Device Provisioning* for deploying fleet of devices.
+* *User Management Subsystem* for specifying groups and users who can perform action on devices (for example, updating firmware etc).
+* *ML Subsystem* to learn from data and experiences and to act without being explicitly programmed.
+* Hot/warm/cold *storage* paths.
 
 .Source: Micorsoft Learn, Optional Subsystems
 image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-solution-architecture/media/m01-l02-optional-subsystems-iot-architecture-416c18f0.png[]
@@ -47,20 +43,20 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-sol
 == Data flow and processing
 There are four categories of stages (storage, routing, analysis, action/display):
 
-* Storage includes in-memory caches, temp queues and permanent archives(database)
+* Storage includes in-memory caches, temp queues and permanent archives(database).
 * Routing makes the decision on what data should go to which target and when. Targets include storage, analysis processes and action.
 * Analyis is used to run the data records through a set of conditions and can produce different output data records.
-* Original data records and post-analysis output data records are stored and available for display and may trigger actions such as sending email, sms
+* Original data records and post-analysis output data records are stored and available for display and may trigger actions such as sending email, sms etc.
 
 [discrete]
-=== Scenarios
+=== Data flow Scenarios
 
 .Scenario 1
 * Device sends data to IoT Hub.
 * IoT hub temporarily stores data.
 * This data is immediately displayed as a graph on-screen.
 
-.Source: Micorsoft Learn 
+.Source: Microsoft Learn 
 image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-solution-architecture/media/m01-l02-data-flow-1-b3c3a3af.png[]
 
 .Scenario 2
@@ -68,7 +64,7 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-sol
 * IoT hub temporarily stores data.
 * The data is then analyzed to detect anomalies, which can then be used to trigger actions such as sending email, text etc.
 
-.Source: Micorsoft Learn 
+.Source: Microsoft Learn 
 image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-solution-architecture/media/m01-l02-data-flow-2-1385659c.png[]
 
 .Scenario 3
@@ -76,19 +72,19 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-sol
 * Some devices may store data on premise within field/edge gateways before sending it to the cloud.
 * Some legacy or constrained devices may use protocol translation provided by an edge gateway.
 
-.Source: Micorsoft Learn 
+.Source: Microsoft Learn 
 image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-solution-architecture/media/m01-l02-data-flow-3-0a8e4444.png[]
 
 == Cross-cutting architectural needs
 Cross-cutting architectural needs:
 
 * Security Requirements
-* User management and auditing
-* Device connectivity
-* In-transit telemetry
-* At rest security
-* Logging and monitoring for individual subsystems and the application
-* High availability
+* User Management and Auditing
+* Device Connectivity
+* In-transit Telemetry
+* At-rest Security
+* Logging and Monitoring for individual subsystems and the application
+* High Availability
 * Disaster Recovery
 
 .Source: Microsoft Learn
@@ -99,30 +95,29 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-sol
 
 [discrete]
 === IP-enabled IoT devices
-An IP-enabled device is, simply, a device that can establish a connection to a network and have a unique identity on that network.
-It can use that connection to communicate with an IoT hub.
+An IP-enabled device is, simply, a device that can establish a connection to a network and have a unique identity on that network. +
 IP-enabled devices are deployed in scenarios where data needs to be collected, delivered, and analyzed in real-time, or periodically.
 
 [discrete]
 === Non-IP enabled devices
-A device does not need to be directly IP-enabled in order to be part of the solution.
-They can connect to other devices like a field gateway (IoT Edge device).
+A device does not need to be directly IP-enabled in order to be part of the solution. +
+They can connect to other devices like a field gateway (IoT Edge device). +
 These devices can use protocols like CoAP5, OPC or technologies like Bluetooth, ZigBee to connect to other hardware.
 
 [discrete]
 === Sensors
-A sensor is a circuit (or device) that collects a specific type of data about the physical environment.
-A smart sensor is a device that gathers input and processes that information locally before communicating message data.
+A sensor is a circuit (or device) that collects a specific type of data about the physical environment. +
+A *smart sensor* is a device that gathers input and processes that information locally before communicating message data.
 
 [discrete]
 === IoT Edge devices and field gateways
-A field gateway is a specialized device-appliance or general-purpose software that:
+A *field gateway* is a specialized device-appliance or a general-purpose software that:
 
-* acts as a communication enabler
-* May act as a local device control system and device data processing hub
-* can perform local processing
-* can control functions that are directed back toward the child devices that are connected to it.
-* can be used to filter or aggregate device telemetry
+* acts as a communication enabler.
+* may act as a local device control system and device data processing hub.
+* can perform local processing.
+* can control functions that are directed back towards the child devices that are connected to it.
+* can be used to filter or aggregate device telemetry.
 
 The scope of a field gateway includes the field gateway itself and all devices that are attached to it.
 
@@ -132,7 +127,6 @@ NAT devices or firewalls do not qualify as field gateways since they are not exp
 
 == Review Azure IoT technologies
 
-[discrete]
 === Managed aPaaS solutions
 Application platform as a service (aPaas) provides a cloud environment to build, manage, and deliver applications to customers.
 
@@ -140,50 +134,33 @@ Azure IoT central is a fully managed, end-to-end ready made environment for IoT 
 
 It delivers built-in disaster recovery, multitenancy, global availability, and a predictable cost structure.
 
-[discrete]
 === Flexible PaaS solutions
-You can tailor Azure hardware and software tools to a specific task or job function. You are responsible for scaling and configuration. The underlying infrastructure as a service (IaaS) is taken care for you.
+You can tailor Azure hardware and software tools to a specific task or job function. +
+You are responsible for scaling and configuration. +
+The underlying infrastructure as a service (IaaS) is taken care for you.
 
-[discrete]
-==== IoT edge and Azure Sphere
+==== IoT Edge and Azure Sphere
 
-* Develop your IoT devices using one of the Azure IoT starter kits or choose a device to use from the Azure Certified for IoT device catalog.
+* Develop your *IoT devices* using one of the *Azure IoT starter kits* or choose a device to use from the *Azure Certified for IoT device* catalog.
 * SDKs are available for multiple programming languages.
-* IoT plug and play can simplify how you create embedded code for your devices.
-* It enables solution developers to integrate devices with their solutions without writing any embedded code.
-* It is a device capability model schema that describes the device capabilities. Use this model to generate embedded code.
-* Azure IoT Edge enables offloading parts of your workload from the cloud to the devices.
+* *IoT Plug and Play* can simplify how you create embedded code for your devices.
+* *Azure IoT Edge* enables offloading parts of your workload from the cloud to the devices.
 * It can reduce latency, reduce the amount of data exchanged with the cloud, and enable offline scenarios.
-* Azure Sphere is a secured, high-level app platform with built-in communication and security features for internet connected devices
+* *Azure Sphere* is a secured, high-level app platform with built-in communication and security features for internet connected devices.
 * It includes a secured microcontroller unit, a custom linux-based operating system, and a cloud based security service which provides continuous, renewable security.
 
-[discrete]
 ==== IoT Hub
+*IoT hub* service enables reliable and secure bidirectional communications between millions of IoT devices and a cloud based solution.
 
-IoT hub service enables reliable and secure bidirectional communications between millions of IoT devices and a cloud based solution.
+*IoT Hub Device Provision System* is a helper service that provides zero-touch, just-in-time provisioning of devices to the right IoT hub without requiring human intervention.
 
-IoT Hub Device Provision system is a helper service that provides zero-touch, just-in-time provisioning of devices to the right IoT hub without requiring human intervention.
-
-It helps meet the following implementation challenges:
-
-* High-volume device connectivity and management
-* High-volume telemetry ingestion
-* Command and control of devices
-* Device security enforcement
-
-[discrete]
 === Azure Digital Twins
-Azure Digital Twins is an IoT service that enables you to model a physical environment. +
-It uses a spatial intelligence graph to model the relationships between people, spaces, and devices. +
-By corelating data across the digital and physical worlds you can create contextually aware solutions.
+IoT Central uses *Azure Digital Twins* to synchronize devices and data in the real world with the digital models that enable users to monitor and manage those connected devices.
 
-Iot Central uses digital twins to synchronize devices and data in the real world with the digital models that enable users to monitor and manage those connected devices.
-
-[discrete]
 === Azure Stream, Azure Data Explorer and Azure Maps
-Azure Stream Analytics and Azure Data Explorer can be used to process, query, analyze, and visualize data.
+*Azure Stream Analytics* and *Azure Data Explorer* can be used to process, query, analyze, and visualize data.
 
-Azure Maps is a collection of geospatial services that use fresh mapping data to provide accurate geographic context to web and mobile applications.
+*Azure Maps* is a collection of geospatial services that use fresh mapping data to provide accurate geographic context to web and mobile applications.
 
 == IoT device software options
 IoT devices need to run code to be useful.
@@ -199,7 +176,6 @@ Device operating system options:
 
 == Cloud service components of an IoT solution
 
-[discrete]
 === Cloud Gateways
 A cloud gateway enables you to manage your IoT devices and brokers the communication with other cloud services.
 
@@ -216,32 +192,29 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-components-i
 
 [discrete]
 === Data storage options
-Some architectures may demand a multi-tiered approach with some data being stored on the device, some on an on-premise database and some on the cloud.
-
 Data is often time-series data. It is common to split data into "warm" and "cold" data stores. +
-The *warm data* holds recent data that needs to be access with low latency. You can decide the duration range (for example, the last day, week, or month) +
+The *warm data* holds recent data that needs to be accessed with low latency. +
+You can decide the duration range (for example, the last day, week, or month) +
 Data stored in *cold storage* is historical data.
 
 .Source Microsoft Learn
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-components-iot-solution/media/m01-l03-warm-cold-storage-68f98297.png[]
 
-[discrete]
 === Analytics
-Without analytics, data collected from IoT would be too voluminous and unstructured to visualize or gain insights.
+Without analytics, data collected from IoT would be too voluminous and unstructured to visualize or gain insights. +
 Analytic services enable architects to build meaningful relationships between sets of data in order to make it easier to manage.
 
-[discrete]
 === Data visualization
-Data visualization tools can take input from various data streams and combine them into "dashboards" that can be used to tell a story about the data that was collected. Ultimately, getting more out of your data is the goal of IoT.
+Data visualization tools can take input from various data streams and combine them into "dashboards" that can be used to tell a story about the data that was collected. +
+Ultimately, getting more out of your data is the goal of IoT.
 
 == IoT Hub
-
 IoT Hub is a managed service that acts as a central message hub for bi-directional communication between your IoT application and the devices it manages.
 
 IoT Hub gives you a secure communication channel for your devices to send data
 
 * per-device authentication enables each device to connect securely to IoT hub and be managed securely by IoT hub.
-* You can control device access and per-device level connection.
+* You can control user device access and per-device level connection.
 * IoT Hub Device Provisioning Service automatically provisions devices to the correct IoT Hub when the device first boots up.
 * Multiple authentication types:
 ** SAS token-based authentication.
@@ -250,23 +223,23 @@ IoT Hub gives you a secure communication channel for your devices to send data
 
 IoT Hub can scale to millions of devices and can handle millions of events per second.
 
-IoT Hub has built-in routing and can setup automatic, rules-based message fan-out:
+IoT Hub has *built-in routing* and can setup automatic, rules-based message fan-out:
 
-* Use message routing to control where your hub send device telemetry.
+* Use message routing to control where your hub sends device telemetry.
 * Can route messages to multiple endpoints at no extra cost.
 * No-code routing rules instead of writing custom message dispatcher code.
 
 IoT Hub can integrate with other services:-
 
-* Azure Event Grid to help your business to quickly react to critical events
+* Azure Event Grid to help your business to quickly react to critical events.
 * Azure Logic Apps to automate business processes.
 * Azure Machine Learning to add machine learning and AI models.
-* Azure Stream Analytics to run real-time analytic computations on the data
+* Azure Stream Analytics to run real-time analytic computations on the data.
 
 IoT Hub can manage your devices:-
 
 * Store, synchronize, and query device metadata and state information for all your devices.
-* Set device state either per-device or based on some common characteristic
+* Set device state either per-device or based on some common characteristic.
 * Automatically respond to a device-reported state change.
 
 Use Azure IoT device SDK libraries to build applications that run on your devices and interact with IoT Hub.
@@ -279,12 +252,9 @@ Provisioning is a two part process:
 * The first part is establishing the initial connection between the device and the IoT solution by registering the device.
 * The second part is applying the proper configuration to the device based on the requirements of the solution it was registered to.
 
-A device can be said to be provisioned only when the above two steps have applied.
-
 Features:-
 
 * Secure attestation support for both X.509 and TPM-based identities
-* Enrollment list containing the devices that may register and their configurations which can be updated.
 * Multiple allocation policies to control how the DPS assigns devices to IoT hubs.
 * Monitoring and diagnostic logging
 * Mult-hub support allows DPS to assign devices to more than one IoT hub across subscriptions.
@@ -294,8 +264,8 @@ When to use:-
 
 * Zero-touch provisioning to an IoT solution without hardcoding IoT Hub connection.
 * Load-balancing devices across multiple hubs.
-* Connecting devices to a particular IoT solution depending on use case or sales data
-* Connecting a device to the IoT hub with the lowest latency
+* Connecting devices to a particular IoT solution depending on use case.
+* Connecting a device to the IoT hub with the lowest latency.
 * Reprovisioning based on a change in the device.
 * Rolling the keys used by the device to connect to IoT Hub.
 
@@ -307,17 +277,14 @@ To evaluate which IoT Hub tier is right for you solution, consider the following
 * What features do I plan to use?
 * How much data do I plan to move daily?
 
-[discrete]
 ==== Basic Tier
 The basic tier enables a subset of features and is intended for IoT solutions that only need uni-directional communication from devices to the cloud. +
 If your IoT solution is based around collecting data from devices and analyzing it centrally, then the basic tier is probably right for you.
 
-[discrete]
 ==== Standard Tier
 The standard tier of IoT Hubs enables all features, and is required for any IoT solutions that want to make use of the bi-directional communication capabilities. +
 If you would like to control IoT devices remotely or distribute some of your workloads onto the devices themselves, then you should consider the standard tier.
 
-[discrete]
 ==== Message throughtput
 Message traffic is measured for your IoT hub on a per-unit basis. +
 When you create an IoT hub, you choose its tier and edition, and set the number of units available. +
@@ -339,7 +306,6 @@ You can purchase up to 200 units for the B1, B2, S1, or S2 edition, or up to 10 
 |Average of 208,333 messages/minute per unit (300 million messages/day per unit)
 |===
 
-[discrete]
 ==== Partitions
 Partions can be used to reduce contentions that could occur when concurrently reading and writing to event streams. +
 The partition limit is chosen when IoT hub is created. +
@@ -348,7 +314,6 @@ The number of partitions is directly related to the number of concurrent readers
 
 The default value of four partitions should be used unless specified by the architect.
 
-[discrete]
 ==== Tier upgrade
 You can upgrade from the basic tier to the standard tier without interrupting your existing operations.
 You cannot downgrade to a lower tier. You can move from S2 to S1 but not from S1 to B1 tier.
@@ -362,8 +327,7 @@ Examples of endpoint types:
 * *Service facing built-in endpoints* for reading device-to-cloud messages.
 * *Custom endpoints* to receive device-to-cloud messages dispatched by a routing rule.
 
-[discrete]
-===== Built-in endpoints
+==== Built-in endpoints
 
 .Source Microsoft Learn
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-iot-hub-properties/media/m02-l04-iot-hub-endpoints-413257e2.png[]
@@ -387,7 +351,6 @@ The IoT hub endpoints:
 ** Direct method invocation.
 ** Receive operation monitoring events.
 
-[discrete]
 ==== Custom endpoints
 These endpoints act as service endpoints and are used as sinks for message routes. +
 Devices cannot write directly to these custom endpoints.
@@ -402,20 +365,17 @@ The following services are supported as custom endpoints.
 == Security Concepts
 There are three different ways for controlling access to IoT Hub:
 
-* Azure AD. It provides identity-based authentication and fine-grained authorization with Azure RBAC. It supports only IoT hub service api's only.
-* SAS. It lets you group permissions and grant them to applications using access keys and signed security tokens.
-* Per-device security credentials. Each IoT Hub contains an identity registry. For each device in this registry, you can configure security credentials that grant DeviceConnect permissions scoped to the device's endpoints.
+* *Azure AD*. It provides identity-based authentication and fine-grained authorization with Azure RBAC. It supports only IoT hub service api's.
+* *SAS*. It lets you group permissions and grant them to applications using access keys and signed security tokens.
+* *Per-device security credentials*. Each IoT Hub contains an identity registry. For each device in this registry, you can configure security credentials that grant DeviceConnect permissions scoped to the device's endpoints.
 
-[discrete]
 === Access Control and Permissions
 Use shared access policies for IoT hub-level access. +
 Use the individual device credentials to scope access to that device only.
 
-[discrete]
 === Authentication
-Azure IoT hub grants access to endpoints by verifying a token against the shared access policies and identity registry security credentials. +
+Azure IoT hub grants access to endpoints by verifying a token against the shared access policies and identity registry security credentials.
 
-[discrete]
 === Security tokens
 IoT Hub uses security tokens to authenticate devices and services to avoid sending keys on the wire. +
 Security tokens are limited in time validity and scope. +
@@ -426,7 +386,6 @@ Some scenarios do require you to use security tokens directly. Example:
 
 IoT hub also allows devices to authenticate with IoT Hub using X.509 certificates.
 
-[discrete]
 === Supported X.509 certificates
 You can verify using X.509 certificates by uploading either a certificate thumbprint or a certificate authority(CA) to Azure IoT Hub. +
 Authentication using certificate thumbprints only verifies that the presented thumbprint matches the configured thumbprint. +
