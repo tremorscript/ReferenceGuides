@@ -2,7 +2,7 @@
 :title: Azure IoT
 :navtitle: Azure IoT
 :source-highlighter: highlight.js
-:highlightjs-languages: shell, console
+:highlightjs-languages: shell, console, json
 
 == Subsystems of IoT
 
@@ -91,7 +91,7 @@ Cross-cutting architectural needs:
 image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-solution-architecture/media/m01-l02-cross-cutting-needs-subsystems-7d98fb39.png[]
 
 
-== IoT Hardware componenents
+== IoT Hardware components
 
 [discrete]
 === IP-enabled IoT devices
@@ -190,7 +190,6 @@ Cloud gateways can provide workloads such as:
 .Source Microsoft Learn
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-components-iot-solution/media/m01-l03-cloud-gateway-6a9bb3cb.png[]
 
-[discrete]
 === Data storage options
 Data is often time-series data. It is common to split data into "warm" and "cold" data stores. +
 The *warm data* holds recent data that needs to be accessed with low latency. +
@@ -399,3 +398,396 @@ Supported Certificates include:
 
 A device may either use an X.509 certificate or a security token for authentication, but not both.
 
+== IoT Device Lifecycle Terms and Concepts
+For Azure IoT, there are five stages within the device lifecycle:
+
+* Plan: Enable operators to create a device metadata scheme that enables them to query for, and target a group of devices for bulk management operations. You can use the device twin to store this device metadata in the form of tags and properties.
+* Provision: Securely provision new devices to IoT Hub and enable operators to immediately discover device capabilities.
+* Configure: Facilitate bulk configuration changes and firmware updates to devices while maintaining both health and security.
+* Monitor: Monitor overall device collection health, the status of ongoing operations, and alert operators to issues that might require attention.
+* Retire: Replace or decommission devices after a failure, upgrade cycle, or at the end of the service lifetime.
+
+== Device Identity and Registration
+
+=== Identity Registry
+A device must have an entry in the IoT Hub identity registry before it can connect to an IoT Hub.
+
+The deviceID is case-sensitive.
+
+The identity registry is a REST-capable collection of device identity resources.
+
+IoT Hub creates a set of resources for every device in the identity registry such as the queue that contains in-flight cloud-to-device messages.
+
+Use the identity registry when you need to:
+
+* Provision devices that connect to your IoT hub.
+* Control per-device access to your hub's device-facing endpoints.
+
+
+=== Module Identity
+You can create module identities under a device identity.
+
+Each module identity can be configured with an independent connection to IoT hub.
+
+You can seperate access control permissions.
+
+You can create up to 20 module identites under a device identity.
+
+=== Identity registry operations
+Identity registry exposes the following operations:
+
+* Create device or module identity
+* Update device or module identity
+* Retreive device or module identity
+* Delete device or module identity
+* List up to 1000 identities
+* Export device identities to Azure blob storage
+* Import device identities from Azure blob storage
+
+=== Device Creation
+You need to specify the Device ID and the authentication type when creating a new device.
+
+== Device Twins
+Device Twins are json documents managed by IoT Hub that store device state information associated with a physical device. +
+This information includes metadata, configurations, and conditions. +
+Azure IoT Hub maintains a device twin for each registered device.
+
+Device twins are implicity created and deleted when a device identity is created or deleted in IoT Hub.
+
+A device twin is a JSON document that includes:
+
+* Tags. A solution back end can read from and write to. Tags are not visible to device apps.
+* Desired properties. The solution back end can set desired properties, and the device app can read them. The device app can also receive notifications of changes in the desired properties.
+* Reported properties. The device app can set reported properties, and the solution back end can read and query them.
+* Device identity properties. The read-only properties from the corresponding device identity stored in the identity registry
+
+.Source Microsoft Learn
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-iot-device-lifecycle-concepts/media/m02-l01-device-twin-diagram-03c0f21f.png[]
+
+.Sample JSON
+[source,json]
+----
+{
+    "deviceId": "devA",
+    "etag": "AAAAAAAAAAc=",
+    "status": "enabled",
+    "statusReason": "provisioned",
+    "statusUpdateTime": "0001-01-01T00:00:00",
+    "connectionState": "connected",
+    "lastActivityTime": "2015-02-30T16:24:48.789Z",
+    "cloudToDeviceMessageCount": 0,
+    "authenticationType": "sas",
+    "x509Thumbprint": { 
+        "primaryThumbprint": null,
+        "secondaryThumbprint": null
+    },
+    "version": 2,
+    "tags": {
+        "$etag": "123",
+        "deploymentLocation": {
+            "building": "43",
+            "floor": "1"
+        }
+    },
+    "properties": {
+        "desired": {
+            "telemetryConfig": {
+                "sendFrequency": "5m"
+            },
+            "$metadata": {...},
+            "$version": 1
+        },
+        "reported": {
+            "telemetryConfig": {
+                "sendFrequency": "5m",
+                "status": "success"
+            },
+            "batteryLevel": 55,
+            "$metadata": {...},
+            "$version": 4
+        }
+    }
+}
+----
+
+=== Usage
+Use device twins to:
+
+* Store device-specific metadata in the cloud. For example, the deployment location of a vending machine.
+* Report current state information such as available capabilities and conditions from your device app. For example, a device is connected to your IoT hub over cellular or WiFi.
+* Synchronize the state of long-running workflows between device app and back-end app. For example, when the solution back end specifies the new firmware version to install, and the device app reports the various stages of the update process.
+* Query your device metadata, configuration, or state.
+
+The best way to implement device twins within cloud solutions applications is through the Azure IoT SDKs.
+
+=== Module identity and module twins
+Each module identity implicitly generates a module twin.
+
+Module twins are JSON documents that store module information including metadata, configurations, and conditions.
+
+SDKs enable you to create modules where each one opens an independent connection to IoT Hub. +
+This helps you to use seperate namespaces for different components on your device. +
+For example, if your vending machine has 3 different sensors controlled by different departments in your company, you can create a module for each sensor. +
+This way, each department is only able to create jobs or direct methods for the sensor that they control, avoiding conflicts and user errors.
+
+== Device monitoring
+Device monitoring is used to track the overall device collection health, the status of ongoing operations, and to alert operators to issues that might require their attention. +
+You can program devices to update their device twins and report real-time operating conditions and status of update operations.
+
+Device twin desired and reported properties can be used to monitor a target condition, target content, or device metrics.
+
+* the target condition defines the scope of device twins to be updated. It is specified as a query on twin tags and/or reported properties.
+* the target content defines the desired properties to be added or updated in the targeted device twins. The content includes a path to the section of desired properties to be changed.
+* The metrics define the summary counts of various configuration states such as Success, In Progress, and Error.
+
+
+== Device Retirements
+Use the IoT Hub identity registry for securely revoking device identities and credentials.
+
+You can disable devices by updating the status property of an identity in the identity registry.
+
+The disable feature is not available for modules.
+
+== Device Configuration and Communication Protocols
+
+=== Protocols
+|===
+|Protocol |When you should use this protocol.
+
+|MQTT MQTT over WebSocket 
+|Use with devices that have their own per-device credentials.
+
+|AMQP AMQP over websocket 
+|Use on field gateways and cloud gateways to take advantage of connection multiplexing across devices.
+
+|HTTPS 
+|Use for devices that support other protocols. 
+|===
+
+=== Ports
+|===
+|Protocol |Port
+|MQTT |8883
+|MQTT over WebSockets |443
+|AMQP |5671
+|AMQP over WebSockets |443
+|HTTPS |443 
+|===
+
+== Devices and Device Provisioning
+
+=== Provisioning Process
+There are two phases in the provisioning/deployment process for a device:-
+
+* The manufacturing phase in which the device is created and prepared at the factory.
+* The cloud setup phase in which the Device Provisioning Service is configured for automated provisioning.
+
+==== Manufacturing Process phase
+In this step, the device is programmed with the provisioning service information, enabling it to call the provisioning service to get its connection info/IoT solution assignment when it is switched on.
+
+Also, in this step, the manufacturer supplies the device deployer/operator with the identifying key information for the device. +
+This could be an X.509 certificate or the public portion of a trusted platform module. Supplying that information could be as simple as confirming that all devices have an X.509 certificate generated from a signing certificate provided by the device deployer/operator, or as complicated as extracting the public portion of a trusted platform module (TPM) endorsement key from each TPM device.  +
+These services are offered by many silicon manufacturers today.
+
+==== Cloud setup phase
+This step is about configuring the cloud for proper automatic provisioning.
+
+There are two types of users involved. +
+A device operator - someone who knows how devices are intially set up. +
+A solution operator - someonw who knows how devices are to be split among the IoT hubs.
+
+A one-time initial setup of the provisioning service must occur. +
+It is done by the solution operator.
+
+The device operator then needs to enroll the device. +
+The device operator takes the key identifying information from the manufacturer and adds it to the enrollment list.
+
+==== Linked IoT Hubs
+The Device Provisioning Service can only provision devices to IoT hubs that have been linked to it.
+
+Linking an IoT hub to an instance of the DPS gives the service read/write permissions to the IoT hub's device registry with the link.
+
+A DPS can register a device ID and set the initial configuration in the device twin.
+
+Linked IoT hubs may be in any Azure region.
+
+You may link hubs in other subscriptions to your provisioning service.
+
+==== Allocation policy
+The service level setting that determines how DPS assigns devices to an IoT hub.
+
+There are there supported policies:
+
+* Evenly weighted distribution. The default setting. Linked IoT hubs are equally likely to have devices provisioned to them.
+* Lowest Latency. Devices are provisioned to an IoT hub with the lowest latency.
+* Static Configuration via the enrollment list: specification of the desired IoT hub in the enrollment list takes priority over the service-level allocation policy.
+* Custom (Use Azure Function): A custom allocation policy using custom code in an Azure function.
+
+==== Enrollment
+An enrollment is the record of devices that may register through autoprovisioning.
+
+Two types of enrollments are supported:
+
+* Group enrollment: Recommended for a large number of devices that share a desired intial configuration, or for devices all going to the same tenant.
+* Individual enrollment: Recommended for devices that require unique intial configurations, or for devices that can only authenticate using SAS tokens via TPM attestation.
+
+Enrollment record contains information about the device or group of devices:
+
+* The attestation mechanism used by the device.
+* The optional intial desired configuration.
+* Desired IoT hub.
+* The desired device ID.
+
+==== Registration
+A registration is the record of a device successfully registering/provisioning to an IoT Hub via the Device Provisioning Service.
+
+Registration records are created automatically; they can be deleted, but they cannot be updated.
+
+==== Operations
+Operations are the billing unit of the Device Provisioning Service.
+
+One operation is the successful completion of one instruction to the service.
+
+Operations include device registrations and re-registrations; service-side changes such as adding enrollment list entries, and updating enrollment list entries.
+
+== Device Enrollment Concepts
+The manufacturer is responsible for encoding the device identity info, and the Device Provisioning Service registration URL.
+
+=== ID Scope
+The ID scope is assigned to a DPS when it is created by the user.
+
+It is used to uniquely identify the specific provisioning service the device will register through.
+
+The ID scope is generated by the service and is immutable, which guarantees uniquess.
+
+=== Registration ID
+The registration ID uniquely identifies a device in the Device Provisioning Service.
+
+The registration ID must be unique in the provisioning service ID scope.
+
+Each device must have a registration ID.
+
+The registration ID is alphanumeric, case insensitive, and may contain special characters including colon, period, underscore, and hyphen.
+
+When TPM attestation is used, the registration ID is provided by the TPM itself.
+
+When X.509-based attestation is used, the registration ID is provided by the subject name of the certificate.
+
+=== Device ID
+The device ID is the ID as it appears in IoT Hub.
+
+The desired ID may be set in the enrollment entry.
+
+Setting the desired ID is only supported in individual enrollments.
+
+If no desired device ID is specified in the enrollment list, the registration ID is used as the device ID when registering the device.
+
+=== Attestation mechanism
+An attestation mechanism is a method used for confirming a device's identity.
+
+IoT Hub uses "authentication scheme" for a similar concept in that service.
+
+The DPS supports the following forms of attestation:
+
+* X.509 certificates based on the standard X.509 certificate authentication flow.
+* Trusted Platform Module (TPM) based on a nonce challenge, using the TPM standard for keys to present a signed Shared Access Signature (SAS) token. TPM attestation does not require a physical TPM on the device, but the service expects to attest using the endorsement key per the TPM spec.
+* Symmetric Key based on shared access signature (SAS) security tokens, which include a hashed signature and an embedded expiration.
+
+A hardware security module (HSM) is recommended for secure, hardware-based storage of device secrets, and is the most secure form of secret storage. +
+Both X.509 certificates and SAS tokens can be stored in HSM.
+
+== Enrollment Types
+
+=== Individual Enrollments
+
+* It is an entry for a single device that may register.
+* Individual enrollments may use X.509 certificates or SAS tokens as attestation mechanisms.
+* Individual enrollments may have the desired IoT hub device ID specified.
+* Individual enrollments are recommended for devices with unique initial configurations, or for devices that can only use SAS tokens via TPM or virtual TPM as the attestation mechanism.
+
+=== Group Enrollments
+
+* An enrollment group is a group of devices that share a specific attestation mechanism.
+* Enrollment groups support both X.509 and symmetric keys.
+* All devices in the X.509 enrollment group present X.509 certificates that have been signed by the same root or intermediate Certificate Authority(CA).
+* Each device in the symmetric key enrollment group present SAS tokens derived from the group symmetric key.
+* The enrollment group name and certificate name must be alphanumeric, lowercase, and may contain hyphens.
+
+== X.509 Certificate Attestation
+X.509 certificates are typically arranged in a certificate chain of trust in which each certificate in the chain is signed by the private key of the next higher certificate, and so on, terminating in a self-signed root certificate. +
+This arrangement establishes a delegated chain of trust from the root certificate generated by a trusted root certificate authority (CA) down through each intermediate CA to the end-entity "leaf" certificate installed on the device.
+
+Often the certificate chain represents some logical or physical heirarchy associated with devices. +
+For example, a manufacturer may:
+
+* Issue a self-signed root CA certificate.
+* Use the root certificate to generate a unique intermediate CA certificate for each factory.
+* Use each factory's certificate to generate a unique intermediate CA certificate for each production line in the plant.
+* And finally, use the production line certificate to generate a unique device (end-entity) certificate for each device manufactured on the line.
+
+=== Root Certificate
+
+* A root certificate is a self-signed X.509 certificate representing a certificate authority (CA).
+* It is the terminus, or trust anchor, of the certificate chain.
+* Root certificates can be self-issued by an organization or purchased from a root certificate authority.
+* The root certificate can also be referred to as a root CA certificate.
+
+=== Intermediate Certificate
+
+* An intermediate certificate is an X.509 certificate, which has been signed by the root certificate (or by another intermediate certificate with the root certificate in its chain).
+* The last intermediate certificate in a chain is used to sign the leaf certificate.
+
+=== End-entity "leaf" certificate
+
+* The leaf certificate, or end-entity certificate, identifies the certificate holder.
+* It has the root certificate in its certificate chain and zero or more intermediate certificates.
+* The leaf certificate is not used to to sign any other certificates.
+* It uniquely identifies the device to the provisioning service and is sometimes referred to as the device certificate.
+* During authentication, the device uses the private key associated with its certificate to respond to a proof of possession challenge from the service.
+* Leaf certificates used with an Individual enrollment entry have a requirement that the Subject Name must be set to the registration ID of the Individual Enrollment entry.
+* Leaf certificates used with an Enrollment group entry should have the Subject Name set to the desired device ID, which will be shown in the Registration Records for the authenticated device in the enrollment group.
+
+== Controlling device access to the provisioning service with X.509 certificates
+The provisioning service exposes two types of enrollment entry that you can use to control access for devices that use the X.509 attestation mechanism:
+
+* Individual enrollment entries are configured with the device certificate associated with a specific device. These entries control enrollments for specific devices.
+* Enrollment group entries are associated with a specific intermediate or root CA certificate. These entries control enrollments for all devices that have that intermediate or root certificate in their certificate chain.
+
+When a device connects to a provisioning service, if an individual enrollment for the device exists, the provisioning service applies that entry. +
+If there is no individual enrollment for the device and an enrollment group for the first intermediate certificate in the device's certificate chain exists, the service applies that entry, and so on, up the chain to the root. The service applies the first applicable entry such that:
+
+* If the first enrollment entry found is enabled, the service provisions the device.
+* If the first enrollment entry found is disabled, the service does not provision the device.
+* If no enrollment entry is found for any of the certificates in the device's certificate chain, the service does not provision the device.
+
+This mechanism and the hierarchical structure of certificate chains provides powerful flexibility in how you can control access for both individual devices and groups of devices.
+
+For example, imagine five devices with the following certificate:
+
+* Device 1: root certificate -> certificate A -> device 1 certificate
+* Device 2: root certificate -> certificate A -> device 2 certificate
+* Device 3: root certificate -> certificate A -> device 3 certificate
+* Device 4: root certificate -> certificate B -> device 4 certificate
+* Device 5: root certificate -> certificate B -> device 5 certificate
+
+Intially, you can create a single enabled group enrollment entry for the root certificate to enable access for all five devices. +
+If certificate B later becomes compromised, you can create a disabled enrollment group entry for certificate B to prevent Device 4 and Device 5 from enrolling. +
+If still later Device 3 becomes compromised, you can create a disabled individual enrollment entry for its certificate. +
+This revokes access for Device 3, but still allows Device 1 and Device 2 to enroll.
+
+== Hardware Security Module
+
+* The hardware security module, or HSM, is used for secure, hardware based storage of device secrets, and is the most secure form of secret storage. +
+* Both X.509 certificates and SAS tokens can be stored in the HSM.
+
+== Trusted Platform Module
+
+* TPM refers to a standard for securely storing keys used to authenticate the platform.
+* TPM can also refer to the I/O interface used to interact with the modules implementing the standard.
+* TPMs can exist as discrete hardware, integrated hardware, firmware-based, or software-based.
+* Device Provisioning service only supports TPM 2.0
+* TPM attestation is based on a nonce challenge, which uses the endorsement and storage root keys to present a signed Shared Access Signature (SAS) token.
+
+== Endorsement Key
+
+* 
