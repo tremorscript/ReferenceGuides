@@ -4,53 +4,50 @@
 :source-highlighter: highlight.js
 :highlightjs-languages: shell, console, json
 
-== Subsystems of IoT
-
-=== Core Subsystems
+== Core Subsystems of IoT
 An IoT solution architecture consists of the following subsystems:
 
 * Devices securely connecting to the cloud.
 * Devices sending and receiving data from the cloud.
 * A cloud gateway service, or hub, that provides device management capabilities.
-* The cloud gateway service, or hub, must securely accept data from the devices.
-* Stream processors consume data from the hub.
-* Stream processors also integrate with business processes.
-* They also place the data into storage.
-* A user interface to visualize telemetry data and facilitate device management.
+* A cloud gateway service, or hub, that securely accepts data from the devices.
+* Stream processors that consume data from the hub.
+* Stream processors can integrate with business processes.
+* Stream processors can place the data into storage.
+* A user interface to visualize telemetry data and to facilitate device management.
 
 Below diagram illustrates the core subsystems of IoT
 
-.Source: Microsoft Learn, Core Subsystems
+.Source: Microsoft Learn, Core Subsystems of IoT
 image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-solution-architecture/media/m01-l02-core-subsystems-iot-architecture-8158ad9e.png[]
 
 
-=== Optional Subsystems
-Many IoT apps will include subsystems for the following:
+=== Optional Subsystems of IoT
+Many IoT apps will also include subsystems for the following:
 
 * *IoT Edge Devices* to manage access and information flow
-* They may help with device provisioning, data filtering, batching and aggregation, buffering of data, protocol translation, event rules processing etc.
+* *IoT Edge Devices* may help with device provisioning, data filtering, batching and aggregation, buffering of data, protocol translation, event rules processing etc.
 * *Data Transformation Subsystem* for manipulation and aggregation of the telemetry stream either before or after it is received by the cloud gateway service (the IoT hub).
-* Manipulation can include protocol transformation (for example, converting binary data to json) etc.
-* *Bulk Device Provisioning* for deploying fleet of devices.
+* *Bulk Device Provisioning* for deploying a fleet of devices.
 * *User Management Subsystem* for specifying groups and users who can perform action on devices (for example, updating firmware etc).
 * *ML Subsystem* to learn from data and experiences and to act without being explicitly programmed.
-* Hot/warm/cold *storage* paths.
+* *Hot/Warm/Cold Storage* paths.
 
-.Source: Micorsoft Learn, Optional Subsystems
+.Source: Micorsoft Learn, Optional Subsystems of IoT
 image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-solution-architecture/media/m01-l02-optional-subsystems-iot-architecture-416c18f0.png[]
 
 
 == Data flow and processing
 There are four categories of stages (storage, routing, analysis, action/display):
 
-* Storage includes in-memory caches, temp queues and permanent archives(database).
-* Routing makes the decision on what data should go to which target and when. Targets include storage, analysis processes and action.
-* Analyis is used to run the data records through a set of conditions and can produce different output data records.
-* Original data records and post-analysis output data records are stored and available for display and may trigger actions such as sending email, sms etc.
+* *Storage* includes in-memory caches, temp queues and databases.
+* *Routing* makes the decision on what data should go to which target and when. Targets include storage, analysis processes and action.
+* *Analysis* is used to run the data records through a set of conditions and can produce different output data records.
+* Data records are stored and available for *display* and may trigger *actions* such as sending email, sms etc.
 
-[discrete]
-=== Data flow Scenarios
 
+.Data flow Scenarios
+--
 .Scenario 1
 * Device sends data to IoT Hub.
 * IoT hub temporarily stores data.
@@ -74,6 +71,7 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-sol
 
 .Source: Microsoft Learn 
 image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-solution-architecture/media/m01-l02-data-flow-3-0a8e4444.png[]
+--
 
 == Cross-cutting architectural needs
 Cross-cutting architectural needs:
