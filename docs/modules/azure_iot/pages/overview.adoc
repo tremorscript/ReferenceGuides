@@ -45,9 +45,10 @@ There are four categories of stages (storage, routing, analysis, action/display)
 * *Analysis* is used to run the data records through a set of conditions and can produce different output data records.
 * Data records are stored and available for *display* and may trigger *actions* such as sending email, sms etc.
 
-
-.Data flow Scenarios
 --
+[discrete]
+== Data flow Scenarios
+
 .Scenario 1
 * Device sends data to IoT Hub.
 * IoT hub temporarily stores data.
