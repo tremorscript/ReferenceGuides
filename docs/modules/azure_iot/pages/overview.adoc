@@ -47,7 +47,8 @@ There are four categories of stages (storage, routing, analysis, action/display)
 
 --
 [discrete]
-== Data flow Scenarios
+Data flow Scenarios
+'''
 
 .Scenario 1
 * Device sends data to IoT Hub.
