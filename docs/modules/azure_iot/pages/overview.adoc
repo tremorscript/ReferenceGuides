@@ -37,7 +37,7 @@ Many IoT apps will also include subsystems for the following:
 image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-solution-architecture/media/m01-l02-optional-subsystems-iot-architecture-416c18f0.png[]
 
 
-== Data flow and processing
+== Data flow and Processing
 There are four categories of stages (storage, routing, analysis, action/display):
 
 * *Storage* includes in-memory caches, temp queues and databases.
@@ -47,7 +47,7 @@ There are four categories of stages (storage, routing, analysis, action/display)
 
 --
 [discrete]
-Data flow Scenarios
+=== Data flow Scenarios
 
 '''
 
@@ -76,7 +76,7 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-sol
 image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-solution-architecture/media/m01-l02-data-flow-3-0a8e4444.png[]
 --
 
-== Cross-cutting architectural needs
+== Cross-cutting Architectural Needs
 Cross-cutting architectural needs:
 
 * Security Requirements
@@ -92,39 +92,41 @@ Cross-cutting architectural needs:
 image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-solution-architecture/media/m01-l02-cross-cutting-needs-subsystems-7d98fb39.png[]
 
 
-== IoT Hardware components
+== IoT Hardware Components
 
 [discrete]
 === IP-enabled IoT devices
-An IP-enabled device is, simply, a device that can establish a connection to a network and have a unique identity on that network. +
-IP-enabled devices are deployed in scenarios where data needs to be collected, delivered, and analyzed in real-time, or periodically.
+
+'''
+* An IP-enabled device is a device that can establish a connection to a network.
+* It has a unique identity on that network.
+* They are deployed in scenarios where data needs to be collected, delivered, and analyzed in real-time, or periodically.
 
 [discrete]
 === Non-IP enabled devices
-A device does not need to be directly IP-enabled in order to be part of the solution. +
-They can connect to other devices like a field gateway (IoT Edge device). +
-These devices can use protocols like CoAP5, OPC or technologies like Bluetooth, ZigBee to connect to other hardware.
+
+'''
+* These devices connect to a field gateway (IoT Edge device).
+* These devices can use protocols like CoAP5, OPC or technologies like Bluetooth, ZigBee to connect to an edge device.
 
 [discrete]
 === Sensors
-A sensor is a circuit (or device) that collects a specific type of data about the physical environment. +
-A *smart sensor* is a device that gathers input and processes that information locally before communicating message data.
+
+''''
+* A sensor is a circuit (or device) that collects a specific type of data about the physical environment.
+* A *smart sensor* is a device that gathers the input and then processes that information locally before forwarding the data.
 
 [discrete]
-=== IoT Edge devices and field gateways
-A *field gateway* is a specialized device-appliance or a general-purpose software that:
+=== IoT Edge devices and Field gateways
 
-* acts as a communication enabler.
-* may act as a local device control system and device data processing hub.
-* can perform local processing.
-* can control functions that are directed back towards the child devices that are connected to it.
-* can be used to filter or aggregate device telemetry.
-
-The scope of a field gateway includes the field gateway itself and all devices that are attached to it.
-
-Gateways may help with device provisioning, data filtering, batching and aggregation, buffering of data, protocol translation, and event processing rules.
-
-NAT devices or firewalls do not qualify as field gateways since they are not explicit connection or session terminals, but rather route (or deny) connections or sessions made through them.
+'''
+* A *field gateway* is a specialized device-appliance or a general-purpose software that:
+** acts as a communication enabler.
+** may act as a local device control system.
+** can perform local processing.
+** can control functions that are directed back towards the child devices that are connected to it.
+** can be used to filter or aggregate device telemetry.
+** may help with device provisioning, buffering of data, protocol translation, and event processing rules.
 
 == Review Azure IoT technologies
 
