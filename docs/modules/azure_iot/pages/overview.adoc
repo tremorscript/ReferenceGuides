@@ -112,7 +112,7 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-sol
 [discrete]
 === Sensors
 
-''''
+'''
 * A sensor is a circuit (or device) that collects a specific type of data about the physical environment.
 * A *smart sensor* is a device that gathers the input and then processes that information locally before forwarding the data.
 
@@ -128,94 +128,117 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/introduction-iot-sol
 ** can be used to filter or aggregate device telemetry.
 ** may help with device provisioning, buffering of data, protocol translation, and event processing rules.
 
-== Review Azure IoT technologies
+== Review Azure IoT Technologies
 
-=== Managed aPaaS solutions
-Application platform as a service (aPaas) provides a cloud environment to build, manage, and deliver applications to customers.
+[discrete]
+=== Managed aPaaS Solutions
 
-Azure IoT central is a fully managed, end-to-end ready made environment for IoT solution development.
+'''
+* *Application platform as a service* (aPaas) provides a cloud environment to build, manage, and deliver applications to customers.
+* *Azure IoT Central* is a fully managed, end-to-end ready made environment for IoT solution development.
+* It delivers built-in disaster recovery, multitenancy, global availability, and a predictable cost structure.
 
-It delivers built-in disaster recovery, multitenancy, global availability, and a predictable cost structure.
+[discrete]
+=== Flexible PaaS Solutions
 
-=== Flexible PaaS solutions
-You can tailor Azure hardware and software tools to a specific task or job function. +
-You are responsible for scaling and configuration. +
-The underlying infrastructure as a service (IaaS) is taken care for you.
+'''
+* You can tailor Azure hardware and software tools to a specific task or job function.
+* You are responsible for scaling and configuration.
+* The underlying infrastructure as a service (IaaS) is taken care for you.
 
-==== IoT Edge and Azure Sphere
+[discrete]
+=== IoT Edge and Azure Sphere
 
+'''
 * Develop your *IoT devices* using one of the *Azure IoT starter kits* or choose a device to use from the *Azure Certified for IoT device* catalog.
 * SDKs are available for multiple programming languages.
 * *IoT Plug and Play* can simplify how you create embedded code for your devices.
 * *Azure IoT Edge* enables offloading parts of your workload from the cloud to the devices.
-* It can reduce latency, reduce the amount of data exchanged with the cloud, and enable offline scenarios.
-* *Azure Sphere* is a secured, high-level app platform with built-in communication and security features for internet connected devices.
-* It includes a secured microcontroller unit, a custom linux-based operating system, and a cloud based security service which provides continuous, renewable security.
+* *Azure Sphere* is a secured, high-level app platform with built-in communication and security features for internet connected devices. It includes a secured microcontroller unit, a custom linux-based operating system, and a cloud based security service which provides continuous, renewable security.
 
-==== IoT Hub
-*IoT hub* service enables reliable and secure bidirectional communications between millions of IoT devices and a cloud based solution.
+[discrete]
+=== IoT Hub
 
-*IoT Hub Device Provision System* is a helper service that provides zero-touch, just-in-time provisioning of devices to the right IoT hub without requiring human intervention.
+'''
+* *IoT Hub* service enables reliable and secure bidirectional communications between millions of IoT devices and a cloud based solution.
+* *IoT Hub Device Provision System* is a helper service that provides zero-touch, just-in-time provisioning of devices to the right IoT hub without requiring human intervention.
 
+[discrete]
 === Azure Digital Twins
-IoT Central uses *Azure Digital Twins* to synchronize devices and data in the real world with the digital models that enable users to monitor and manage those connected devices.
 
+'''
+* IoT Central uses *Azure Digital Twins* to synchronize devices and data in the real world with the digital models that enable users to monitor and manage those connected devices.
+
+[discrete]
 === Azure Stream, Azure Data Explorer and Azure Maps
-*Azure Stream Analytics* and *Azure Data Explorer* can be used to process, query, analyze, and visualize data.
 
-*Azure Maps* is a collection of geospatial services that use fresh mapping data to provide accurate geographic context to web and mobile applications.
+'''
+* *Azure Stream Analytics* and *Azure Data Explorer* can be used to process, query, analyze, and visualize data.
+
+* *Azure Maps* is a collection of geospatial services that use fresh mapping data to provide accurate geographic context to web and mobile applications.
+
 
 == IoT device software options
-IoT devices need to run code to be useful.
 
-Device operating system options:
+* IoT devices need to run code to be useful.
+* Device operating system options:
+** Windows 10 IoT enterprise (Managed)
+** Ubuntu Core (Open source)
+** Riot (Open source)
+** QNX (managed)
+** Android Automative (managed)
 
-* Windows 10 IoT enterprise (Managed)
-* Ubuntu Core (Open source)
-* Riot (Open source)
-* QNX (managed)
-* Android Automative (managed)
 
+== Cloud Service Components of an IoT solution
 
-== Cloud service components of an IoT solution
-
+[discrete]
 === Cloud Gateways
-A cloud gateway enables you to manage your IoT devices and brokers the communication with other cloud services.
 
-Cloud gateways can provide workloads such as:
-
-* Authentication and Authorization
-* Message brokering
-* Data storage and filtering
-* Data analytics
-* Functions (discrete code blocks that perform specific tasks)
+'''
+* A cloud gateway enables you to manage your IoT devices and brokers the communication with other cloud services.
+* Cloud gateways can provide workloads such as:
+** Authentication and Authorization
+** Message brokering
+** Data storage and filtering
+** Data analytics
+** Functions (discrete code blocks that perform specific tasks)
 
 .Source Microsoft Learn
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-components-iot-solution/media/m01-l03-cloud-gateway-6a9bb3cb.png[]
 
-=== Data storage options
-Data is often time-series data. It is common to split data into "warm" and "cold" data stores. +
-The *warm data* holds recent data that needs to be accessed with low latency. +
-You can decide the duration range (for example, the last day, week, or month) +
-Data stored in *cold storage* is historical data.
+[discrete]
+=== Data Storage Options
+
+'''
+* Data is often time-series data. 
+* The *warm data* holds recent data that needs to be accessed with low latency.
+  You can decide the duration range (for example, the last day, week, or month).
+* Data stored in *cold storage* is historical data.
 
 .Source Microsoft Learn
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-components-iot-solution/media/m01-l03-warm-cold-storage-68f98297.png[]
 
+[discrete]
 === Analytics
-Without analytics, data collected from IoT would be too voluminous and unstructured to visualize or gain insights. +
-Analytic services enable architects to build meaningful relationships between sets of data in order to make it easier to manage.
 
+'''
+* Data collected from IoT is too voluminous and unstructured to visualize or gain insights.
+* Analytic services enable architects to build meaningful relationships between sets of data in order to make it easier to manage.
+
+[discrete]
 === Data visualization
-Data visualization tools can take input from various data streams and combine them into "dashboards" that can be used to tell a story about the data that was collected. +
-Ultimately, getting more out of your data is the goal of IoT.
+
+'''
+* Data visualization tools can take input from various data streams and combine them into "dashboards" that can be used to tell a story about the data that was collected.
 
 == IoT Hub
-IoT Hub is a managed service that acts as a central message hub for bi-directional communication between your IoT application and the devices it manages.
 
-IoT Hub gives you a secure communication channel for your devices to send data
+[discrete]
+=== Security
 
-* per-device authentication enables each device to connect securely to IoT hub and be managed securely by IoT hub.
+'''
+* IoT Hub is a managed service that acts as a central message hub for bi-directional communication between your IoT application and the devices it manages.
+* Per-device authentication enables each device to connect securely to IoT hub and be managed securely by IoT hub.
 * You can control user device access and per-device level connection.
 * IoT Hub Device Provisioning Service automatically provisions devices to the correct IoT Hub when the device first boots up.
 * Multiple authentication types:
@@ -223,47 +246,67 @@ IoT Hub gives you a secure communication channel for your devices to send data
 ** Individual X.509 certificate authentication for secure, standards-based authentication.
 ** X.509 CA authentication for simple, standards-based enrollment.
 
-IoT Hub can scale to millions of devices and can handle millions of events per second.
 
-IoT Hub has *built-in routing* and can setup automatic, rules-based message fan-out:
+[discrete]
+=== Routing
 
-* Use message routing to control where your hub sends device telemetry.
-* Can route messages to multiple endpoints at no extra cost.
-* No-code routing rules instead of writing custom message dispatcher code.
+'''
+* IoT Hub has *built-in routing* and can setup automatic, rules-based message fan-out:
+** Use message routing to control where your hub sends device telemetry.
+** Can route messages to multiple endpoints at no extra cost.
+** No-code routing rules instead of writing custom message dispatcher code.
 
-IoT Hub can integrate with other services:-
+[discrete]
+=== Integration
 
-* Azure Event Grid to help your business to quickly react to critical events.
-* Azure Logic Apps to automate business processes.
-* Azure Machine Learning to add machine learning and AI models.
-* Azure Stream Analytics to run real-time analytic computations on the data.
+'''
+* IoT Hub can integrate with other services:-
+** Azure Event Grid to help your business to quickly react to critical events.
+** Azure Logic Apps to automate business processes.
+** Azure Machine Learning to add machine learning and AI models.
+** Azure Stream Analytics to run real-time analytic computations on the data.
 
-IoT Hub can manage your devices:-
 
-* Store, synchronize, and query device metadata and state information for all your devices.
-* Set device state either per-device or based on some common characteristic.
-* Automatically respond to a device-reported state change.
+[discrete]
+=== Device Management
 
-Use Azure IoT device SDK libraries to build applications that run on your devices and interact with IoT Hub.
+'''
+* IoT Hub can manage your devices:-
+** Store, synchronize, and query device metadata and state information for all your devices.
+** Set device state either per-device or based on some common characteristic.
+** Automatically respond to a device-reported state change.
 
-There is a limit of 50 IoT hubs per subscription. You can request quota increases by contacting support.
+[discrete]
+=== Developer
+
+'''
+* Use Azure IoT device SDK libraries to build applications that run on your devices and interact with IoT Hub.
+* There is a limit of 50 IoT hubs per subscription. You can request quota increases by contacting support.
 
 == Device Provisioning Service
-Provisioning is a two part process:
 
-* The first part is establishing the initial connection between the device and the IoT solution by registering the device.
-* The second part is applying the proper configuration to the device based on the requirements of the solution it was registered to.
+[discrete]
+=== Provisioning Process
 
-Features:-
+'''
+* Provisioning is a two part process:
+** The first part is establishing the initial connection between the device and the IoT solution by registering the device.
+** The second part is applying the proper configuration to the device based on the requirements of the solution it was registered to.
 
+[discrete]
+=== Features
+
+'''
 * Secure attestation support for both X.509 and TPM-based identities
 * Multiple allocation policies to control how the DPS assigns devices to IoT hubs.
 * Monitoring and diagnostic logging
 * Mult-hub support allows DPS to assign devices to more than one IoT hub across subscriptions.
 * Cross-region support to assign devices in other regions.
 
-When to use:-
+[discrete]
+=== When to use
 
+'''
 * Zero-touch provisioning to an IoT solution without hardcoding IoT Hub connection.
 * Load-balancing devices across multiple hubs.
 * Connecting devices to a particular IoT solution depending on use case.
@@ -271,26 +314,32 @@ When to use:-
 * Reprovisioning based on a change in the device.
 * Rolling the keys used by the device to connect to IoT Hub.
 
-== IoT Hub properties
 
-=== IoT Hub Tiers
-To evaluate which IoT Hub tier is right for you solution, consider the following two questions:
+== IoT Hub Tiers
 
-* What features do I plan to use?
-* How much data do I plan to move daily?
+*To evaluate which IoT Hub tier is right for you solution, consider the following two questions:
+** What features do I plan to use?
+** How much data do I plan to move daily?
 
-==== Basic Tier
-The basic tier enables a subset of features and is intended for IoT solutions that only need uni-directional communication from devices to the cloud. +
-If your IoT solution is based around collecting data from devices and analyzing it centrally, then the basic tier is probably right for you.
+[discrete]
+=== Basic Tier
 
-==== Standard Tier
-The standard tier of IoT Hubs enables all features, and is required for any IoT solutions that want to make use of the bi-directional communication capabilities. +
-If you would like to control IoT devices remotely or distribute some of your workloads onto the devices themselves, then you should consider the standard tier.
+'''
+* This tier enables features for solutions that only need uni-directional communication from devices to the cloud.
+* If your IoT solution is based around collecting data from devices and analyzing it centrally, then the basic tier is probably right for you.
 
-==== Message throughtput
-Message traffic is measured for your IoT hub on a per-unit basis. +
-When you create an IoT hub, you choose its tier and edition, and set the number of units available. +
-You can purchase up to 200 units for the B1, B2, S1, or S2 edition, or up to 10 units for the B3 or S3 edition.
+[discrete]
+=== Standard Tier
+
+'''
+* This tier of IoT Hubs enables features for solutions that want to make use of the bi-directional communication capabilities.
+* If you would like to control IoT devices remotely or distribute some of your workloads onto the devices themselves, then you should consider the standard tier.
+
+
+== Message Throughtput Basics
+* Message traffic is measured for your IoT hub on a per-unit basis.
+* When you create an IoT hub, you choose its tier and edition, and set the number of units available.
+* You can purchase up to 200 units for the B1, B2, S1, or S2 edition, or up to 10 units for the B3 or S3 edition.
 
 |===
 |Tier edition |Sustained throughput |Sustained send rate
@@ -308,29 +357,25 @@ You can purchase up to 200 units for the B1, B2, S1, or S2 edition, or up to 10 
 |Average of 208,333 messages/minute per unit (300 million messages/day per unit)
 |===
 
-==== Partitions
-Partions can be used to reduce contentions that could occur when concurrently reading and writing to event streams. +
-The partition limit is chosen when IoT hub is created. +
-The maximum partition limit is 32 but most IoT hubs only need 4 partitions. +
-The number of partitions is directly related to the number of concurrent readers you expect to have.
+== Partition Basics
 
-The default value of four partitions should be used unless specified by the architect.
+* Partions can be used to reduce contentions that could occur when concurrently reading and writing to event streams. * The partition limit is chosen when IoT hub is created.
+* The maximum partition limit is 32 but most IoT hubs only need 4 partitions.
+* The number of partitions is directly related to the number of concurrent readers you expect to have.
+* The default value of four partitions should be used unless specified by the architect.
 
-==== Tier upgrade
-You can upgrade from the basic tier to the standard tier without interrupting your existing operations.
-You cannot downgrade to a lower tier. You can move from S2 to S1 but not from S1 to B1 tier.
+== IoT Hub Endpoint Basics
+* An endpoint is a service that can retrieve data from other services.
+* Examples of endpoint types:
+** *Device-facing endpoints* that enables devices to perform operations such as sending device-to-cloud messages and receiving cloud-to-device messages.
+** *Service-facing management endpoints* that enable back-end apps to perform operations such as device identity management and device twin management.
+** *Service facing built-in endpoints* for reading device-to-cloud messages.
+** *Custom endpoints* to receive device-to-cloud messages dispatched by a routing rule.
 
-=== IoT Hub endpoints
-An endpoint is a service that can retrieve data from other services. +
-Examples of endpoint types:
+[discrete]
+=== Built-in endpoints
 
-* *Device-facing endpoints* that enables devices to perform operations such as sending device-to-cloud messages and receiving cloud-to-device messages.
-* *Service-facing management endpoints* that enable back-end apps to perform operations such as device identity management and device twin management.
-* *Service facing built-in endpoints* for reading device-to-cloud messages.
-* *Custom endpoints* to receive device-to-cloud messages dispatched by a routing rule.
-
-==== Built-in endpoints
-
+'''
 .Source Microsoft Learn
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-iot-hub-properties/media/m02-l04-iot-hub-endpoints-413257e2.png[]
 
@@ -353,16 +398,17 @@ The IoT hub endpoints:
 ** Direct method invocation.
 ** Receive operation monitoring events.
 
-==== Custom endpoints
-These endpoints act as service endpoints and are used as sinks for message routes. +
-Devices cannot write directly to these custom endpoints.
+[discrete]
+=== Custom endpoints
 
-The following services are supported as custom endpoints.
-
-* Azure Storage containers
-* Event Hubs
-* Service Bus Queues
-* Service Bus Topics
+'''
+* These endpoints act as service endpoints and are used as sinks for message routes.
+* Devices cannot write directly to these custom endpoints.
+* The following services are supported as custom endpoints.
+** Azure Storage containers
+** Event Hubs
+** Service Bus Queues
+** Service Bus Topics
 
 == Security Concepts
 There are three different ways for controlling access to IoT Hub:
@@ -371,98 +417,106 @@ There are three different ways for controlling access to IoT Hub:
 * *SAS*. It lets you group permissions and grant them to applications using access keys and signed security tokens.
 * *Per-device security credentials*. Each IoT Hub contains an identity registry. For each device in this registry, you can configure security credentials that grant DeviceConnect permissions scoped to the device's endpoints.
 
+[discrete]
 === Access Control and Permissions
-Use shared access policies for IoT hub-level access. +
-Use the individual device credentials to scope access to that device only.
 
+'''
+* Use shared access policies for IoT hub-level access.
+* Use the individual device credentials to scope access to that device only.
+
+[discrete]
 === Authentication
-Azure IoT hub grants access to endpoints by verifying a token against the shared access policies and identity registry security credentials.
 
+'''
+* Azure IoT hub grants access to endpoints by verifying a token against the shared access policies and identity registry security credentials.
+
+[discrete]
 === Security tokens
-IoT Hub uses security tokens to authenticate devices and services to avoid sending keys on the wire. +
-Security tokens are limited in time validity and scope. +
-Some scenarios do require you to use security tokens directly. Example:
 
-* The direct use of the MQTT, AMQP, or HTTPS surfaces.
-* The implementation of the token service pattern.
+'''
+* IoT Hub uses security tokens to authenticate devices and services to avoid sending keys on the wire.
+* Security tokens are limited in time validity and scope.
+* Some scenarios do require you to use security tokens directly. Example:
+** The direct use of the MQTT, AMQP, or HTTPS surfaces.
+** The implementation of the token service pattern.
+* IoT hub also allows devices to authenticate with IoT Hub using X.509 certificates.
 
-IoT hub also allows devices to authenticate with IoT Hub using X.509 certificates.
-
+[discrete]
 === Supported X.509 certificates
-You can verify using X.509 certificates by uploading either a certificate thumbprint or a certificate authority(CA) to Azure IoT Hub. +
-Authentication using certificate thumbprints only verifies that the presented thumbprint matches the configured thumbprint. +
-Authentication using certificate authority validates the certificate chain.
 
-Supported Certificates include:
-
-* An existing X.509 certificate. A device may already have a certificate that it can then use to authenticate. Works with either thumbprint or CA authentication.
-* CA-signed X.509 certificate. You can use a Certificate Authority signed certificate. Works with either thumbprint or CA authentication.
-* A self generated and self-signed X.509 certificate. A device manufacturer or in-house deployer can generate these certificates and store the corresponding private key (and certificate) on the device. You can use tools such as OpenSSL and Windows SelfSignedCertificate utility for this purpose. Only works with thumbprint authentication.
-
-A device may either use an X.509 certificate or a security token for authentication, but not both.
+'''
+* You can verify using X.509 certificates by uploading either a certificate thumbprint or a certificate authority(CA) to Azure IoT Hub.
+* Authentication using certificate thumbprints only verifies that the presented thumbprint matches the configured thumbprint.
+* Authentication using certificate authority validates the certificate chain.
+* Supported Certificates include:
+** *An existing X.509 certificate*. A device may already have a certificate that it can then use to authenticate. Works with either thumbprint or CA authentication.
+** *CA-signed X.509 certificate*. You can use a Certificate Authority signed certificate. Works with either thumbprint or CA authentication.
+** *A self generated and self-signed X.509 certificate*. A device manufacturer or in-house deployer can generate these certificates and store the corresponding private key (and certificate) on the device. You can use tools such as OpenSSL and Windows SelfSignedCertificate utility for this purpose. Only works with thumbprint authentication.
+* A device may either use an X.509 certificate or a security token for authentication, but not both.
 
 == IoT Device Lifecycle Terms and Concepts
 For Azure IoT, there are five stages within the device lifecycle:
 
-* Plan: Enable operators to create a device metadata scheme that enables them to query for, and target a group of devices for bulk management operations. You can use the device twin to store this device metadata in the form of tags and properties.
-* Provision: Securely provision new devices to IoT Hub and enable operators to immediately discover device capabilities.
-* Configure: Facilitate bulk configuration changes and firmware updates to devices while maintaining both health and security.
-* Monitor: Monitor overall device collection health, the status of ongoing operations, and alert operators to issues that might require attention.
-* Retire: Replace or decommission devices after a failure, upgrade cycle, or at the end of the service lifetime.
+* *Plan*: Enable operators to create a device metadata scheme that enables them to query for, and target a group of devices for bulk management operations. You can use the device twin to store this device metadata in the form of tags and properties.
+* *Provision*: Securely provision new devices to IoT Hub and enable operators to immediately discover device capabilities.
+* *Configure*: Facilitate bulk configuration changes and firmware updates to devices while maintaining both health and security.
+* *Monitor*: Monitor overall device collection health, the status of ongoing operations, and alert operators to issues that might require attention.
+* *Retire*: Replace or decommission devices after a failure, upgrade cycle, or at the end of the service lifetime.
 
 == Device Identity and Registration
 
+[discrete]
 === Identity Registry
-A device must have an entry in the IoT Hub identity registry before it can connect to an IoT Hub.
 
-The deviceID is case-sensitive.
-
-The identity registry is a REST-capable collection of device identity resources.
-
-IoT Hub creates a set of resources for every device in the identity registry such as the queue that contains in-flight cloud-to-device messages.
-
-Use the identity registry when you need to:
-
-* Provision devices that connect to your IoT hub.
-* Control per-device access to your hub's device-facing endpoints.
+'''
+* A device must have an entry in the IoT Hub identity registry before it can connect to an IoT Hub.
+* The deviceID is case-sensitive.
+* The identity registry is a REST-capable collection of device identity resources.
+* IoT Hub creates a set of resources for every device in the identity registry such as the queue that contains in-flight cloud-to-device messages.
+* Use the identity registry when you need to:
+** Provision devices that connect to your IoT hub.
+** Control per-device access to your hub's device-facing endpoints.
 
 
+[discrete]
 === Module Identity
-You can create module identities under a device identity.
 
-Each module identity can be configured with an independent connection to IoT hub.
+'''
+* You can create module identities under a device identity.
+* Each module identity can be configured with an independent connection to IoT hub.
+* You can seperate access control permissions.
+* You can create up to 20 module identites under a device identity.
 
-You can seperate access control permissions.
-
-You can create up to 20 module identites under a device identity.
-
+[discrete]
 === Identity registry operations
-Identity registry exposes the following operations:
 
-* Create device or module identity
-* Update device or module identity
-* Retreive device or module identity
-* Delete device or module identity
-* List up to 1000 identities
-* Export device identities to Azure blob storage
-* Import device identities from Azure blob storage
+'''
+* Identity registry exposes the following operations:
+** Create device or module identity
+** Update device or module identity
+** Retreive device or module identity
+** Delete device or module identity
+** List up to 1000 identities
+** Export device identities to Azure blob storage
+** Import device identities from Azure blob storage
 
+[discrete]
 === Device Creation
-You need to specify the Device ID and the authentication type when creating a new device.
 
-== Device Twins
-Device Twins are json documents managed by IoT Hub that store device state information associated with a physical device. +
-This information includes metadata, configurations, and conditions. +
-Azure IoT Hub maintains a device twin for each registered device.
+'''
+* You need to specify the Device ID and the authentication type when creating a new device.
 
-Device twins are implicity created and deleted when a device identity is created or deleted in IoT Hub.
+== Device Twins Concept
 
-A device twin is a JSON document that includes:
-
-* Tags. A solution back end can read from and write to. Tags are not visible to device apps.
-* Desired properties. The solution back end can set desired properties, and the device app can read them. The device app can also receive notifications of changes in the desired properties.
-* Reported properties. The device app can set reported properties, and the solution back end can read and query them.
-* Device identity properties. The read-only properties from the corresponding device identity stored in the identity registry
+* Device Twins are json documents managed by IoT Hub that store device state information associated with a physical device.
+* This information includes metadata, configurations, and conditions.
+* Azure IoT Hub maintains a device twin for each registered device.
+* Device twins are implicity created and deleted when a device identity is created or deleted in IoT Hub.
+* A device twin is a JSON document that includes:
+** _Tags_. A solution back end can read from and write to. Tags are not visible to device apps.
+** _Desired properties_. The solution back end can set desired properties, and the device app can read them. The device app can also receive notifications of changes in the desired properties.
+** _Reported properties_. The device app can set reported properties, and the solution back end can read and query them.
+** _Device identity properties_. The read-only properties from the corresponding device identity stored in the identity registry
 
 .Source Microsoft Learn
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-iot-device-lifecycle-concepts/media/m02-l01-device-twin-diagram-03c0f21f.png[]
@@ -513,7 +567,10 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-iot-device-l
 }
 ----
 
-=== Usage
+[discrete]
+===  Usage
+
+'''
 Use device twins to:
 
 * Store device-specific metadata in the cloud. For example, the deployment location of a vending machine.
@@ -521,39 +578,35 @@ Use device twins to:
 * Synchronize the state of long-running workflows between device app and back-end app. For example, when the solution back end specifies the new firmware version to install, and the device app reports the various stages of the update process.
 * Query your device metadata, configuration, or state.
 
-The best way to implement device twins within cloud solutions applications is through the Azure IoT SDKs.
+== Module Identity and Module Twins
 
-=== Module identity and module twins
-Each module identity implicitly generates a module twin.
+* Each module identity implicitly generates a module twin.
+* Module twins are JSON documents that store module information including metadata, configurations, and conditions.
+* SDKs enable you to create modules where each one opens an independent connection to IoT Hub.
+* For example, if your vending machine has 3 different sensors controlled by different departments in your company, you can create a module for each sensor.
+* This way, each department is only able to create jobs or direct methods for the sensor that they control, avoiding conflicts and user errors.
 
-Module twins are JSON documents that store module information including metadata, configurations, and conditions.
-
-SDKs enable you to create modules where each one opens an independent connection to IoT Hub. +
-This helps you to use seperate namespaces for different components on your device. +
-For example, if your vending machine has 3 different sensors controlled by different departments in your company, you can create a module for each sensor. +
-This way, each department is only able to create jobs or direct methods for the sensor that they control, avoiding conflicts and user errors.
-
-== Device monitoring
-Device monitoring is used to track the overall device collection health, the status of ongoing operations, and to alert operators to issues that might require their attention. +
-You can program devices to update their device twins and report real-time operating conditions and status of update operations.
-
-Device twin desired and reported properties can be used to monitor a target condition, target content, or device metrics.
-
-* the target condition defines the scope of device twins to be updated. It is specified as a query on twin tags and/or reported properties.
-* the target content defines the desired properties to be added or updated in the targeted device twins. The content includes a path to the section of desired properties to be changed.
-* The metrics define the summary counts of various configuration states such as Success, In Progress, and Error.
+== Device Monitoring
+* Device monitoring is used to track the overall device collection health, the status of ongoing operations, and to alert operators to issues that might require their attention.
+* Device twin desired and reported properties can be used to monitor a target condition, target content, or device metrics.
+** The Target condition defines the scope of device twins to be updated. It is specified as a query on twin tags and/or reported properties.
+** The Target content defines the desired properties to be added or updated in the targeted device twins. The content includes a path to the section of desired properties to be changed.
+** The Metrics define the summary counts of various configuration states such as Success, In Progress, and Error.
 
 
 == Device Retirements
-Use the IoT Hub identity registry for securely revoking device identities and credentials.
 
-You can disable devices by updating the status property of an identity in the identity registry.
+* Use the IoT Hub identity registry for securely revoking device identities and credentials.
+* You can disable devices by updating the status property of an identity in the identity registry.
+* The disable feature is not available for modules.
 
-The disable feature is not available for modules.
 
 == Device Configuration and Communication Protocols
 
+[discrete]
 === Protocols
+
+'''
 |===
 |Protocol |When you should use this protocol.
 
@@ -567,7 +620,10 @@ The disable feature is not available for modules.
 |Use for devices that support other protocols. 
 |===
 
+[discrete]
 === Ports
+
+'''
 |===
 |Protocol |Port
 |MQTT |8883
@@ -579,169 +635,183 @@ The disable feature is not available for modules.
 
 == Devices and Device Provisioning
 
+[discrete]
 === Provisioning Process
+
+'''
 There are two phases in the provisioning/deployment process for a device:-
 
 * The manufacturing phase in which the device is created and prepared at the factory.
 * The cloud setup phase in which the Device Provisioning Service is configured for automated provisioning.
 
-==== Manufacturing Process phase
-In this step, the device is programmed with the provisioning service information, enabling it to call the provisioning service to get its connection info/IoT solution assignment when it is switched on.
+[discrete]
+==== Manufacturing Process Phase
 
-Also, in this step, the manufacturer supplies the device deployer/operator with the identifying key information for the device. +
-This could be an X.509 certificate or the public portion of a trusted platform module. Supplying that information could be as simple as confirming that all devices have an X.509 certificate generated from a signing certificate provided by the device deployer/operator, or as complicated as extracting the public portion of a trusted platform module (TPM) endorsement key from each TPM device.  +
-These services are offered by many silicon manufacturers today.
+'''
+* In this phase, the device is programmed with the provisioning service information, 
+* This enables it to call the provisioning service to get its connection info/IoT solution assignment when it is switched on.
+* Also, in this phase, the manufacturer supplies the device deployer/operator with the identifying key information for the device.
+* This identifying information could be an X.509 certificate or the public portion of a trusted platform module.
+* These services are offered by many silicon manufacturers today.
 
+[discrete]
 ==== Cloud setup phase
-This step is about configuring the cloud for proper automatic provisioning.
 
-There are two types of users involved. +
-A device operator - someone who knows how devices are intially set up. +
-A solution operator - someonw who knows how devices are to be split among the IoT hubs.
+'''
+* This phase is about configuring the cloud for proper automatic provisioning.
+* There are two types of users involved
+** A device operator - someone who knows how devices are intially set up.
+** A solution operator - someonw who knows how devices are to be split among the IoT hubs.
+* A one-time initial setup of the provisioning service must occur.
+* It is done by the solution operator.
+* The device operator then needs to enroll the device.
+* The device operator takes the key identifying information from the manufacturer and adds it to the enrollment list.
 
-A one-time initial setup of the provisioning service must occur. +
-It is done by the solution operator.
-
-The device operator then needs to enroll the device. +
-The device operator takes the key identifying information from the manufacturer and adds it to the enrollment list.
-
+[discrete]
 ==== Linked IoT Hubs
-The Device Provisioning Service can only provision devices to IoT hubs that have been linked to it.
 
-Linking an IoT hub to an instance of the DPS gives the service read/write permissions to the IoT hub's device registry with the link.
+'''
+* The Device Provisioning Service can only provision devices to IoT hubs that have been linked to it.
+* Linking an IoT hub to an instance of the DPS gives the service read/write permissions to the IoT hub's device registry with the link.
+* A DPS can register a device ID and set the initial configuration in the device twin.
+* Linked IoT hubs may be in any Azure region.
+* You may link hubs in other subscriptions to your provisioning service.
 
-A DPS can register a device ID and set the initial configuration in the device twin.
-
-Linked IoT hubs may be in any Azure region.
-
-You may link hubs in other subscriptions to your provisioning service.
-
+[discrete]
 ==== Allocation policy
-The service level setting that determines how DPS assigns devices to an IoT hub.
 
-There are there supported policies:
+'''
+* The service level setting that determines how DPS assigns devices to an IoT hub.
+* There are there supported policies:
+** Evenly weighted distribution. The default setting. Linked IoT hubs are equally likely to have devices provisioned to them.
+** Lowest Latency. Devices are provisioned to an IoT hub with the lowest latency.
+** Static Configuration via the enrollment list: specification of the desired IoT hub in the enrollment list takes priority over the service-level allocation policy.
+** Custom (Use Azure Function): A custom allocation policy using custom code in an Azure function.
 
-* Evenly weighted distribution. The default setting. Linked IoT hubs are equally likely to have devices provisioned to them.
-* Lowest Latency. Devices are provisioned to an IoT hub with the lowest latency.
-* Static Configuration via the enrollment list: specification of the desired IoT hub in the enrollment list takes priority over the service-level allocation policy.
-* Custom (Use Azure Function): A custom allocation policy using custom code in an Azure function.
-
+[discrete]
 ==== Enrollment
-An enrollment is the record of devices that may register through autoprovisioning.
 
-Two types of enrollments are supported:
+'''
+* An enrollment is the record of devices that may register through autoprovisioning.
+* Two types of enrollments are supported:
+** Group enrollment: Recommended for a large number of devices that share a desired initial configuration, or for devices all going to the same tenant.
+** Individual enrollment: Recommended for devices that require unique initial configurations, or for devices that can only authenticate using SAS tokens via TPM attestation.
+* Enrollment record contains information about the device or group of devices:
+** The attestation mechanism used by the device.
+** The optional intial desired configuration.
+** Desired IoT hub.
+** The desired device ID.
 
-* Group enrollment: Recommended for a large number of devices that share a desired intial configuration, or for devices all going to the same tenant.
-* Individual enrollment: Recommended for devices that require unique intial configurations, or for devices that can only authenticate using SAS tokens via TPM attestation.
-
-Enrollment record contains information about the device or group of devices:
-
-* The attestation mechanism used by the device.
-* The optional intial desired configuration.
-* Desired IoT hub.
-* The desired device ID.
-
+[discrete]
 ==== Registration
-A registration is the record of a device successfully registering/provisioning to an IoT Hub via the Device Provisioning Service.
 
-Registration records are created automatically; they can be deleted, but they cannot be updated.
+'''
+* A registration is the record of a device successfully registering/provisioning to an IoT Hub via the Device Provisioning Service.
+* Registration records are created automatically; they can be deleted, but they cannot be updated.
 
+[discrete]
 ==== Operations
-Operations are the billing unit of the Device Provisioning Service.
-
-One operation is the successful completion of one instruction to the service.
-
-Operations include device registrations and re-registrations; service-side changes such as adding enrollment list entries, and updating enrollment list entries.
+* Operations are the billing unit of the Device Provisioning Service.
+* One operation is the successful completion of one instruction to the service.
+* Operations include device registrations and re-registrations; service-side changes such as adding enrollment list entries, and updating enrollment list entries.
 
 == Device Enrollment Concepts
-The manufacturer is responsible for encoding the device identity info, and the Device Provisioning Service registration URL.
+* The manufacturer is responsible for encoding the device identity info, and the Device Provisioning Service registration URL.
 
+[discrete]
 === ID Scope
-The ID scope is assigned to a DPS when it is created by the user.
 
-It is used to uniquely identify the specific provisioning service the device will register through.
+'''
+* The ID scope is assigned to a DPS when it is created by the user.
+* It is used to uniquely identify the specific provisioning service the device will register through.
+* The ID scope is generated by the service and is immutable, which guarantees uniquess.
 
-The ID scope is generated by the service and is immutable, which guarantees uniquess.
-
+[discrete]
 === Registration ID
-The registration ID uniquely identifies a device in the Device Provisioning Service.
 
-The registration ID must be unique in the provisioning service ID scope.
+'''
+* The registration ID uniquely identifies a device in the Device Provisioning Service.
+* The registration ID must be unique in the provisioning service ID scope.
+* Each device must have a registration ID.
+* The registration ID is alphanumeric, case insensitive, and may contain special characters including colon, period, underscore, and hyphen.
+* When TPM attestation is used, the registration ID is provided by the TPM itself.
+* When X.509-based attestation is used, the registration ID is provided by the subject name of the certificate.
 
-Each device must have a registration ID.
-
-The registration ID is alphanumeric, case insensitive, and may contain special characters including colon, period, underscore, and hyphen.
-
-When TPM attestation is used, the registration ID is provided by the TPM itself.
-
-When X.509-based attestation is used, the registration ID is provided by the subject name of the certificate.
-
+[discrete]
 === Device ID
-The device ID is the ID as it appears in IoT Hub.
 
-The desired ID may be set in the enrollment entry.
+'''
+* The device ID is the ID as it appears in IoT Hub.
+* The desired ID may be set in the enrollment entry.
+* Setting the desired ID is only supported in individual enrollments.
+* If no desired device ID is specified in the enrollment list, the registration ID is used as the device ID when registering the device.
 
-Setting the desired ID is only supported in individual enrollments.
-
-If no desired device ID is specified in the enrollment list, the registration ID is used as the device ID when registering the device.
-
+[discrete]
 === Attestation mechanism
-An attestation mechanism is a method used for confirming a device's identity.
 
-IoT Hub uses "authentication scheme" for a similar concept in that service.
+'''
+* An attestation mechanism is a method used for confirming a device's identity.
+* IoT Hub uses "authentication scheme" for a similar concept in that service.
+* The DPS supports the following forms of attestation:
+** X.509 certificates based on the standard X.509 certificate authentication flow.
+** Trusted Platform Module (TPM) based on a nonce challenge, using the TPM standard for keys to present a signed Shared Access Signature (SAS) token. TPM attestation does not require a physical TPM on the device, but the service expects to attest using the endorsement key per the TPM spec.
+** Symmetric Key based on shared access signature (SAS) security tokens, which include a hashed signature and an embedded expiration.
+* A hardware Security Module (HSM) is recommended for secure, hardware-based storage of device secrets, and is the most secure form of secret storage.
+* Both X.509 certificates and SAS tokens can be stored in HSM.
 
-The DPS supports the following forms of attestation:
+== Device Enrollment Types
 
-* X.509 certificates based on the standard X.509 certificate authentication flow.
-* Trusted Platform Module (TPM) based on a nonce challenge, using the TPM standard for keys to present a signed Shared Access Signature (SAS) token. TPM attestation does not require a physical TPM on the device, but the service expects to attest using the endorsement key per the TPM spec.
-* Symmetric Key based on shared access signature (SAS) security tokens, which include a hashed signature and an embedded expiration.
-
-A hardware security module (HSM) is recommended for secure, hardware-based storage of device secrets, and is the most secure form of secret storage. +
-Both X.509 certificates and SAS tokens can be stored in HSM.
-
-== Enrollment Types
-
+[discrete]
 === Individual Enrollments
 
+'''
 * It is an entry for a single device that may register.
 * Individual enrollments may use X.509 certificates or SAS tokens as attestation mechanisms.
 * Individual enrollments may have the desired IoT hub device ID specified.
 * Individual enrollments are recommended for devices with unique initial configurations, or for devices that can only use SAS tokens via TPM or virtual TPM as the attestation mechanism.
 
+[discrete]
 === Group Enrollments
 
+'''
 * An enrollment group is a group of devices that share a specific attestation mechanism.
 * Enrollment groups support both X.509 and symmetric keys.
 * All devices in the X.509 enrollment group present X.509 certificates that have been signed by the same root or intermediate Certificate Authority(CA).
 * Each device in the symmetric key enrollment group present SAS tokens derived from the group symmetric key.
 * The enrollment group name and certificate name must be alphanumeric, lowercase, and may contain hyphens.
 
+
 == X.509 Certificate Attestation
-X.509 certificates are typically arranged in a certificate chain of trust in which each certificate in the chain is signed by the private key of the next higher certificate, and so on, terminating in a self-signed root certificate. +
-This arrangement establishes a delegated chain of trust from the root certificate generated by a trusted root certificate authority (CA) down through each intermediate CA to the end-entity "leaf" certificate installed on the device.
 
-Often the certificate chain represents some logical or physical heirarchy associated with devices. +
-For example, a manufacturer may:
+* X.509 certificates are typically arranged in a certificate chain of trust in which each certificate in the chain is signed by the private key of the next higher certificate, and so on, terminating in a self-signed root certificate.
+* This arrangement establishes a delegated chain of trust from the root certificate generated by a trusted root certificate authority (CA) down through each intermediate CA to the end-entity "leaf" certificate installed on the device.
+* Often the certificate chain represents some logical or physical heirarchy associated with devices.
+* For example, a manufacturer may:
+** Issue a self-signed root CA certificate.
+** Use the root certificate to generate a unique intermediate CA certificate for each factory.
+** Use each factory's certificate to generate a unique intermediate CA certificate for each production line in the plant.
+** And finally, use the production line certificate to generate a unique device (end-entity) certificate for each device manufactured on the line.
 
-* Issue a self-signed root CA certificate.
-* Use the root certificate to generate a unique intermediate CA certificate for each factory.
-* Use each factory's certificate to generate a unique intermediate CA certificate for each production line in the plant.
-* And finally, use the production line certificate to generate a unique device (end-entity) certificate for each device manufactured on the line.
-
+[discrete]
 === Root Certificate
 
+'''
 * A root certificate is a self-signed X.509 certificate representing a certificate authority (CA).
 * It is the terminus, or trust anchor, of the certificate chain.
 * Root certificates can be self-issued by an organization or purchased from a root certificate authority.
 * The root certificate can also be referred to as a root CA certificate.
 
+[discrete]
 === Intermediate Certificate
 
+'''
 * An intermediate certificate is an X.509 certificate, which has been signed by the root certificate (or by another intermediate certificate with the root certificate in its chain).
 * The last intermediate certificate in a chain is used to sign the leaf certificate.
 
+[discrete]
 === End-entity "leaf" certificate
 
+'''
 * The leaf certificate, or end-entity certificate, identifies the certificate holder.
 * It has the root certificate in its certificate chain and zero or more intermediate certificates.
 * The leaf certificate is not used to to sign any other certificates.
@@ -751,48 +821,51 @@ For example, a manufacturer may:
 * Leaf certificates used with an Enrollment group entry should have the Subject Name set to the desired device ID, which will be shown in the Registration Records for the authenticated device in the enrollment group.
 
 == Controlling device access to the provisioning service with X.509 certificates
-The provisioning service exposes two types of enrollment entry that you can use to control access for devices that use the X.509 attestation mechanism:
+* The provisioning service exposes two types of enrollment entry that you can use to control access for devices that use the X.509 attestation mechanism:
+** Individual enrollment entries are configured with the device certificate associated with a specific device. These entries control enrollments for specific devices.
+** Enrollment group entries are associated with a specific intermediate or root CA certificate. These entries control enrollments for all devices that have that intermediate or root certificate in their certificate chain.
 
-* Individual enrollment entries are configured with the device certificate associated with a specific device. These entries control enrollments for specific devices.
-* Enrollment group entries are associated with a specific intermediate or root CA certificate. These entries control enrollments for all devices that have that intermediate or root certificate in their certificate chain.
+[discrete]
+=== Process
 
-When a device connects to a provisioning service, if an individual enrollment for the device exists, the provisioning service applies that entry. +
-If there is no individual enrollment for the device and an enrollment group for the first intermediate certificate in the device's certificate chain exists, the service applies that entry, and so on, up the chain to the root. The service applies the first applicable entry such that:
-
-* If the first enrollment entry found is enabled, the service provisions the device.
-* If the first enrollment entry found is disabled, the service does not provision the device.
-* If no enrollment entry is found for any of the certificates in the device's certificate chain, the service does not provision the device.
-
-This mechanism and the hierarchical structure of certificate chains provides powerful flexibility in how you can control access for both individual devices and groups of devices.
-
-For example, imagine five devices with the following certificate:
-
-* Device 1: root certificate -> certificate A -> device 1 certificate
-* Device 2: root certificate -> certificate A -> device 2 certificate
-* Device 3: root certificate -> certificate A -> device 3 certificate
-* Device 4: root certificate -> certificate B -> device 4 certificate
-* Device 5: root certificate -> certificate B -> device 5 certificate
-
-Intially, you can create a single enabled group enrollment entry for the root certificate to enable access for all five devices. +
-If certificate B later becomes compromised, you can create a disabled enrollment group entry for certificate B to prevent Device 4 and Device 5 from enrolling. +
-If still later Device 3 becomes compromised, you can create a disabled individual enrollment entry for its certificate. +
-This revokes access for Device 3, but still allows Device 1 and Device 2 to enroll.
+'''
+* When a device connects to a provisioning service, if an individual enrollment for the device exists, the provisioning service applies that entry.
+* If there is no individual enrollment for the device and an enrollment group for the first intermediate certificate in the device's certificate chain exists, the service applies that entry, and so on, up the chain to the root. 
+* The service applies the first applicable entry such that:
+** If the first enrollment entry found is enabled, the service provisions the device.
+** If the first enrollment entry found is disabled, the service does not provision the device.
+** If no enrollment entry is found for any of the certificates in the device's certificate chain, the service does not provision the device.
+* This mechanism and the hierarchical structure of certificate chains provides powerful flexibility in how you can control access for both individual devices and groups of devices.
+* For example, imagine five devices with the following certificate:
+** Device 1: root certificate -> certificate A -> device 1 certificate
+** Device 2: root certificate -> certificate A -> device 2 certificate
+** Device 3: root certificate -> certificate A -> device 3 certificate
+** Device 4: root certificate -> certificate B -> device 4 certificate
+** Device 5: root certificate -> certificate B -> device 5 certificate
+* Initially, you can create a single enabled group enrollment entry for the root certificate to enable access for all five devices.
+* If certificate B later becomes compromised, you can create a disabled enrollment group entry for certificate B to prevent Device 4 and Device 5 from enrolling.
+* If still later Device 3 becomes compromised, you can create a disabled individual enrollment entry for its certificate.
+* This revokes access for Device 3, but still allows Device 1 and Device 2 to enroll.
 
 == Hardware Security Module
 
-* The hardware security module, or HSM, is used for secure, hardware based storage of device secrets, and is the most secure form of secret storage. +
+* The hardware security module, or HSM, is used for secure, hardware based storage of device secrets, and is the most secure form of secret storage.
 * Both X.509 certificates and SAS tokens can be stored in the HSM.
 
+[discrete]
 === Trusted Platform Module
 
+'''
 * TPM refers to a standard for securely storing keys used to authenticate the platform.
 * TPM can also refer to the I/O interface used to interact with the modules implementing the standard.
 * TPMs can exist as discrete hardware, integrated hardware, firmware-based, or software-based.
-* Device Provisioning service only supports TPM 2.0
+* Device Provisioning service only supports TPM 2.0.
 * TPM attestation is based on a nonce challenge, which uses the endorsement and storage root keys to present a signed Shared Access Signature (SAS) token.
 
+[discrete]
 === Endorsement key
 
+'''
 * The endorsement key is an asymmetric key contained inside the TPM.
 * It is internally generated or injected at manufacture time.
 * It is unique for every TPM.
@@ -800,8 +873,10 @@ This revokes access for Device 3, but still allows Device 1 and Device 2 to enro
 * The private key portion of the endorsement key is never released outside of the TPM.
 * The public portion of the endorsement key is used to recognize a genuine TPM.
 
+[discrete]
 === Storage root key
 
+'''
 * The storage root key is stored in the TPM.
 * It is used to protect the TPM keys created by applications.
 * These cannot be used without the TPM.
@@ -824,8 +899,10 @@ This revokes access for Device 3, but still allows Device 1 and Device 2 to enro
 .Source Microsoft Learn
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-device-provisioning-service-trusted-platform-module-ownership-2e2f42a8.png[]
 
+[discrete]
 === High-level Attestation Process
 
+'''
 * The public part of the EK is used by the DPS for device enrollment.
 * The device vendor can read the EK_pub and upload it to the provisioning service.
 * The device will be recognized when it connects to the DPS.
@@ -833,8 +910,10 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provi
 * Clearing the TPM erases customer data and not the EK.
 * The device will still be recognized by the DPS when it connects to provision.
 
+[discrete]
 === Detailed Attestation Process
 
+'''
 * The device connects to the DPS and requests to provision.
 * It provides the service its registration ID, an ID scope, and the EK_pub and SRK_pub from the TPM.
 * The service passes the encrypted nonce back to the device.
