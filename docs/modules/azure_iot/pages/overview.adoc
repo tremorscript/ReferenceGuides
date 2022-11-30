@@ -1000,3 +1000,337 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provi
 * *Bootup and register.* - Initiated upon boot up by registration software, which is built using a Device Provisioning Service client SDK appropriate for the device and attestation mechanism. Upon successful registration, the device is provided with its IoT Hub unique device ID and connection information, allowing it to pull its initial configuration and begin the telemetry process.
 
 == The Reprovisioning Process
+
+[discrete]
+=== Reprovisioning Scenarios
+
+'''
+[horizontal]
+Latency:: As a device moves between locations, network latency can be improved by having the device migrated closed to the IoT hub.
+Multi-tenancy:: A device may be reassigned to a new customer within an IoT solution. This new customer may use a different IoT hub.
+Solution change:: A device could be moved into a new or updated IoT solution. This may require an IoT hub change.
+Quarantine:: A device that is malfunctioning, compromised, or out-of-date may be reassigned to an IoT hub that can only update and get back in compliance. Once the device is functioning properly, it's then migrated back to its main hub.
+
+[discrete]
+=== Device State Data
+
+'''
+* Device state data is composed of the device twin and device capabilities.
+* This data is stored in the Device Provisioning Service instance and the IoT hub that a device is assigned to
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-device-provisioning-service-reprovisioning-state-1-0f06266f.png[]
+
+When a device is initially provisioned with a DPS instance, the following steps are done:
+
+. The device sends a provisioning request to a DPS instance.
+.. The service instance authenticates the device identity based on an enrollment entry.
+.. It then creates the initial configuration of the device state data.
+.. The service instance assigns the device to an IoT hub based on the enrollment configuration.
+.. It then returns that IoT hub assignment to the device.
+. The provisioning service instance gives a copy of any intial device state data to the assigned IoT hub.
+.. The device connects to the assigned IoT hub and begins operations.
+
+[]
+* Over time, the device state data on the IoT hub may be updated by device operations and back-end operations.
+* The initial device state information stored in the DPS instance stays untouched.
+* This untouched device state data is the initial configuration.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-device-provisioning-service-reprovisioning-state-2-ccaf3d23.png[]
+
+* As a device moves between IoT hubs, it may also be necessary to migrate device state updated on the previous IoT hub over to the new IoT hub.
+* This migration is supported by reprovisioning policies in the DPS.
+
+[discrete]
+=== Reprovisioning policies
+
+'''
+* A device usually supports a method to manually trigger provisioning on demand.
+* The reprovisioning policy on an enrollment entry determines how the DPS handles provisioning requests.
+* The policy also determines whether device state data should be migrated during reprovisioning.
+* The same policies are available for individual enrollments and enrollment groups:
+
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-device-provisioning-service-reprovisioning-state-3-499f65e7.png[]
+
+* Reprovision and migrate data:
+** This policy is the default for new enrollment entries.
+** This policy takes action when devices associated with the enrollment entry submint a new request (1).
+** The updated device state information from that initial IoT hub will be migrated over to the new IoT hub (2).
+** During migration, the device's status will be reported as Assigning.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-device-provisioning-service-reprovisioning-state-4-bb4ef6ea.png[]
+
+* Reprovision and reset to initial config:
+** This policy takes action when devices associated with the enrollment entry submit a new provisioning request (1).
+** The initial configuration data that the provisioning service instance received when the device was provisioned is provided to the new IoT hub (2).
+** During migration, the device's status will be reported as Assigning.
+** This policy is often used for a factory reset without changing IoT hubs.
+
+[]
+* Never reprovision: The device is never reassigned to a different hub. This policy is provided for managing backwards compatibility. 
+
+== Azure CLI Commands for DPS
+
+[discrete]
+=== DPS Service Commands
+
+'''
+[cols="1,1"]
+|===
+|Service Commands
+|Description
+
+|az iot dps create
+|Create an Azure IoT Hub DPS instance.
+
+|az iot dps delete
+|Delete an Azure IoT Hub DPS instance.
+
+|az iot dps list
+|List Azure IoT Hub Device Provisioning Service instances.
+
+|az iot dps show
+|Get the details of an Azure IoT Hub Device Provisioning instance.
+
+|az iot dps update
+|Update an Azure IoT Hub Device Provisioning Service instance.
+|===
+
+
+[discrete]
+=== Access Policy Commands
+
+'''
+[cols="1,1"]
+|===
+|Access Policy Commands
+|Description
+
+|az iot dps access-policy
+|Manage Azure IoT Hub DPS access policies.
+
+|az iot dps access-policy create
+|Create a new shared access policy in an Azure IoT Hub DPS instance.
+
+|az iot dps access-policy delete
+|Delete a shared access policies in an Azure IoT Hub DPS instance.
+
+|az iot dps access-policy list
+|List all shared access policies in an Azure IoT Hub DPS.
+
+|az iot dps access-policy show
+|Show details of a shared access policy in an Azure IoT Gub DPS instance.
+
+|az iot dps access-policy update
+|Update a shared access policy in an Azure IoT Hub DPS instance.
+
+|===
+
+[discrete]
+=== Certificate Commands
+
+'''
+[cols="1,1"]]
+|===
+|az iot dps certificate
+|Manage Azure IoT Hub DPS certificates.
+
+|az iot dps certificate create
+|Create/upload an Azure IoT Hub DPS certificate.
+
+|az iot dps certificate delete
+|Delete an Azure IoT Hub DPS certificate.
+
+|az iot dps certificate generate-verification-code
+|Generate a verification code for an Azure IoT Hub DPS certificate.
+
+|az iot dps certificate list
+|List all certificates contained within an Azure IoT Gub dps
+
+|az iot dps certificate show
+|Show information about a particular Azure IoT Hub DPS certificate.
+
+|az iot dps certificate update
+|Update an Azure IoT Hub DPS certificate
+
+|az iot dps certificate verify
+|Verify an Azure IoT Hub DPS certificate.
+
+|===
+
+
+[discrete]
+Linked Hub Commands
+
+'''
+[cols="1,1"]
+|===
+|Linked Hub Commands
+|Descriptions
+
+|az iot dps linked-hub
+|Manage Azure IoT Hub DPS linked IoT hubs.
+
+|az iot dps linked-hub create
+|Create a linked IoT hub in an Azure IoT Hub DPS instance.
+
+|az iot dps linked-hub delete
+|Update (delete) a linked IoT hub in an Azure IoT Hub DPS instance.
+
+|az iot dps linked-hub list
+|List all linked IoT hubs in an Azure IoT DPS instance.
+
+|az iot dps linked-hub show
+|Show details of a linked IoT hub in an Azure IoT Hub DPS instance.
+
+|az iot dps linked-hub update
+|Update a linked IoT hub in an Azure IoT Hub DPS instance.
+
+|===
+
+
+== Device Provisioning SDK
+
+The Azure Provisioning device and service SDKs for C# can be downloaded from NuGet as follows:
+
+* Provisioning Device Client SDK
+* Provisioning Service Client SDK
+
+[discrete]
+=== Provisioning Device SDK
+
+'''
+* This SDK supports the following protocols: MQTT, MQTT-WS, AMQP, AMQP-WS, and HTTPS.
+* TPM Individual Enrollment:
+** This SDK supports connecting your device to the DPS via individual enrollment using TPM.
+** TPM over MQTT (and MQTT-WS) is currrently not supported by the DPS
+* X.509 Indivicual Enrollment:
+** This SDK supports connecting your device to the DPS via individual enrollment using X.509 root certificate.
+* X.509 Enrollment Group
+** This SDK supports connecting your device to the DPS via individual enrollment using X.509 leaf certificate.
+* WebSocket support for MQTT/AMQP is limited to .NET Framework 4.x
+
+[discrete]
+=== Provisioning Service SDK
+
+'''
+* This SDK can be used to programmatically enroll devices.
+* CRUD Operation with TPM Individual Enrollment
+** Programmatically manage device enrollment using TPM with the service SDK.
+* Bulk CRUD Operation with TPM Individual Enrollment
+** Programmatically manage device enrollment using TPM with the service SDK.
+* CRUD Operation with X.509 Individual Enrollment
+** Programmatically manage device enrollment using X.509 individual enrollment with the service SDK.
+* CRUD Operation with X.509 Group Enrollment
+** Programmatically manage device enrollment using X.509 group enrollment with the service SDK.
+* Query enrollments
+** Programmatically query registration states with the service SDK.
+
+
+== Trusted Platform Module (TPM) Simulator
+
+* In production, TPM is located on the device, either as discrete hardware, integrated hardware, or firmware-based.
+* In testing phase, a software-based TPM simulator is provided to developers.
+* This simulator is only available on the Windows platform for now.
+* Clone the Github repository: `git clone https://github.com/Azure/azure-iot-sdk-java.git`.
+* Navigate to the TPM simulator folder under `azure-iot-sdk-java/provisioning/provisioning-tool/tpm-simulator/`.
+* Run Simulator.exe prior to running any client application for provisioning device.
+* Let the simulator run in the background throughout the provisioning process to obtain registration ID and Endorsement Key. Both values are only valid for one instance of the run.
+
+== X.509 certificate Generator
+
+* For production environment, purchase an X.509 CA certificate from a public root certificate authority.
+* For testing environment, you can generate an X.509 root certificate or X.509 certificate chain using:
+** OpenSSL: You can use scripts for certificate generation:
+*** Node.js
+*** Powershell or Bash
+** Device Identity Composition Engine (DICE) Enulator: DICE can be used for cryptographic device identity and attestation based on TLS protocol and X.509 client certificates.
+* https://learn.microsoft.com/en-us/azure/iot-hub/tutorial-x509-openssl
+
+== Access control to DPS
+
+* The DPS uses permissions to grant access to each endpoint.
+* Permissions limit the access to a service instance based on functionality.
+* For example, a backend app must include a token that contains security credentials along with every message it sends to the service.
+* You can grant permissions in the following ways:
+** Shared access authorization policies. Shared access policies can grant any combination of permissions.
+** A newly created provisioning service has the `provisioningserviceowner` policy set as the default policy. It is a policy with all permissions.
+
+[discrete]
+=== Authentication
+
+* DPS grants access to endpoints by verifying a token against the shared access policies.
+* Security credentials, such as symmetric keys, are never sent over the wire.
+
+[discrete]
+=== Security tokens
+
+* The DPS uses security tokens to authenticate services to avoid sending keys on the wire.
+* Security tokens are limited in time validity and scope.
+* DPS SDKs automatically generate tokens without requiring any special configuration.
+
+
+[discrete]
+=== Security Token Structure
+
+* Use security tokens to grant time-bounded access for services to specific functionality in IoT Device Provisioning Service.
+* To get authorization to connect to the provisioning service, services must send security tokens signed with either a shared access or symmetric key.
+* A token signed with a shared access key grants access to all the functionality associated with the shared access policy permissions.
+* The security token has the following format:
+** `SharedAccessSignature sig={signature}&se={expiry}&skn={policyName}&sr={URL-encoded-resourceURI}`
+
+[discrete]
+=== Use security tokens from service components
+
+* Service components can only generate security tokens using shared access policies granting the appropriate permissions.
+
+[cols="1,1"]
+|===
+|Endpoint
+|Functionality
+
+|{your-service}.azure-devices-provisioning.net/enrollments
+|Provides device enrollment operations with the Device Provisioning Service.
+
+|{your-service}.azure-devices-provisioning.net/enrollmentGroups
+|Provides operations for managing device enrollment groups.
+
+|{your-service}.azure-devices-provisioning.net/registrations/{id}
+|Provides operations for retrieving and managing the status of device registrations.
+|===
+
+* As an example, a service generated using a pre-created shared access policy named `enrollmentread` would create a token with the following parameters:
+** resource URI: `{mydps}.azure-devices-provisioning.net`,
+** signing key: one of the keys of the `enrollmentread` policy,
+** policy name: `enrollmentread`,
+** an expiration time
+
+The result, which would grant access to read all enrollment records, would be:
+
+`SharedAccessSignature sr=mydps.azure-devices-
+provisioning.net&sig=JdyscqTpXdEJs49elIUCcohw2DlFDR3zfH5KqGJo4r4%3D&se=1456973447&skn=enrollmentread`
+
+== Device Provisioning Service
+
+[cols="1,1"]
+|===
+
+|Permission
+|Notes
+
+|ServiceConfig
+|Grants access to change the service configurations. This permissions is used by backend cloud services.
+
+|EnrollmentRead
+|Grants read access to the device enrollments and enrollment groups. This permission is used by backend cloud services.
+
+|EnrollmentWrite
+|Grants write access to the device enrollments and enrollment groups. This permission is used by backend cloud services.
+
+|RegistrationStatusRead
+|Grants read access to the device registration status. This permission is used by backend cloud services.
+
+|RegistrationStatusWrite
+|Grants delete access to the device registration status. This permission is used by backend cloud services.
+
+|===
