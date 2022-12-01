@@ -317,7 +317,7 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-components-i
 
 == IoT Hub Tiers
 
-*To evaluate which IoT Hub tier is right for you solution, consider the following two questions:
+* To evaluate which IoT Hub tier is right for you solution, consider the following two questions:
 ** What features do I plan to use?
 ** How much data do I plan to move daily?
 
@@ -359,7 +359,8 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-components-i
 
 == Partition Basics
 
-* Partions can be used to reduce contentions that could occur when concurrently reading and writing to event streams. * The partition limit is chosen when IoT hub is created.
+* Partions can be used to reduce contentions that could occur when concurrently reading and writing to event streams. 
+* The partition limit is chosen when IoT hub is created.
 * The maximum partition limit is 32 but most IoT hubs only need 4 partitions.
 * The number of partitions is directly related to the number of concurrent readers you expect to have.
 * The default value of four partitions should be used unless specified by the architect.
@@ -382,16 +383,16 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-iot-hub-prop
 The IoT hub endpoints:
 
 * *Resource provider*. It exposes an Azure Resource Manager interface. This interface enables Azure subscription owners to create and delete IoT hubs, and to update IoT hub properties.
-* *Device identity management*. A set of HTTPS REST endpoints to manage device identities. Device identities are used for device authentication and access control.
-* *Device twin management*. A set of HTTPS REST endpoints to query and update device twins.
-* *Jobs management* HTTS REST endpoint to query and manage jobs.
+* *Device identity management*. A set of Https REST endpoints to manage device identities. Device identities are used for device authentication and access control.
+* *Device twin management*. A set of Https REST endpoints to query and update device twins.
+* *Jobs management*. Https REST endpoint to query and manage jobs.
 * *Device endpoints*. For each device, a set of endpoints are exposed
-** Send device-to-cloud messages
-** Receive cloud-to-device messages
+** Send device-to-cloud messages.
+** Receive cloud-to-device messages.
 ** Initiate file uploads - a device uses this endpoint to receive an Azure storage SAS URI from IoT Hub to upload a file.
 ** Retrieve and update device twin properties.
 ** Receive direct method requests.
-* *Service endpoints*. Exposes a set of endpoints for your solution back end to communicate with your devices. With one exception, these endpoints are only exposed using the AMQP protocols. The method invocation endpoint is exposed over the HTTPS protocol.
+* *Service endpoints*. Exposes a set of endpoints for your solution back end to communicate with your devices. With one exception, these endpoints are only exposed using the AMQP protocols. The method invocation endpoint is exposed over the Https protocol.
 ** Receive device-to-cloud messages.
 ** Send cloud-to-device messages and receive delivery acknowledgements.
 ** Receive file notifications.
@@ -413,9 +414,9 @@ The IoT hub endpoints:
 == Security Concepts
 There are three different ways for controlling access to IoT Hub:
 
-* *Azure AD*. It provides identity-based authentication and fine-grained authorization with Azure RBAC. It supports only IoT hub service api's.
-* *SAS*. It lets you group permissions and grant them to applications using access keys and signed security tokens.
-* *Per-device security credentials*. Each IoT Hub contains an identity registry. For each device in this registry, you can configure security credentials that grant DeviceConnect permissions scoped to the device's endpoints.
+* *Azure AD* - It provides identity-based authentication and fine-grained authorization with Azure RBAC. It supports only IoT hub service api's.
+* *SAS* - It lets you group permissions and grant them to applications using access keys and signed security tokens.
+* *Per-device security credentials* - Each IoT Hub contains an identity registry. For each device in this registry, you can configure security credentials that grant DeviceConnect permissions scoped to the device's endpoints.
 
 [discrete]
 === Access Control and Permissions
@@ -445,7 +446,7 @@ There are three different ways for controlling access to IoT Hub:
 === Supported X.509 certificates
 
 '''
-* You can verify using X.509 certificates by uploading either a certificate thumbprint or a certificate authority(CA) to Azure IoT Hub.
+* You can verify using X.509 certificates by uploading either a certificate thumbprint or a certificate authority (CA) to Azure IoT Hub.
 * Authentication using certificate thumbprints only verifies that the presented thumbprint matches the configured thumbprint.
 * Authentication using certificate authority validates the certificate chain.
 * Supported Certificates include:
@@ -1334,3 +1335,97 @@ provisioning.net&sig=JdyscqTpXdEJs49elIUCcohw2DlFDR3zfH5KqGJo4r4%3D&se=145697344
 |Grants delete access to the device registration status. This permission is used by backend cloud services.
 
 |===
+
+
+== Configure Verified CA Certificates
+
+* A verified X.509 Certificate Authority (CA) certificate is a CA certificate that has been uploaded and registered to your provisioning service and has gone through proof-of-possession with the service.
+
+[discrete]
+=== Proof-of-Possession Process
+
+'''
+. Get a unique verification code generated by the provisioning service for your X.509 CA certificate. You can do this from the Azure portal.
+. Create an X.509 verification certificate with the verification code as its subject and sign the certificate with the private key associated with your X.509 certificate.
+. Upload the signed verification certificate to the service. The service validates the verification certificate using the public portion of the CA certificate to be verified, thus proving that you are in possession of the CA certificate's private key.
+
+[]
+* Verifying certificate ownership ensures the uploader of the certificate is in possession of the certificate's private key.
+* Verification prevents a malicious actor sniffing your traffic from extracting an intermediate certificate and using that certificate to create an enrollment group in their own provisioning service, effectively hijacking your devices.
+* By proving ownership of the root or an intermediate certificate in a certificate chain, you are proving that you have permission to generate leaf certificates for the devices that will be registering as part of that enrollment group.
+* For this reason, the root or intermediate certificate configured in an enrollment group must either be a verified certificate or must roll up to a verified certificate in the certificate chain a device presents when it authenticates with the service.
+
+[discrete]
+=== Register and get the verification code
+
+'''
+. In the Azure portal, navigate to your provisioning service and open Certificates from the left-hand menu.
+. Select Add to add a new certificate.
+. Enter a friendly display name for your certificate.
+. Browse to your .cer or .pem file that represents the public part of your X.509 certificate.
+. Select Upload.
+. Once you get a notification that your certificate is successfully uploaded, Select Save.
+. Select the certificate that you added in the previous step.
+. In Certificate Details, select Generate Verification code.
+. The provisioning service creates a verification code that you can use to validate the certificate ownership.
+. Copy the code to your clipboard.
+
+[discrete]
+=== Digitally sign the verification code to create a verification certificate
+
+'''
+* You need to sign the Verification Code with the private key associated with your X.509 CA certificate, which generates a signature.
+* This process is known as Proof of possession and results in a signed verification certificate.
+* The Azure IoT Hub C SDK provides Powershell (Windows) and Bash (Linux) scripts to help you create CA and leaf certificates for development and to perform proof-of-possession using a verification code.
+* You download the files relevant to your system to a working folder and follow the instructions in the Managing CA certificates readme to perform proof-of-possession on a CA certificate.
+* The Azure IoT Hub C# SDK contains the Group Certificate Verification Sample, which you can use to do proof-of-possession.
+* The Powershell and Bash scripts provided in the documentation and SDKs rely on OpenSSL.
+* You may also use OpenSSL or other third-party tools to help you do proof-of-possession.
+
+[discrete]
+=== Upload the signed verification certificate
+
+'''
+* Upload the resulting signature as a verification certificate to your provisioning service in the portal.
+* In Certificate Details on the Azure portal, use the File Explorer icon next to the Verification Certificate .pem or .cer file field to upload the signed verification certificate from your system.
+* Once the certificate is successfully uploaded, select Verify. The STATUS of your certificate changes to Verified in the Certificate Explorer list.
+* Select Refresh if it does not update automatically.
+
+== Roll Device Certificates
+* During the lifecycle of your IoT solution, you will need to roll certificates.
+* It could be because of a security breach or certificate expirations.
+* Rolling device certificates will involve updating the certificate stored on the device and the IoT hub.
+* The device can then reprovision itself with the IoT hub using normal autoprovisioning with the DPS.
+
+[device]
+=== Roll the certificate on the device
+* Certificates on a device should always be stored in a safe place like a HSM.
+* If you are managing your own device certificates, make sure both old and new leaf certificates have the same Common Name (CN).
+* By having the same CN, the device can reprovision itself without creating a duplicate registration record.
+* https://learn.microsoft.com/en-us/azure/iot-dps/how-to-roll-certificates
+
+== The Deprovisioning process
+
+Deprovisioning a device involves two steps:
+* Disenroll the device from your provisioning service, to prevent future autoprovisioning.
+** To learn how to disenroll a device, see https://learn.microsoft.com/en-us/azure/iot-dps/how-to-revoke-device-access-portal
+** To learn how to disenroll a device programmatically using one of the provisioning SDKs, see https://learn.microsoft.com/en-us/azure/iot-dps/quick-enroll-device-x509?pivots=programming-language-csharp
+** Deregister the device from your IoT Hub, to prevent future communications and data transfer.
+
+The exact steps you take to deprovision a device depends on its attestation mechanism and its applicable enrollment entry with your provisioning service.
+
+Deprovisioning enrollment groups requires you to consider two scenarios:
+
+* To deprovision all of the devices that have been provisioned through an enrollment group:
+  . Disable the enrollment group to blocklist its signing certificate.
+  . Use the list of provisioned devices for that enrollment group to disable or delete each device from the identity registry of its respective IoT hub
+  . After disabling or deleting all devices from their respective IoT hubs, you can optionally delete the enrollment group.
+  . Be aware, though, that, if you delete the enrollment group and there is an enabled enrollment group for a signing certificate higher up in the certificate chain of one or more of the devices, those devices can re-enroll.
+* To deprovision a single device from an enrollment group:
+  . Create a disabled individual enrollment for its leaf (device) certificate.
+  . This revokes access to the provisioning service for that device while still permitting access for other devices that have the enrollment group's signing certificate in their chain.
+  . Do not delete the disabled individual enrollment for the device.
+  . Doing so will allow the device to re-enroll through the enrollment group.
+  . Use the list of provisioned devices for that enrollment group to find the IoT hub that the device was provisioned to and disable or delete it from theat hub's identity registry.
+  
+   
