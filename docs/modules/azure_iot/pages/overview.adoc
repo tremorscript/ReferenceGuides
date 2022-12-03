@@ -2115,4 +2115,6 @@ At this time, only `$iothubname`, `$twin.tags`, `$twin.properties.desired`, and 
 
 == Azure IoT Edge
 
-* Azure IoT Edge en
+* Azure IoT Edge enables you to scale out your IoT solution by packaging your business logic into standard containers.
+* You can deploy these containers to any of your devices and monitor it all from the cloud.
+* 
