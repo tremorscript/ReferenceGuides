@@ -965,7 +965,7 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provi
 
 '''
 SAS tokens have the following form:- +
-`SharedAccessSignature sig={signature}&se={expiry}&skn={policyName}&sr={URL-encoded-resourceURI}`
+`SharedAccessSignature sig=\{signature}&se=\{expiry}&skn=\{policyName}&sr=\{URL-encoded-resourceURI}`
 
 * Signature is the HMAC-SHA256 signature string produced by using the symmetric key or the enrollment group key. The key must be decoded from base64 before being used to perform the sha256 computation. The signature result must be url encoded.
 * resourceURI is the uri registration endpoint that can be accessed by this token. It starts with the scope ID for the DPS. for example, `{scope ID}/registrations/{registration ID}`
