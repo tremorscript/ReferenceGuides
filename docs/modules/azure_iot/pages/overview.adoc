@@ -1279,7 +1279,7 @@ The Azure Provisioning device and service SDKs for C# can be downloaded from NuG
 * To get authorization to connect to the provisioning service, services must send security tokens signed with either a shared access or symmetric key.
 * A token signed with a shared access key grants access to all the functionality associated with the shared access policy permissions.
 * The security token has the following format:
-** `SharedAccessSignature sig={signature}&se={expiry}&skn={policyName}&sr={URL-encoded-resourceURI}`
+** `SharedAccessSignature sig=\{signature}&se=\{expiry}&skn=\{policyName}&sr=\{URL-encoded-resourceURI}`
 
 [discrete]
 === Use security tokens from service components
