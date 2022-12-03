@@ -2,7 +2,8 @@
 :title: Azure IoT
 :navtitle: Azure IoT
 :source-highlighter: highlight.js
-:highlightjs-languages: shell, console, json
+:highlightjs-languages: shell, console, json, sql
+:icons: font
 
 == Core Subsystems of IoT
 An IoT solution architecture consists of the following subsystems:
@@ -1406,7 +1407,11 @@ provisioning.net&sig=JdyscqTpXdEJs49elIUCcohw2DlFDR3zfH5KqGJo4r4%3D&se=145697344
 
 == The Deprovisioning process
 
+* You may find it necessary to deprovision devices that were previously autoprovisioned through the DPS.
+* For example, a device may be sold or moved to a different IoT hub, or it may be lost, stolen, or otherwise compromised.
+
 Deprovisioning a device involves two steps:
+
 * Disenroll the device from your provisioning service, to prevent future autoprovisioning.
 ** To learn how to disenroll a device, see https://learn.microsoft.com/en-us/azure/iot-dps/how-to-revoke-device-access-portal
 ** To learn how to disenroll a device programmatically using one of the provisioning SDKs, see https://learn.microsoft.com/en-us/azure/iot-dps/quick-enroll-device-x509?pivots=programming-language-csharp
@@ -1427,5 +1432,687 @@ Deprovisioning enrollment groups requires you to consider two scenarios:
   . Do not delete the disabled individual enrollment for the device.
   . Doing so will allow the device to re-enroll through the enrollment group.
   . Use the list of provisioned devices for that enrollment group to find the IoT hub that the device was provisioned to and disable or delete it from theat hub's identity registry.
-  
-   
+
+
+== Manage Disenrollment
+
+* Enrollment in the DPS enables a device to be autoprovisioned.
+* A provisioned device is one that has been registered with IoT Hub.
+* This allows it to receive its initial device twin state and begin reporting telemetry data.
+
+[discrete]
+=== Blocklist devices by using an individual enrollment entry
+
+'''
+* Individual enrollments apply to a single device.
+* It can use either X.509 certificates or SAS tokens as the attestation mechanism.
+* Devices that use SAS tokens as their attestation mechanism can be provisioned only through an individual enrollment.
+* To blocklist a device that has an individual enrollment, you can either disable or delete its enrollment entry.
+
+To *temporarily* blocklist the device by disabling its enrollment entry:
+
+. Sign in to the Azure portal and select All resources from the left menu.
+. In the list of resources, select the provisioning service that you want to blocklist your device from.
+. In your provisioning service, select Manage enrollments, and then select the Individual Enrollments tab.
+. Select the enrollment entry for the device that you want to blocklist.
+. On your enrollment page, scroll to the bottom, and select Disable for the Enable entry switch, and then select Save.  
+
+To *permanently* blocklist the device by deleting its enrollment entry:
+
+. Sign in to the Azure portal and select All resources from the left menu.
+. In the list of resources, select the provisioning service that you want to blocklist your device from.
+. In your provisioning service, select Manage enrollments, and then select the Individual Enrollments tab.
+. Select the check box next to the enrollment entry for the device that you want to blocklist.
+. Select Delete at the top of the window, and then select Yes to confirm that you want to remove the enrollment.
+. After you finish the procedure, you should see your entry removed from the list of individual enrollments.
+
+[discrete]
+=== Blocklist an X.509 intermediate or root CA certificate by using an enrollment group.
+
+'''
+* X.509 certificates are typically arranged in a certificate chain of trust.
+* If a certificate at any stage in a chain becomes compromised, trust is broken.
+* The certificate must be blocklisted to prevent Device Provisioning Service from provisioning devices downstream in any chain that contains that certificate.
+* An enrollment group is an entry for devices that share a common attestation mechanism of X.509 certificates signed by the same intermediate or root CA.
+* The enrollment group entry is configured with the X.509 certificate associated with the intermediate or root CA.
+* The entry is also configured with any configuration values, such as twin state and IoT hub connection, that are shared by devices with that certificate in their certificate chain.
+* To blocklist the certificate, you can either disable or delete its enrollment group. 
+
+[discrete]
+=== Blocklist specific devices in an enrollment group
+
+'''
+* Devices that implement the X.509 attestation mechanism use the device's certificate chain and private key to authenticate.
+* When a device connects and authenticates with DPS, the service first looks for an individual enrollment that matches the device's credentials.
+* The service then searches enrollment groups to determine whether the device can be provisioned.
+* If the service finds a disabled individual enrollment for the device, it prevents the device from connecting.
+* The service prevents the connection even if an enabled enrollment group for an intermediate or root CA in the device's certificate chain exists.
+
+== How to provision for multitenancy
+
+* The allocation policies defined by the provisioning service support various allocation scenarios.
+** Geolocation/GeoLatency: This policy causes the DPS to evaluate device latency and determine the closest IoT hub out of the group of IoT hubs.
+** Multi-tenancy: The solution may require all devices for a particular tenant to communicate with a specific group of IoT hubs.
+
+[]
+* Provisioning devices for the multitenant scenario across regions, involves the following:
+** Two (or more) regional IoT hubs.
+** An enrollment group that uses a multitenant enrollment and specifies assigning devices based on lowest latency.
+** Multiple devices provisioned in each region.
+
+* With this configuration in place, you will see that devices in each region are provisioned to the same tenant in the closest region.
+
+== Common Message Format
+
+* To support seamleass interoperability across protocols, IoT Hub defines a common message format for all device-facing protocols.
+* This message format is used for both device-to-cloud and cloud-to-device messages.
+* IoT Hub implements device-to-cloud messaging using a streaming messaging pattern.
+* IoT Hub's device-to-cloud messages are more like Event Hubs events than Service Bus messages in that there is a high volume of events passing through the service that can be read by multiple readers.
+
+[]
+An IoT Hub message consists of:
+
+* A predetermined set of _system properties_ as listed below.
+* A set of _application properties_. A dictionary of string properties that the application can define and access, without needing to deserialize the message body. IoT Hub never modifies these properties.
+* An opaque binary body.
+
+[]
+* Property name and values can only contain ASCII alphanumeric characters.
+* `{'!', '#', '$', '%, '&', ''', '*', '+', '-', '.', '^', '_', '`', '|', '~'}` are also allowed.
+
+[]
+Device-to-cloud messaging with IoT Hub has the following characteristics:
+
+* Device-to-cloud messages are durable and retained in an IoT Hub's default messages/events endpoint for up to seven days.
+* Device-to-cloud messages can be at most 256 KB, and can be grouped in batches to optimize sends. Batches can be at most 256 KB.
+* IoT Hub does not allow arbitrary partitioning. Device-to-cloud messages are partitioned based on their originating *deviceID*.
+* IoT Hub enables per-device authentication and access control.
+* You can stamp messages with information that goes into the application properties.
+
+[discrete]
+=== System properties of D2C IoT hub messages
+
+'''
+. *message-id*
++
+A user settable identifier for the message used for request-reply patterns. +
+A case-sensitive string (up to 128 characters long) of ASCII 7-bit alphanumeric characters. +
+Other characters allowed: ` {'-', ':', '.', '+', '%', '_', '#', '*', '?', '!', '(', ')', ',', '=', '@', ';', '$', '''}`
++
+It is user settable.
++
+The keyword for routing query is _messageId_.
+
+. *iothub-enqueuedtime*
++
+Date and time the Device-to-Cloud message was received by IoT Hub.
++
+It is not user settable.
++
+The keyword for routing query is _enqueuedTime_.
+
+. *user-id*
++
+An ID used to specify the origin of messages. +
+When messages are generated by IoT Hub, it is set to `{iot hub name}`.
++
+It is user settable.
++
+The keyword for routing query is _userId_.
+
+. *iothub-connection-device-id*
++
+An ID set by IoT Hub on device-to-cloud messages. +
+It contains the *deviceId* of the device that sent the message.
++
+It is not user settable.
++
+The keyword for routing query is _connectionDeviceId_.
+
+. *iothub-connection-module-id*
++
+And ID set by IoT Hub on device-to-cloud messages. +
+It contains the *moduleId* of the device that sent the message.
++
+It is not user settable.
++
+The keyword for routing query is _connectionModuleId_.
+
+. *iothub-connection-auth-generation-id*
++
+An ID set by IoT Hub on device-to-cloud messages. +
+It contains the *connectionDeviceGenerationId* of the device that sent the message.
++
+It is not user settable.
++
+The keyword for routing query is _connectionDeviceGenerationId_.
+
+. *iothub-connection-auth-method*
++
+An authentication method set by IoT Hub on device-to-cloud messages. +
+This property contains information about the authentication method used to authenticate the device sending the message.
++
+It is not user settable.
++
+The keyword for routing query is _connectionAuthMethod_.
+
+. *dt-dataschema*
++
+This value is set by IoT hub on device-to-cloud messages. +
+It contains the device model ID set in the device connection.
++
+It is not user settable.
++
+The keyword for routing query is _$dt-dataschema_.
+
+. *dt-subject*
++
+The name of the component that is sending the device-to-cloud messages.
++
+It is user settable.
++
+The keyword for routing query is _$dt-subject_.
+
+[discrete]
+=== System Properties of C2D IoT hub messages
+
+'''
+. *message-id*
++
+A user settable identifier for the message used for request-reply patterns. +
+A case-sensitive string (up to 128 characters long) of ASCII 7-bit alphanumeric characters. +
+Other characters allowed: ` {'-', ':', '.', '+', '%', '_', '#', '*', '?', '!', '(', ')', ',', '=', '@', ';', '$', '''}`
++
+It is user settable.
++
+
+. *sequence-number*
++
+A number (unique per device-queue) assigned by IoT hub to each cloud-to-device message.
++
+It is not user settable.
+
+. *to*
++
+A destination specified in Cloud-to-Device messages.
++
+It is not user settable.
+
+. *absolute expiry time*
++
+Date and time of message expiration
++
+It is user settable.
+
+. *correlation-id*
++
+A string property in a response message that typically contains the MessageId of the request, in request-reply patterns.
++
+It is user settable.
+
+. *user-id*
++
+An ID used to specify the origin of messages. +
+When messages are generated by IoT Hub, it is set to `{iot hub name}`
++
+It is use settable.
+
+. *iothub-ack*
++
+A feedback message generator.
++
+This property is used in cloud-to-device messages to request IoT Hub to generate feedback messages as a result of the consumption of the message by the device.
++
+--
+Possible values:
+
+[horizontal]
+none(default):: no feedback message is generated. +
+positive:: receive a feedback message if the message was completed. +
+negative:: receive a feedback message if the message expired without being completed by the device. +
+full:: both positive and negative.
+--
+
+[discrete]
+=== Message size
+
+'''
+IoT Hub measures message size in a protocol-agnostic way, considering only the actual payload.
+
+The size in bytes is calculated as the sum of the following values:
+
+* The body size in bytes.
+* The size in bytes of all the values of the message system properties.
+* The size in bytes of all user property names and values.
+
+Property names and values are limited to ASCII characters, so the length of the strings equals the size in bytes.
+
+[discrete]
+=== Anti-spoofing properties
+
+'''
+To avoid device spoofing in device-to-cloud messages, IoT Hub stamps all messages with the following properties:
+
+* iothub-connection-device-id
+* iothub-connection-auth-generation-id
+* iothub-connection-auth-method
+
+The first two contain the *deviceId* and *generationId* of the originating device (device identity properties).
+
+The iothub-connection-auth-method property contains a json serialized object:-
+
+[source, json]
+----
+{
+  "scope": "{ hub | device }",
+  "type": "{ symkey | sas | x509 }",
+  "issuer": "iothub"
+}
+----
+
+
+== Message Routing
+
+* IoT Hub Message Routing enables users to rout device-to-cloud messages to service-facing endpoints.
+* Routing also provides a querying capability to filter the data before routing it to the endpoints.
+
+[discrete]
+=== Routing endpoints
+
+'''
+* An IoT hub has a default built-in messaging endpoint (messages/events).
+* Custom endpoints can be configured that link IoT hub to other services in your subscription.
+* IoT Hub currently supports the following custom endpoints:
+** Azure Storage containers
+** Event Hubs
+** Service Bus Queues
+** Service Bus Topics
+
+[]
+* There are two storage services IoT hub can route messages to: Azure Blob Storage and Azure Data Lake Storage Gen2.
+* Both of these use blobs for their storage.
+* Service Bus Queues and Service Bus Topics that have Sessions or Duplicate Detection enabled are not supported as custom endpoints.
+
+[discrete]
+=== Routing queries
+
+'''
+* A single message may match the condition on multiple routing queries.
+* The IoT hub delivers the message to the endpoint associated with each matched query.
+* IoT hub automatically deduplicates message delivery.
+* So if a message matches multiple queries that have the same destination, it is only written once to that destination.
+* When you route message data to custom endpoints, messages are only delivered to the built-in endpoint if they do not match any query.
+* To deliver messages to both the built-in endpoint and to a custom endpoint, add a route that sends messages to the built-in events endpoint.
+
+[]
+* Each routing query you configure has the following properties:
+
+[horizontal]
+Name:: The unique name that identifies the query.
+Source:: The origin of the data stream to be acted upon. For example, device telemetry.
+Condition:: 
+  The query expression for the routing query that is run against the following to determine if it is a match for the endpoint:
+    * message application properties
+    * system properties 
+    * message body
+    * device twin tags
+    * device twin properties
+Endpoint::
+  * The name of the endpoint where IoT hub sends messages that match the query.
+  * We recommend that you choose an endpoint in the same region as your IoT hub.
+
+
+[discrete]
+=== IoT Hub built-in endpoint
+
+'''
+* By default, messages are routed to the built-in service-facing endpoint which is compatible with Event Hubs.
+* This endpoint is currently only exposed using the AMQP protocol on port 5671 and AMQP over WebSockets on port 443.
+* An IoT hub exposes the following properties to enable you to control the built-in endpoint.
++
+Partition count:: Set this property at creation to define the number of partitions for device-to-cloud event ingestion.
+Retention time:: This property specifies how long in days messages are retained by IoT Hub. The default is one day, but it can be increased to seven days.
+* IoT Hub enables you to manage consumer groups on the built-in device-to-cloud receive endpoint.
+* You can have up to 20 consumer groups for each IoT Hub.
+* If you are using message routing and the fallback route is enabled, all messages that do not match a query on any route go to the built-in endpoint.
+* If you disable this fallback route, messages that don't match any query are dropped.
+* Retention time can modified programmatically or through the Azure portal.
+
+[discrete]
+=== Reading from the Built-in endpoint
+
+'''
+* IoT Hub exposes the messages/events built-in endpoint for your back-end services to read the device-to-cloud messages.
+* This endpoint is Event Hubs-compatible, which enables you to use any of the mechanisms the Event Hubs service supports for reading messages.
+* For services that are aware of IoT Hub, you can use IoT hub service connection string to connect to the built-in endpoint.
+* For services that are not aware of IoT Hub, you need an Event Hubs-compatible endpoint and Event Hubs-compatible name.
+* You can retrieve these values from IoT hub service in the Azure portal by opening the *Built-in endpoints* blade.
+* You can use any shared access policy that has the ServiceConnect permissions to connect to the specified Event Hubs.
+* The following Azure products are aware of IoT Hub and you can easily create a service connection to them:
+** Azure Functions.
+** Azure Stream Analytics.
+** Time Series Insights.
+** Apache Storm spout.
+** Apache Spark integration.
+** Azure Databricks.
+
+[discrete]
+=== Routing to multiple endpoints
+
+'''
+* Message routing can be used for:
+** Sending device telemetry messages and events, namely device lifecycle events and device twin change events, to the built-in-endpoint and custom endpoints.
+** Filtering data before routing it to various endpoints by applying queries.
+** Message routing allows you to query on the message properties and message body as well as device twin tags and device twin properties.
+
+[]
+* IoT Hub needs write access to these service endpoints for message routing to work.
+* If you configure your endpoints through the Azure portal, the necessary permissions are added for you.
+* Make sure you configure your services to support the expected throughput.
+* For example, if you are using Event Hubs as a custom endpoint, you must configure the throughput units for that Event Hubs so it handle the ingress of events from IoT Hub.
+* Similarly, when using a Service Bus Queue as an endpoint, you must configure the maximum size to ensure the queue can hold all the data ingressed.
+* You many need to monitor your endpoints and make any necessary adjustments for the actual load.
+
+[]
+* If a message matches multiple routes that point to the same endpoint, IoT Hub delivers the message to that endpoint only once.
+* You do not need to configure deduplication on your Service Bus queue or topic.
+* In partitioned queues, partition affinity guarantees message ordering.
+
+[discrete]
+=== Custom endpoint
+
+'''
+* IoT hub supports Azure Storage containers, Event Hubs, Service Bus queues and Service Bus topics as custom endpoint.
+** Azure Storage
+*** These are two storage services IoT Hub can route messages to -- Azure Blob Storage and Azure Data Lake Storage Gen2 accounts.
+*** Both of these use blobs for their storage.
+** Event Hubs
+*** Event Hubs is a service that processes large amounts of event data (telemetry) from devices and applications.
+*** After you collect data into Event Hubs, you can store the data using a storage cluster or transform it using a real-time analytics provider
+** Service Bus Queues and Service Bus Topics
+*** Service Bus Queues and Topics must not have Sessions or Duplicate Detection enabled. If either of those options are enabled, the endpoint appears as Unreachable in the Azure portal.
+
+[discrete]
+=== Fallback route
+
+'''
+* The fallback route sends all the messages that don't satisfy query conditions on any of the existing routes to the built-in endpoint (message/events) that is compatible with Event Hubs.
+* If message routing is turned on, you can enable the fallback route capability.
+* Once a route is created, data stops flowing to the built-in endpoint, unless a route is created to that endpoint.
+* If there are no routes to the built-in-endpoint and a fallback route is enabled, only messages that don't match any query conditions on routes will be sent to the built-in-endpoint.
+* Also, if all existing routes are deleted, fallback route must be enabled to receive all data the built-in-endpoint.
+* You can enable/disable the fallback route in the Azure portal -> Message Routing blade.
+* You can also use Azure Resource Manager for FallbackRouteProperties to use a custom endpoint for fallback route.
+
+[discrete]
+=== Non-telemetry events
+
+'''
+* In additon to device telemetry, message routing also enables sending device twin change events, device lifecycle events, and digital twin change events.
+* For example, if a route is created with data source set to device twin change events, IoT Hub sends messages to the endpoint that contain the change in the device twin.
+* Similarly, if a route is created with data source set to device lifecycle events, IoT hub send a message indicating whether the device was deleted or created.
+
+[discrete]
+=== Latency
+
+'''
+* When you route device-to-cloud telemetry messages using built-in endpoints, there is a slight increase in the end-to-end latency after the creation of the first route. 
+* In most cases, the average increase in latency is less than 500ms.
+* You can monitor the latency using `Routing: message latency for messages/events` or `d2c.endpoints.latency.builtIn.events` IoT Hub metric.
+* Creating or deleting any route after the first one does not impact the end-to-end latency.
+
+[discrete]
+=== Monitoring and Troubleshooting
+
+'''
+* https://learn.microsoft.com/en-us/azure/iot-hub/monitor-iot-hub[IoT Hub metrics] lists all the metrics that are enabled by default for your IoT Hub.
+* The Rest Api https://learn.microsoft.com/en-us/rest/api/iothub/iot-hub-resource/get-endpoint-health?tabs=HTTP[Get Endpoint Health] can be used to get the health status of the endpoints.
+
+
+== Message Routing Query Syntax
+
+* Message routing allows you to query on the message properties and message body as well as device twin tags and device twin properties.
+* If the message body is not JSON, message routing can still route the message, but queries cannot be applied to the message body.
+* Queries are boolean expression where a Boolean true makes the query succeed or fail.
+* If the expression evaluates to null or undefined, it is treated as false and an error will be generated in diagnostic logs if there is a routing failure.
+* The query syntax must be correct for the route to be saved and evaluated.
+
+[discrete]
+=== Message properties based routing
+
+'''
+* The IoT Hub defines a common format for all device-to-cloud messaging for interoperability across protocols.
+* IoT Hub assumes the following JSON representation of the message.
+* System properties are added for all users and identify content of the message.
+* Users can selectively add appplication properties to the message.
+* IoT Hub device-to-cloud messaging is not case-sensitive.
+* If you have multiple properties with the same name, IoT Hub will only send one of the properties.
+
+[source, json]
+----
+{ 
+  "message": { 
+    "systemProperties": { 
+      "contentType": "application/json", 
+      "contentEncoding": "UTF-8", 
+      "iothub-message-source": "deviceMessages", 
+      "iothub-enqueuedtime": "2017-05-08T18:55:31.8514657Z" 
+    }, 
+    "appProperties": { 
+      "processingPath": "{cold | warm | hot}", 
+      "verbose": "{true, false}", 
+      "severity": 1-5, 
+      "testDevice": "{true | false}" 
+    }, 
+    "body": "{\"Weather\":{\"Temperature\":50}}" 
+  } 
+}
+----
+
+[]
+* *System properties* help identify contents and source of the messages.
+* *Application properties* are user-defined strings that can be added to the message. These fields are optional.
+
+[discrete]
+==== Query expressions
+
+'''
+* A query on message system properties needs to be prefixed with the `$` symbol.
+* Queries on application properties are accessed with their name and should not be prefixed with the `$` symbol.
+* If an application property name begins with `$`, then IoT Hub will search for it in the system properties, and if it is not found, then it will look in the application properties.
+
+To query on system property contentEncoding:
+
+[source,sql]
+----
+$contentEncoding = 'UTF-8'
+----
+
+To query on application property processingPath:
+
+[source,sql]
+----
+processingPath = 'hot'
+----
+
+To combine these queries, you can use Boolean expressions and functions:
+
+[source,sql]
+----
+$contentEncoding = 'UTF-8' AND processingPath = 'hot'
+----
+
+[discrete]
+=== Message body based routing
+
+* To enable querying on message body, the message should be a JSON encoded in either UTF-8, UTF-16 or UTF-32.
+* The `contentType` must be set to `application/JSON` and `contentEncoding` to one of the supported UTF encodings in the system properties.
+* If these properties are not specified, IoT Hub will not evaluate the query expression on the message body.
+
+[discrete]
+==== Query expressions
+
+* A query on the message body needs to be prefixed with the $body.
+
+Following are all valid query expressions:
+
+[source,sql]
+----
+$body.Weather.HistoricalData[0].Month = 'Feb'
+----
+
+[source,sql]
+----
+$body.Weather.Temperature = 50 AND $body.Weather.IsEnabled
+----
+
+[source,sql]
+----
+length($body.Weather.Location.State) = 2
+----
+
+[source,sql]
+----
+$body.Weather.Temperature = 50 AND processingPath = 'hot'
+----
+
+
+[discrete]
+=== Device Twin based routing
+
+* Message routing enables you to query on Device Twin tags and properties, which are JSON objects.
+* Querying on module twin is not supported.
+* A sample of Device Twin tags and properties is shown below:
+
+[source, json]
+----
+{
+    "tags": { 
+        "deploymentLocation": { 
+            "building": "43", 
+            "floor": "1" 
+        } 
+    }, 
+    "properties": { 
+        "desired": { 
+            "telemetryConfig": { 
+                "sendFrequency": "5m" 
+            }, 
+            "$metadata" : {...}, 
+            "$version": 1 
+        }, 
+        "reported": { 
+            "telemetryConfig": { 
+                "sendFrequency": "5m", 
+                "status": "success" 
+            },
+            "batteryLevel": 55, 
+            "$metadata" : {...}, 
+            "$version": 4 
+        } 
+    } 
+}
+----
+
+[discrete]
+==== Query expressions
+
+'''
+* A query on device twin properties needs to be prefixed with the $twin.
+* Use unique names in tags and properties as the query is not case-sensitive.
+* Refrain from using twin, $twin, body, or $bosy, as a property names.
+* Following are all valid query expressions:
+
+[source,sql]
+----
+$twin.properties.desired.telemetryConfig.sendFrequency = '5m'
+----
+
+[source,sql]
+----
+$body.Weather.Temperature = 50 AND $twin.properties.desired.telemetryConfig.sendFrequency = '5m'
+----
+
+[source,sql]
+----
+$twin.tags.deploymentLocation.floor = 1
+----
+
+
+== Message processing options and constraints
+
+[discrete]
+=== Message Enrichments
+
+* Message enrichment is the ability of the IoT Hub to stamp messages with additional information before the messages are sent to the designated endpoint.
+* One reason to use message enrichments is to include data that can be used to simplify downstream processing.
+* For example, enriching device telemetry messages with a device twin tag can reduce load on customers to make device twin API calls for this information.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/consider-message-processing-options-constraints/media/m04-l01-message-enrichments-flow-804be88e.png[]
+
+[]
+* A message enrichment has three key elements:
+** Enrichment name or key
+** A value
+** One or more endpoints for which the enrichment should be applied.
+
+[]
+* The key is a string.
+* A key can only contain alphanumeric characters or these special characters: hyphen(-), underscore (_), and period (.).
+
+The value can be any of the following examples:
+
+* Any static string.
+* The name of the IoT hub sending the message. This value is $iothubname.
+* Information from the device twin, such as its path. Example would `$twin.tags.field` and `$twin.tags.latitude`.
+
+[NOTE]
+====
+At this time, only `$iothubname`, `$twin.tags`, `$twin.properties.desired`, and `$twin.properties.reported` are supported variables for message enrichment.
+====
+
+[]
+* Message enrichments are added as application properties to messages sent to chosen endpoint(s).
+* Enrichments are applied per endpoint.
+* If you specify five enrichments to be stamped for a specific endpoint, all messages going to that endpoint are stamped with the same five enrichments.
+
+[]
+.Limitations
+* You can add up to 10 enrichments per IoT Hub. In the case of the free tier, only 2 enrichments are allowed.
+* If you are applying an enrichment with a value set to a tag or property in the device twin, the value will be stamped as a string value.
+* For example, if an enrichment value is set to `$twin.tags.field`, the messages will be stamped with the string "`$twin.tags.field`" rather than the value of that field from the twin.
+* This happens in the following cases:
+** Your IoT Hub is in the basic tier. Basic tier IoT hubs do not support device twins.
+** Your IoT Hub is in the Standard tier, but the device sending the message has no device twin.
+** Your IoT Hub is in the standared tier, but the device twin path used for the value of the enrichment does not exist.
+*** For example, if the enrichment value is set to `$twin.tags.location`, and the device twin does not have a `location` property under `tags`, the message is stamped with the string `$twin.tags.location`.
+* Updates to a device twin can take up to five minutes to be reflected in the corresponding enrichment value.
+* The total message size, including the enrichments, can't exceed 256KB.
+** If the message size exceeds 256 KB, the IoT Hub will drop the message.
+** You can use IoT Hub metrics to identify and debug errors when messages are dropped. For example, you can monitor `d2d.telemetry.egress.invalid`.
+* Message enrichments don't apply to digital twin change events.
+
+[]
+.Pricing
+* Message enrichments are available at no extra charge.
+* Currently, you are charged when you send a message to an IoT hub.
+* You are only charged once for that message, even if the message goes to multiple endpoints.
+
+
+== IoT Hub quotas and throttling
+
+* Each Azure subscription can have at most 50 IoT hubs, and at most one Free hub.
+* Each IoT hub is provisioned with one or more units in a specific tier.
+* The tier and number of units determine the maximum daily quota of messages that you send
+* The message size used to calculate the daily quota is 0.5 KB for a free tier hub and 4 KB for all other tiers.
+* The tier also determines the throttling limits that IoT Hub enforces on all operations.
+
+.Operation throttles
+* Operation throttles are rate limitations that are applied in minute ranges and are intended to prevent abuse.
+* They are also subject to traffic shaping.
+* Check this link to get the details of the https://learn.microsoft.com/en-us/training/modules/consider-message-processing-options-constraints/4-iot-hub-quotas-throttle[throttles] 
+
+
+== Azure IoT Edge
+
+* Azure IoT Edge en
