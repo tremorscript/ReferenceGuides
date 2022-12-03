@@ -1,6 +1,6 @@
 name: studynotes 
 title: Study Notes 
-version: 0.1
+version: main
 start_page: index.adoc
 nav:
 - modules/ROOT/nav.adoc
