@@ -1297,7 +1297,7 @@ The Azure Provisioning device and service SDKs for C# can be downloaded from NuG
 |\{your-service}.azure-devices-provisioning.net/enrollmentGroups
 |Provides operations for managing device enrollment groups.
 
-|\{your-service}.azure-devices-provisioning.net/registrations/{id}
+|\{your-service}.azure-devices-provisioning.net/registrations/\{id}
 |Provides operations for retrieving and managing the status of device registrations.
 |===
 
