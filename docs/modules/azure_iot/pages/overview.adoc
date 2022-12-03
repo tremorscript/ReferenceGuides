@@ -2117,4 +2117,49 @@ At this time, only `$iothubname`, `$twin.tags`, `$twin.properties.desired`, and 
 
 * Azure IoT Edge enables you to scale out your IoT solution by packaging your business logic into standard containers.
 * You can deploy these containers to any of your devices and monitor it all from the cloud.
-* 
+* If you want to respond to emergencies as quickly as possible, you can run anomaly detection workloads at the edge.
+* If you want to reduce bandwidth costs and avoid transferring terabytes of raw data, you can clean and aggregate the data locally then only send the insights to the cloud for analysis.
+
+Azure IoT Edge is made up of three components:
+* *IoT Edge modules* are containers that run Azure services, third-party services, or your own code. Modules are deployed to IoT Edge devices and execute locally on those devices.
+* The *IoT Edge runtime* runs on each IoT Edge device and manages the modules deployed to each device.
+* A *cloud-based interface* enables you to remotely monitor and manage IoT Edge devices.
+
+[]
+.IoT Edge modules
+* IoT Edge modules are units of execution, implemented as Docker compatible containers, that run your business logic at the edge.
+* You can develop custom modules or package certain Azure services into modules that provide insights offline and at the edge.
+
+[]
+.Azure services at the edge
+* Azure IoT Edge allows you to deploy and execute complex azure services like Functions, Stream Analytics and Machine Learning on-premises.
+
+[]
+.Bring your own code
+* You can deploy you own code to your Azure IoT Edge devices.
+* You can run the same code on a device or in the cloud.
+* Azure IoT Edge supports both Linux and Windows so you can code to the platform of your choice.
+* It supports Java, dotnet-core, node.js, C, and Python.
+
+[]
+.IoT Edge runtime
+* The Azure IoT Edge runtime sits on the IoT Edge device, and performs management and communication operations
+* It supports both Linux and Windows operating systems and abstracts hardware details.
+* Use a device smaller than a Raspberry Pi 3 if you are not processing much data, or use an industrial server to run resource-intensive workloads.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-azure-iot-edge-environment/media/m06-l01-iot-edge-runtime-introduction-fc026798.png[]
+
+[]
+.IoT Edge Cloud Interface
+* It is difficult to manage millions of devices of different makes and models and geographically scattered.
+* Workloads are created and configured for a particular type of device, deployed to all of your devices, and monitored to catch any misbehaving devices.
+* These activities cannot be done on a per device basis and must be done at scale.
+* Cloud services allow you to:
+** Create and configure a workload to be run on a specific type of device.
+** Send a workload to a set of devices.
+** Monitor workloads running on devices in the field.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-azure-iot-edge-environment/media/m06-l01-cloud-interface-27b30369.png[]
+
+== IoT Edge Runtime
+
