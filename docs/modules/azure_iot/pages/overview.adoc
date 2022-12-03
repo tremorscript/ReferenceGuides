@@ -1291,18 +1291,18 @@ The Azure Provisioning device and service SDKs for C# can be downloaded from NuG
 |Endpoint
 |Functionality
 
-|{your-service}.azure-devices-provisioning.net/enrollments
+|\{your-service}.azure-devices-provisioning.net/enrollments
 |Provides device enrollment operations with the Device Provisioning Service.
 
-|{your-service}.azure-devices-provisioning.net/enrollmentGroups
+|\{your-service}.azure-devices-provisioning.net/enrollmentGroups
 |Provides operations for managing device enrollment groups.
 
-|{your-service}.azure-devices-provisioning.net/registrations/{id}
+|\{your-service}.azure-devices-provisioning.net/registrations/{id}
 |Provides operations for retrieving and managing the status of device registrations.
 |===
 
 * As an example, a service generated using a pre-created shared access policy named `enrollmentread` would create a token with the following parameters:
-** resource URI: `{mydps}.azure-devices-provisioning.net`,
+** resource URI: `\{mydps}.azure-devices-provisioning.net`,
 ** signing key: one of the keys of the `enrollmentread` policy,
 ** policy name: `enrollmentread`,
 ** an expiration time
