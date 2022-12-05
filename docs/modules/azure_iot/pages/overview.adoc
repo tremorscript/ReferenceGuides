@@ -2,7 +2,7 @@
 :title: Azure IoT
 :navtitle: Azure IoT
 :source-highlighter: highlight.js
-:highlightjs-languages: shell, console, json, sql
+:highlightjs-languages: shell, console, json, sql, csharp
 :icons: font
 
 == Core Subsystems of IoT
@@ -2162,4 +2162,150 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-azure-iot-ed
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-azure-iot-edge-environment/media/m06-l01-cloud-interface-27b30369.png[]
 
 == IoT Edge Runtime
+
+* The IoT Edge runtime is a collection of programs that turn a device into an IoT Edge device.
+* The IoT Edge runtime components enable IoT Edge devices to receive code to run at the edge and communicate the results.
+* The *IoT Edge Hub* module of the runtime is responsible for communication.
+* The *IoT Edge Agent* module deploys and monitors the modules.
+* The IoT Edge Hub and the IoT Edge Agent modules are referred to as the runtime modules.
+
+.IoT Edge Hub
+* The IoT Edge hub acts as a local proxy for IoT Hub by exposing the same protocol endpoints as IoT Hub.
+* This consistency means that clients can connect to the IoT Edge runtime just as they would to IoT Hub.
+* IoT Edge hub supports clients that connect using MQTT or AMQP. It does not support clients that use HTTP.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-azure-iot-edge-environment/media/m06-l01-iot-edge-hub-682ff0e6.png[]
+
+.Module Communication
+* IoT Edge hub facilitates module to module communication
+* Using IoT Edge hub as a message broker keeps modules independent from each other.
+* Modules only need to specify the inputs on which they accept messages and the outputs to which they write messages.
+* A solution developer can stitch these inputs and outputs together so that the modules process data in the order specific to that solution.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-azure-iot-edge-environment/media/m06-l01-iot-edge-module-communication-module-endpoints-a729b3b0.png[]
+
+[]
+* To send data to the IoT Edge hub, a module calls the SendEventAsync method.
+* The first argument specifies on which output to send the message.
+* The following pseudocode sends a message on output1:
+
+[source, csharp]
+----
+ModuleClient client = await ModuleClient.CreateFromEnvironmentAsync(transportSettings);
+await client.OpenAsync();
+await client.SendEventAsync("output1", message);
+----
+
+[]
+* To receive a message, register a callback that processes messages coming in on a specific input.
+* The following pseudocode registers the function messageProcessor to be used for processing all messages received on input1:
+
+[source, csharp]
+----
+await client.SetInputMessageHandlerAsync("input1", messageProcessor, userContext);
+----
+
+[]
+* The solution developer is responsible for specifying the rules that determine how IoT Edge passes messages between modules.
+* Routing rules are defined in the cloud and pushed down to IoT Edge hub in its module twin.
+
+
+== IoT Edge Agent
+* The IoT Edge agent is the other module that makes up the Azure IoT Edge runtime.
+* It is responsible for instantiating modules, ensuring that they continue to run, and reporting the status of the modules back to IoT Hub.
+* This configuration data is written as a property of the IoT Edge agent module twin.
+
+.Deployment manifest
+* The IoT Edge security daemon starts the IoT Edge agent on device startup.
+* The agent retrieves its module twin from IoT Hub and inspects the deployment manifest.
+* The deployment manifest is a JSON file that declares the modules that need to be started.
+* Some interesting properties are:
+** *settings.image** - The container image that the IoT Edge agent uses to start the module.
+** *settings.createOptions* - A string passed directly to the Moby container daemon when starting a module's container. Adding options in this property allows for advanced configurations like port forwarding or mounting volumes into a module's container.
+** *status* - The state in which the IoT Edge agent places the module. The IoT Edge agent reports the status of each module back to the cloud in the reported properties. A difference between the desired property and the reported property is an indicator of a misbehaving device. The supported statuses are:
+*** Downloading
+*** Running
+*** Unhealthy
+*** Failed
+*** Stopped
+** *restartPolicy* - How the IoT Edge agent restarts a module. Possible values include:
+*** Never - The IoT Edge agent nevers restarts the module.
+*** On-failure - If the module crashes, the IoT Edge agent restarts it. If the module shuts down cleanly, the IoT Edge agent does not restart it.
+*** On-unhealthy - If the module crashes or is considered unhealthy, the IoT Edge agent restarts it.
+*** Always - If the module crashes, is considered unhealthy, or shuts down in any way, the IoT Edge agent restarts it.
+** *imagePullPolicy** - Whether the IoT Edge agents attempts to pull the latest image for a module automatically or not. If you do not specify a value, the default is onCreate. Possible values includ:
+*** On-create - When starting a module or updating a module, the IoT Edge agent will attempt to pull the module image from the container registry.
+*** Never - The expectation is that the module image is cached on the device, and any module image updates are made manually or managed by a third party solution.
+
+.Command-line tool
+* The iotedge tool is a command-line tool that is used to manage the IoT Edge runtime.
+* To view the available subcommands:
+
+[source, bash]
+----
+iotedge help
+----
+
+
+The *iotedge* command-line tool provides a number of commands to assist in the management of IoT Edge modules that are deployed to the device.
+
+* To obtain a list of deployed modules
+
+[source, bash]
+----
+sudo iotedge list
+----
+
+* To restart a specific module,
+
+[source,bash]
+----
+sudo iotedge restart module-name
+----
+
+* To vies diagnostic logs related to a specific module,
+
+[source, bash]
+----
+sudo iotedge logs module-name
+----
+
+The *iotedge* tool is useful for troubleshooting configuration issues and performs a series of checks.
+
+* To view a list of the available checks,
+
+[source, bash]
+----
+iotedge check-list
+----
+
+* To execute the full list of checks, the *iotedge* tool must be run with elevated privileges:
+
+[source, bash]
+----
+sudo iotedge check
+----
+
+== Azure IoT Edge modules
+
+To understand how modules are developed, deployed, and maintained, it helps to think of the four conceptual elements of a module:
+
+* A module image is a package containing the software that defines a module.
+* A module instance is the specific unit of computation running the module image on an IoT Edge device. The module instance is started by the IoT Edge runtime.
+* A module identity is a piece of informatio stored in IoT Hub, that is associated to each module instance.
+* A module twin is a JSON document stored in IoT Hub, that contains state information for a module instance, including metadata, configurations, and conditions.
+
+.Module images and instances
+* IoT Edge module images contain applications that take advantage of the management, security, and communication features of the IoT Edge runtime.
+* You can develop your own module images, or export one from a supported Azure service.
+* The images exist in the cloud and they can be updated, changed, and deployed in different solutions.
+* Each time a module image is deployed to a device and started by the IoT Edge runtime, a new instance of that module is created.
+* Module images exist as container images in a repository, and module instances are containers on devices.
+
+.Module identities
+* When a new module instance is created by the IoT Edge runtime, the instance is associated with a corresponding module identity.
+* The module identity is stored in the IoT Hub.
+* It is used as the addressing and security scope for all local and cloud communications for that specific module instance.
+* The identity associated with a module instance depends on the identity of the device on which the instance is running and the name you provide to that module in your solution.
+* For example, if you deploy a module to a device called `Hannover01`, the IoT Edge runtime creates a corresponding module identity called `/devices/Hannover01/modules/insight`.
 
