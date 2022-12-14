@@ -59,7 +59,7 @@ There are three types of references: *local branch*, *remote branch*, and *tag*.
 
 A *local branch reference* is a file that contains a 40-byte identifier of the commit that the reference points to. +
 This file is created at the project's `.git/refs/head` directory. +
-Creating a branch in Git just means writing 40 bytes to disk, which is why `git branch foo`` is so fast.
+Creating a branch in Git just means writing 40 bytes to disk, which is why `git branch foo` is so fast.
 
 *Local branch references* are specific to a single local repository. +
 Commands that affect local branch references include *commit*, *merge*, *rebase*, and *reset*.
@@ -112,7 +112,7 @@ The Secret Of Git can fit it into these four words:
 
 Because *references make commits reachable*, creating a branch is a way to "nail down" part of the graph that you might want to come back to later.
 
-Neither `git merge` nor `git rebase` will change your existing commits (remember, a commit's ID is a hash of its contents _*and its history*_), you can create a temporary branch any time you want to try something you're even just a little bit unsure about.
+Neither `git merge` nor `git rebase` will change your existing commits (remember, a commit's ID is a hash of its contents _and its history_), you can create a temporary branch any time you want to try something you're even just a little bit unsure about.
 
 *Creating a branch before you try a merge or a rebase is like saving your game before you battle the boss.*
 
@@ -226,7 +226,7 @@ git push -u origin main # <3>
 .commit message considerations
 * Don't assume that the code is self-evident/self-documenting.
 * Finding it difficult to summarize your commit? Maybe it includes more than one bug fix or logical change. Consider splitting the commits using `git add -p`
-* It should be possible to review a change request without reading the contents of the bug or task. Don't assume the reviwer understands the problem.
+* It should be possible to review a change request without reading the contents of the bug or task. Don't assume the reviewer understands the problem.
 
 .commit message structure
 * Separate subject from body with a blank line
@@ -258,13 +258,12 @@ You can specify which editor you would like to use for commit messages.
 git config --global core.editor "code --wait"
 ----
 
-.sample contributing.md files
+== sample contributing.md files
 * https://github.com/thoughtbot/factory_bot_rails/blob/master/CONTRIBUTING.md[Factory Bot rails,window=_blank]
 * https://github.com/puppetlabs/puppet/blob/main/CONTRIBUTING.md[Puppet,window=_blank]
 
 == Versioning
 
-[discrete]
 === Version numbers
 `major.minor[.build[.revision]]`
 
@@ -279,7 +278,6 @@ Updating the major / minor version indicates changes of the API / interfaces / c
 * Minor Version: A backwards-compatible minor change
 * Build / Revision: No API change, just a different build.s
 
-[discrete]
 === Semantic Versioning
 Semantic Versioning is a concept of calculating the version number automatically based on a certain source code repository.
 
