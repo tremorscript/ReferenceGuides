@@ -9,4 +9,4 @@ nav:
 - modules/Azureiot/nav.doc
 - modules/Devops/nav.adoc
 - modules/azure_iot/nav.adoc
-- modules/azure_security/nav.adoc
+- modules/azure_security_engineer/nav.adoc

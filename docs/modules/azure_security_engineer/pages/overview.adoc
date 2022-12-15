@@ -1,0 +1,217 @@
+= Azure Security Engineer 
+:title: Azure Security Engineer
+:navtitle: Azure Security Engineer
+:source-highlighter: highlight.js
+:highlightjs-languages: shell, console
+:toc:
+
+== Azure Active Directory
+
+Azure Active Directory (Azure AD) is Microsoft's cloud-based identity and access management service, which helps your employees sign in and access resources in:
+* External resources, such as Microsoft 365, the Azure portal, and thousands of other SaaS applications
+* Internal resources, such as apps on your corporate network and intranet, along with any cloud apps developed by your own organization.
+
+A security engineer uses Azure AD to manage identities.
+
+A security engineer's task includes:
+* Create users, groups, and administrative units to securely access resources and services.
+* Configure access to systems to be passwordless.
+* Define a strategy for using Azure AD and Azure AD Domain Services to lock down access to your solutions.
+
+=== Azure AD Editions
+
+Azure Active Directory comes in four editions - Free, Microsoft 365 Apps, Premium P1, and Premium P2.
+
+The free edition is included with an Azure subscription.
+
+The premium editions are available through a Microsoft Enterprise Agreement, the Open Volume License Program, and the Cloud Solution Providers program.
+
+Azure and Microsoft 365 subscribers can also buy Azure Active Directory Premium P1 and P2 online.
+
+==== Azure Active Directory Free
+
+Provides user and group management, on-premises directory synchronization, basic reports, and single sign-on across Azure, Microsoft 365, and amany popular SaaS apps.
+
+==== Azure Active Directory Microsoft 365 apps
+
+This edition is included with O365.
+
+In addition to the Free features, this edition provides IDAM for Microsoft 365 apps including Branding, MFA, group access management, and self-service password reset for cloud users.
+
+==== Azure Active Directory Premium P1
+
+In addition to the Free features, P1 also lets your hybrid users access both on-premises and cloud resources.
+
+It also supports advanced administration, such as dynamic groups, self-service group management, Microsoft Identity Manager (an on-premises IDAM suite) and cloud write-back capabilities, which allow self-service password reset for your on-premises users.
+
+==== Azure Active Directory Premium P2
+
+In addition to the Free and P1 features, P2 also offers Azure AD Identity Protection to help provide risk-based Conditional Access to your apps and critical company data and Privileged Identity Management to help discover, restrict, and monitor administrators and their access to resources and provide just-in-time access when needed.
+
+==== Pricing Page
+https://azure.microsoft.com/pricing/details/active-directory[Azure AD Pricing]
+
+== Roles in Azure AD
+
+Users who are assigned to the Global administrator role can read and modify every administrative setting in your Azure AD organization.
+
+By default, the person who signs up for an Azure subscription is assigned the Global Administrator role for the Azure AD organization.
+
+Only Global administrators and Privileged Role administrators can delegate administrator roles.
+
+*As a best practice, we recommend that you assign this role to fewer than five people in your organization.*
+
+
+=== Available Roles
+
+* *Application Administrator*
+** Users in this role can create and manage all aspects of enterprise applications, application registrations, and application proxy settings.
+* *Application Developer*
+** Can create application registrations independent of the "Users can register applications" setting.
+* *Authentication Administrator*
+** Users with this role can set or reset any authentication method for non-administrators and some roles.
+* *Azure DevOps Administrator*
+** Users with this role can manage the Azure DevOps policy to restrict new Azure DevOps organization creation to a set of configurable users or groups.
+* *Azure Information Protection Administrator*
+** Users with this role have all permissions in the Azure Information Protection Service.
+* *B2C User Flow Administrator*
+** Users with this role can create and manage B2C User Flows (also called "built-in" policies) in the Azure portal.
+* *B2C User Flow Attribute Administrator*
+** Users with this role add or delete custom attributes available to all user flows in the tenant.
+* *B2C IEF Keyset Administrator*
+** User can create and manage policy keys and secrets for token encryption, token signatures, and claim encryption/decryption.
+* *B2C IEF Policy Administrator*
+** Users in this role can create, read, update, and delete all custom policies in Azure AD B2C and therefore have full control over the Identity Experience Framework in the relevant Azure B2C tenant.
+* *Billing Administrator*
+** Makes purchases, manages subscriptions, manages support tickets, and monitors service health.
+* *Cloud Application Administrator*
+** Users in this role have the same permissions as the Application Administrator role, excluding the ability to manage application proxy.
+* *Cloud Device Administrator*
+** Users in this role can enable, disable, and delete devices in Azure AD and read Windows 10 BitLocker keys (if present) in the Azure portal.
+* *Compliance Administrator*
+** Users in this role have permissions to manage compliance-related features in the compliance portal, Microsoft 365 admin center, Azure, and Microsoft 365 Security and compliance portal.
+* *Compliance Data Administrator*
+** Users with this role have permissions to track data in the compliance portal, Microsoft 365 admin center, Azure, and Microsoft 365 Security and compliance portal.
+* *Conditional Access Administrator*
+** Users with this role have the ability to manage Azure AD Conditional Access settings.
+* *Exchange Administrator*
+** Users with this role have global permissions within Microsoft Exchange Online when the service is present.
+* *Directory Readers*
+** Users in this rile can read basic directory information.
+* *Global Administrator / Company Adminstrator*
+** Users with this role have access to all administrative features in Azure AD.
+* *Groups Administrator*
+** Users in this role can create/manage groups and its settings like naming and expiration policies.
+* *Security Administrator*
+** Users with this role have permissions to manage security-related features in the Microsoft 365 security center, Azure AD Identity Protection, Azure Information Protection, and Microsoft 365 Security and Compliance Center.
+
+
+=== Azure AD Domain Services
+
+Azure Active Directory Domain Services (Azure AD DS) provides managed domain services such as group policy, LDAP, and Kerberos / NTLM authentication that is fully compatible with Windows Server Active Directory.
+
+Azure AD DS integrates with your existing Azure AD tenant, which makes it possible for users to sign in using their existing credentials.
+
+Azure AD DS replicates identity information from Azure AD. The same set of Azure AD DS features exist for both environments.
+* If you have an existing on-premises AD DS environment, you can synchronize user account information to provided a consistent identity for users.
+* For cloud-only environments, you do not need a traditional on-premises AD DS environment to use the centralized identity services of Azure AD DS.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/azure-active-directory/media/az500-azure-active-directory-domain-services-6692a3ee.png[]
+
+==== Azure AD DS features and benefits
+
+* *Simplified deployment experience*
+** Azure AD DS is enabled for your Azure AD tenant using a single wizard in the Azure portal.
+* *Integrated with Azure AD*
+** User accounts, group memberships, and credentials are automatically available from your Azure AD tenant.
+** New users, groups, or changes to attributes from your Azure AD tenant or your on-premises AD DS environment are automatically synchronized to Azure AD DS.
+* *Use your corporate credentials/passwords*
+** Passwords for users in Azure AD DS are the same as in your Azure AD tenant.
+** Users can use their corporate credentials to domain-join machines, sign in interactively or over remote desktop, and authenticate agains the Azure AD DS managed domain.
+* *NTLM and Kerberos authentication*
+** With support for NTLM and Kerberos authentication, you can deploy applications that rely on Windows-integrated authentication.
+* *High availability*
+** Azure AD DS includes multiple domain controllers, which provide high availability for your managed domain.
+** This high availability guarantees service uptime and resilience to failures.
+
+In regions that support Azure Availability Zones, these domain controllers are also distributed across zones for additional resiliency.
+
+[NOTE]
+====
+Azure AD DS integrates with Azure AD, which itself can synchronize with an on-premises AD DS environment.
+This ability extends central identity use cases to traditional web applications that run in Azure as part of a lift-and-shift strategy.
+====
+
+=== Create and Manage Azure AD users
+
+In Azure AD, every user who needs access to resources needs a user account.
+
+A user account is a synced Active Directory Domain Services (AD DS) object or an Azure AD user object that contains all the infomation needed to authenticate and authorize the user during the sign-on process and to build the user's access token.
+
+Azure AD defines users in three ways:
+
+* *Cloud Identities*
+** These users exist only in Azure AD.
+** Examples are administrator accounts and users that you manage yourself.
+** Their source is Azure AD.
+* *Directory-synchronized identites*
+** These users exist in on-premises Active Directory.
+** A synchronization activity that occurs via *Azure AD Connect* brings these users in to Azure.
+* *Guest users*
+** These users exist outside Azure.
+** Examples are accounts from other cloud providers and Microsoft accounts.
+
+=== Manage users with Azure AD groups
+
+Azure AD allows you to define two different types of groups
+
+* *Security groups*
+** These are used to manage member and computer access to shared resources for a group of users.
+** For example, you can create a security group for a specific security policy.
+** You can give a set of permissions to all the members at once, instead of having to add permissions to each member individually.
+** This option requires an Azure AD administrator.
+* *Microsoft 365 groups*
+** These groups provide collaboration opportunites by giving members access to a shared mailbox, calendar, files, SharePoint site, and more.
+** This option also lets you give people outside of your organization access to a group.
+** This option is available to users as well as admins.
+
+There are different ways you can assign group access rights:
+
+* *Assigned*
+** Lets you add specific users to be members of this group and to have unique permissions.
+* *Dynamic User*
+** Lets you use dynamic membership rules to automatically add and remove members.
+** If a member's attributes change, the system reviews your dynamic group rules for the directory to determine if the member meets the rule requirements or no longer meets the rules requirements.
+* *Dynamic Device (Security groups only)*
+** Lets you use dynamic group rules to automatically add and remove devices.
+** If a device's attributes change, the system reviews your dynamic group rules for the directory to determine if the device meets the rule requirements or no longer meets the rules requirements.
+
+=== Configure Azure AD Administrative Units
+
+An administrative unit is an Azure AD resource that can be a container for other Azure AD resources.
+
+An administrative unit can contain only users and groups.
+
+Administrative units restrict permissions in a role to any portion of your organization that you define.
+
+For example, use administrative units to delegate the Helpdesk Administrator role to regional support specialists, so they can manage users in the region that they support.
+
+=== Passwordless authentication methods
+
+Sign-in without ever using a password.
+
+With passwordless, the password is replaced with something you have plus something you are or something you know.
+
+For example, Windows Hello for Business can use a biometric gesture like a face or fingerprint, or a device-specific PIN that isn't transmitted over a network.
+
+* *Windows Hello for Business*
+** Biometric and PIN credentials are directly tied to the user's PC, which prevents access from anyone other than the owner.
+* *FIDO2 Security Keys*
+** Generally stored on a USB stick, FIDO2 security keys are an unphishable standards-based passwordless authentication method that can come in any form factor.
+* *Microsoft Authenticator App*
+** Authenticator App turns any iOS or Android phone into a strong, passwordless credential.
+** Users can sign in to any platform or browser by getting a notification to their phone, matching an number displayed on screen to the one on their phone, and then using their biometric (touch or face) or PIN to confirm.
+* *FIDO2 Smartcards (preview)*
+** New method to use FIDO2 keys for passwordless login via a smartcard.
+* *Temporary Access Pass (preview)*
+** Time-limited passcode allows you to set up security keys and the Microsoft Authenticator without ever needing to use, much less know, your password!
