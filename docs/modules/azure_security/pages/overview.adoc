@@ -1,6 +1,6 @@
 = Azure Security 
 :title: Azure Security 
-:navtitle: Git Notes 
+:navtitle: Azure Security
 :source-highlighter: highlight.js
 :highlightjs-languages: shell, console
 
