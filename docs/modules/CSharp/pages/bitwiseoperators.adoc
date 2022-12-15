@@ -43,3 +43,14 @@ if ((features & Features.Brakes) == Features.Brakes)
     Console.WriteLine("Has Brakes");
 }
 ====
+
+== Code from Microsoft Learn
+
+=== Bitwise Complement Operator (~)
+
+The `~` operator produces a bitwise complement of its operand by reversing each bit
+
+[source,csharp]
+====
+
+====
