@@ -2,7 +2,7 @@
 :title: Bitwise Operators
 :navtitle: Bitwise Operators
 :source-highlighter: highlight.js
-:highlightjs-languages: csharp
+:highlightjs-languages: csharp, cs
 
 
 == Code from Shawn Wildermuth's video
@@ -11,7 +11,7 @@ https://www.youtube.com/watch?v=qWCUoLCRY38[Coding Shorts - Bitwise operators,wi
 https://github.com/tremorscript/CSharpLearning/tree/main/src/BitwiseOperators[Github Projects,window=_blank]
 
 [source,csharp]
-====
+----
 Console.WriteLine("Hello, World!");
 
 // a method that converts a number to binary
@@ -42,7 +42,7 @@ if ((features & Features.Brakes) == Features.Brakes)
 {
     Console.WriteLine("Has Brakes");
 }
-====
+----
 
 == Code from Microsoft Learn
 
@@ -50,7 +50,3 @@ if ((features & Features.Brakes) == Features.Brakes)
 
 The `~` operator produces a bitwise complement of its operand by reversing each bit
 
-[source,csharp]
-====
-
-====
