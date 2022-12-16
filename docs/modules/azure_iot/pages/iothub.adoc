@@ -1,0 +1,11 @@
+= Working With IoT Hub 
+:title: Working With IoT Hub
+:navtitle: Working With IoT Hub
+:source-highlighter: highlight.js
+:highlightjs-languages: shell, console, json, sql, csharp
+:icons: font
+:toc:
+
+
+== Core Subsystems of IoT
+An IoT solution architectur
