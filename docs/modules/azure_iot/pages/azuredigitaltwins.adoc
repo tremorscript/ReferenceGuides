@@ -3,20 +3,16 @@
 :navtitle: Azure Digital Twins
 :source-highlighter: highlight.js
 :highlightjs-languages: shell, console, json, sql, csharp
-:icons: font
+:
 :toc:
 
 == Environment and Service Goals
 
 Azure Digital Twins is a platform as a service (PaaS) offering that enables the creation of knowledge graphs. 
 
-A way to integrate information extracted from multiple data sources.
-
 The knowledge graph is based on interconnected digital entities that combine to represent a larger, interactive environment.
 
 The size and complexity of the environment is dependent upon your business needs, and could represent things like buildings, factories, farms, energy networks, railways, stadiums, and more—even entire cities.
-
-The digital entities defined within your environment, which are referred to as digital twins within an Azure Digital Twins solution, can be used to gain insights that drive better products, optimized operations, reduced costs, and breakthrough customer experiences.
 
 Azure Digital Twins can be used to build customized, connected solutions that:
 
@@ -34,7 +30,7 @@ Azure Digital Twins can be used to build customized, connected solutions that:
 * It is also worth noting that IoT Hub device twins can be connected to Azure Digital Twins (the service) as part of an end-to-end solution that represents devices across services.
 ====
 
-==== Simple Azure Digital Twins environment scenario
+=== Simple Azure Digital Twins environment scenario
 
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-components-azure-digital-twins-solution/media/m11-l02-simple-twins-environment-fb572ff0.png[]
 
@@ -47,8 +43,6 @@ The lines on the Graph that connect a Floor to a Room are called relationships.
 Relationships help to define how our digital twins are related to one another.
 
 In this case, the relationship tells us that a floor “contains” rooms.
-
-The graph shows that our building has two floors, and each floor contains one room, but our environment could be expanded to include more floors and more rooms on each floor, or we could create more levels of detail, such as adding digital twins that represent digital entities within the rooms.
 
 
 == Services and Data Workflows that form an Azure Digital Twins Solution
