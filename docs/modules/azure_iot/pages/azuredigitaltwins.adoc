@@ -290,7 +290,7 @@ The following example reimagines the Planet model from the earlier DTDL example 
 The "parent" model is defined first, and then the "child" model builds on it by using the field “extends”.
 
 [source,json]
-====
+----
 [
 {
     "@id": "dtmi:com:contoso:CelestialBody;1",
@@ -340,7 +340,7 @@ The "parent" model is defined first, and then the "child" model builds on it by 
     "@context": "dtmi:dtdl:context;2"
 }
 ]
-====
+----
 
 In this example, CelestialBody contributes a name, a mass, and a temperature to Planet.
 
