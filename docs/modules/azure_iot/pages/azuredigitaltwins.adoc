@@ -1,4 +1,4 @@
-== Azure Digital Twins
+= Azure Digital Twins
 :title: Azure Digital Twins
 :navtitle: Azure Digital Twins
 :source-highlighter: highlight.js
@@ -6,7 +6,7 @@
 :icons: font
 :toc:
 
-=== Environment and Service Goals
+== Environment and Service Goals
 
 Azure Digital Twins is a platform as a service (PaaS) offering that enables the creation of knowledge graphs. 
 
@@ -51,14 +51,14 @@ In this case, the relationship tells us that a floor “contains” rooms.
 The graph shows that our building has two floors, and each floor contains one room, but our environment could be expanded to include more floors and more rooms on each floor, or we could create more levels of detail, such as adding digital twins that represent digital entities within the rooms.
 
 
-=== Services and Data Workflows that form an Azure Digital Twins Solution
+== Services and Data Workflows that form an Azure Digital Twins Solution
 
 Azure Digital Twins is typically used together with other services to create flexible, connected solutions that use your data in various workflows.
 
 * Using Event Routes, Azure Digital Twins can receive data from upstream services such as IoT Hub or Logic Apps, which are used to deliver telemetry and notifications.
 * Azure Digital Twins can also route data to downstream services, such as Azure Maps and Time Series Insights, for storage, workflow integration, analytics, and more.
 
-==== Data Ingress
+=== Data Ingress
 
 Azure Digital Twins can be driven with data and events from any service—IoT Hub, Logic Apps, your own custom service, and more.
 
@@ -72,7 +72,7 @@ This capability gives you full access to all of the device management capabiliti
 
 To ingest data from any source into Azure Digital Twins, use an Azure function.
 
-==== Data Egress
+=== Data Egress
 
 Azure Digital Twins can send data to connected endpoints. Supported endpoints can be:
 
@@ -88,7 +88,7 @@ To send your data to services like these, attach the destination service to an e
 
 For example, if you are also using Azure Maps and want to correlate location with your Azure Digital Twins twin graph, you can use Azure Functions with Event Grid to establish communication between all the services in your deployment.
 
-==== Azure Digital Twins in a solution context
+=== Azure Digital Twins in a solution context
 
 Azure Digital Twins is commonly used in combination with other Azure services as part of a larger IoT solution.
 
@@ -103,7 +103,7 @@ A complete solution using Azure Digital Twins may contain the following parts:
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-components-azure-digital-twins-solution/media/m11-l02-adt-solution-services-24939866.png[]
 
 
-=== Azure Digital Twins Models
+== Azure Digital Twins Models
 
 In an Azure Digital Twins solution, Models provide the blueprint that is used to create the digital twin entities within your Azure Digital Twins environment.
 
@@ -116,7 +116,7 @@ The nodes that you see in this graph are the digital twin instances that were cr
 Models have names (such as Floor, Room, or TemperatureSensor), and contain elements such as properties, telemetry/events, and relationships that describe how the digital twin entities are related to each other within your environment.
 
 
-==== Elements of a model
+=== Elements of a model
 
 Azure Digital Twins models are defined using the Digital Twins Definition Language (DTDL), which is expressed using a JSON-style coding format.
 
@@ -142,7 +142,7 @@ A DTDL model interface may contain zero, one, or many of each of the following f
 ** Relationships can represent different semantic meanings, such as contains ("floor contains room"), cools ("hvac cools room"), isBilledTo ("compressor is billed to user"), etc.
 ** Relationships allow the solution to provide a graph of interrelated entities.
 
-==== Differentiating between Property and Telemetry Fields
+=== Differentiating between Property and Telemetry Fields
 
 Since property and telemetry fields could both represent numeric data, it may not be obvious when or where each should be used.
 
@@ -161,7 +161,7 @@ The difference between properties and telemetry for Azure Digital Twins models i
 *** In C# terms, telemetry is like a C# event.
 *** In IoT terms, telemetry is typically a data value sent by a device at a specified time interval.
 
-==== Applying Property and Telemetry Fields in an IoT Context
+=== Applying Property and Telemetry Fields in an IoT Context
 
 When designing a model, a telemetry field is often used in models that represent IoT devices.
 
@@ -169,7 +169,7 @@ In this case, you will typically monitor incoming device data and take actions a
 
 A property field is used most often when designing a model because properties provide you with backing storage and the ability to read and query the data fields.
 
-==== Property and Telemetry Fields Example
+=== Property and Telemetry Fields Example
 
 Consider the following example:
 
@@ -183,12 +183,12 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-components-a
 
 
 
-=== Digital Twins Definition Language
+== Digital Twins Definition Language
 
 Models for Azure Digital Twins are defined using the Digital Twins Definition Language (DTDL), which is based on JSON-LD and is programming-language independent.
 
 
-==== Implementation Specifics
+=== Implementation Specifics
 
 For a DTDL model to be compatible with Azure Digital Twins, it must meet these requirements.
 
@@ -202,7 +202,7 @@ For a DTDL model to be compatible with Azure Digital Twins, it must meet these r
 ** Then, when another interface wants to include that interface as a component or through inheritance, it can reference its ID.
 
 
-==== Example Model Code
+=== Example Model Code
 
 Twin type models can be written in any text editor.
 
@@ -278,7 +278,7 @@ The fields of the model are:
 ** Each attribute must provide an @type (Property, Telemetry, Command, Relationship, or Component) to identify the type of interface information it describes, and then a set of properties that define the actual attribute (for example, name and schema to define a Property).
 
 
-==== Possible Schemas
+=== Possible Schemas
 
 As per DTDL, the schema for Property and Telemetry attributes can be of standard primitive types—integer, double, string, and Boolean—and other types such as DateTime and Duration.
 
@@ -291,7 +291,7 @@ In addition to primitive types, Property and Telemetry fields can have these com
 Telemetry fields also support the Array type.
 
 
-==== Model Inheritance
+=== Model Inheritance
 
 Sometimes, you may want to specialize a model further.
 
@@ -369,7 +369,7 @@ It also cannot redefine a capability already defined in any of its parent interf
 For example, if a parent interface defines a double property mass, the extending interface cannot contain a declaration of mass, even if it's also a double.
 
 
-=== Digital Twins and Graph Construction
+== Digital Twins and Graph Construction
 
 In an Azure Digital Twins solution, the entities in your environment are represented by digital twins.
 
@@ -384,7 +384,7 @@ The image below shows a simplified Contoso Cheese Factory Azure Digital Twins en
 The graph contains seven digital twin nodes connected by relationships. To the left of the twins graph are the corresponding models.
 
 
-==== Digital Twins
+=== Digital Twins
 
 Since the digital twins nodes that you create in your Azure Digital Twins solution are based on a model type, the first step in adding a digital twin to Azure Digital Twins is to upload a model type to your Azure Digital Twins service.
 
@@ -393,7 +393,7 @@ After creating and uploading a model, you can create an instance of the type; th
 For example, after creating a model of type Cheese Cave, you can create one or more digital twins that use this type (for example, a Cheese Cave digital twin called Cave_1, another called Cave_2, etc.).
 
 
-==== Relationships: a graph of digital twins
+=== Relationships: a graph of digital twins
 
 Twins are connected into a twin graph by their relationships.
 
@@ -410,7 +410,7 @@ With this definition, Azure Digital Twins will allow you to create “Has Caves�
 The result of this process is a set of nodes (the digital twins) connected via edges (their relationships) in a graph.
 
 
-==== Visualization
+=== Visualization
 
 While the primary way to interact with your Azure Digital Twins instance is through the APIs and SDKs, it can be helpful to see a visualization of the twins and graphs that you are creating in your instance.
 
