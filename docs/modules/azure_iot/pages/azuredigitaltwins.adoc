@@ -412,7 +412,7 @@ You will also use these APIs to create and delete endpoints.
 
 The Data plane APIs are Azure Digital Twins APIs that are used for data management operations like managing models, twins, graph queries, and event routes.
 
-=== Azure Digital Twins Service Configuration
+== Azure Digital Twins Service Configuration
 
 The initial setup for a new Azure Digital Twins instance consists of two parts:
 
@@ -433,7 +433,7 @@ image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-azure-digita
 
 Common roles that meet this requirement are Owner, Account admin, or the combination of User Access Administrator and Contributor.
 
-==== Configure endpoints and routes
+=== Configure endpoints and routes
 
 In Azure Digital Twins, you can route event notifications to downstream services or connected compute resources.
 
@@ -484,7 +484,7 @@ You can use key-based authentication with a pre-created authorization rule, or i
 
 Once created, the endpoint is available as an endpoint inside of Azure Digital Twins, under the name you chose for the endpoint. You'll typically use that name as the target of an event route.
 
-==== Create an Event Route
+=== Create an Event Route
 
 To actually send data from Azure Digital Twins to an endpoint, you'll need to define an event route.
 
@@ -506,7 +506,7 @@ To create an event route in the Azure portal, on the left-side menu of your Azur
 
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-azure-digital-twins-solution-development-tools-processes/media/m11-l03-adt-create-event-route-103cae57.png[]
 
-===== Filter Events
+==== Filter Events
 
 Routes have a filter field.
 
@@ -524,13 +524,13 @@ To add an event filter while you are creating an event route, use the *Add an ev
 
 You can either select from some basic common filter options, or use the advanced filter options to write your own custom filters.
 
-===== Basic Filters
+==== Basic Filters
 
 To use the basic filters, expand the Event types option and select the checkboxes corresponding to the events you'd like to send to your endpoint.
 
 image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-azure-digital-twins-solution-development-tools-processes/media/m11-l03-adt-create-event-route-103cae57.png[]
 
-===== Advanced Filters
+==== Advanced Filters
 
 You can use the advanced filter option to write your own custom filters.
 
@@ -667,16 +667,16 @@ The following functions are supported when defining route filters:
 When you implement or update a filter, the change may take a few minutes to be reflected in the data pipeline.
 ====
 
-=== Model Management
-Module management operations include validation, upload, retrieval, update, and deletion.
+== Model Management
+Model management operations include validation, upload, retrieval, update, and deletion.
 
 You can manage the models within your Azure Digital Twins instance using the DigitalTwinModels APIs, the .NET (C#) SDK, or the Azure Digital Twins CLI extension.
 
-==== Validating and Uploading Models
+=== Validating and Uploading Models
 
 After creating a model, it's recommended that you validate your models offline before uploading them to your Azure Digital Twins instance.
 
-===== Model Validation Tools
+==== Model Validation Tools
 
 Microsoft provides the following tools that can be used to validate Azure Digital Twins models:
 
@@ -691,7 +691,7 @@ Microsoft provides the following tools that can be used to validate Azure Digita
 ** The tool uses Intellisense to help you with the language syntax (including autocompletion) and syntax validation.
 ** The full documentation for the DTDL Editor for Visual Studio Code can be found here: DTDL - Visual Studio Marketplace.
 
-===== Uploading Models to Azure Digital Twins
+==== Uploading Models to Azure Digital Twins
 
 Once you're finished creating, extending, or selecting your models, you're ready to upload them to your Azure Digital Twins instance for use in your solution.
 
@@ -713,7 +713,7 @@ Microsoft also provides sample applications (based on the SDKs) that can be used
 ** The Azure Digital Twins UploadModels tool can be found here: https://github.com/Azure/opendigitaltwins-tools/tree/main/ADTTools#uploadmodels[Upload Models Tool].
 ** You can follow the instructions provided with the sample to configure and use this tool to upload models into your own instance.
 
-==== Update and Version Models
+=== Update and Version Models
 
 Once a model is uploaded to your Azure Digital Twins instance, the entire model interface is immutable, which means there's no traditional "editing" of models.
 
@@ -721,7 +721,7 @@ Azure Digital Twins also doesn't allow reupload of the same model.
 
 Instead, if you want to make changes to a model - such as updating displayName or description - the way to change the model is to upload a newer version of the model.
 
-===== Model Versioning
+==== Model Versioning
 
 To create a new version of an existing model, start with the DTDL of the original model. Update, add, or remove the fields you would like to change.
 
@@ -753,7 +753,7 @@ This version of the model will then be available in your instance to use for dig
 
 It does not overwrite earlier versions of the model, so multiple versions of the model will coexist in your instance until you remove them.
 
-===== Impact on Twins
+==== Impact on Twins
 
 When you create a new twin, since the new model version and the old model version coexist, the new twin can use either the new version of the model or the older version.
 
@@ -766,11 +766,11 @@ You can update these existing twins to the new model version by patching them.
 [NOTE]
 If you aren't familiar with JSON Patch, you can read more here: JsonPatch in ASP.NET Core web API
 
-==== Remove Models
+=== Remove Models
 
 Models can also be removed from the service in one of two ways:
 
-* *Decomisioning*
+* *Decommisioning*
 ** Once a model is decommissioned, you can no longer use it to create new digital twins.
 ** Existing digital twins that already use this model aren't affected, so you can still update them with things like property changes and adding or deleting relationships.
 * *Deletion*
@@ -780,7 +780,7 @@ Models can also be removed from the service in one of two ways:
 
 Decommissioning and deletion are separate features and they don't impact each other, although they may be used together to remove a model gradually.
 
-===== Decommissioning
+==== Decommissioning
 
 Here's the C# code to decommission a model:
 
@@ -794,11 +794,11 @@ await client.DecommissionModelAsync(dtmiOfPlanetInterface);
 
 A model's decommissioning status is included in the ModelData records returned by the model retrieval APIs.
 
-===== Deletiom
+==== Deletion
 
 You can delete all models in your instance at once, or you can do it on an individual basis.
 
-====== Before deletion: Deletion requirements
+===== Before deletion: Deletion requirements
 
 Generally, models can be deleted at any time.
 
@@ -808,7 +808,7 @@ For example, if a ConferenceRoom model extends a Room model, and has a ACUnit mo
 
 You can solve the dependency issue by updating the dependent model to remove the dependencies, or by deleting the dependent model completely.
 
-====== During deletion: Deletion process
+===== During deletion: Deletion process
 
 Even if a model meets the requirements to delete it immediately, you may want to take steps to avoid unintended consequences (for the twins left behind).
 
@@ -830,7 +830,7 @@ To delete a model, use this call:
 await client.DeleteModelAsync(IDToDelete);
 ====
 
-====== After deletion: Twins without models
+===== After deletion: Twins without models
 
 Once a model is deleted, any digital twins that were using the model are now considered to be without a model.
 
@@ -853,7 +853,7 @@ Things you cannot do:
 * Edit outgoing relationships (as in, relationships from this twin to other twins).
 * Edit properties.
 
-====== After deletion: Reuploading a model
+===== After deletion: Reuploading a model
 
 After a model has been deleted, you may decide later to upload a new model with the same ID as the one you deleted.
 
@@ -866,15 +866,15 @@ Here's what happens in that case.
 
 Azure Digital Twins doesn't prevent this state, so be careful to patch twins appropriately in order to make sure they remain valid through the model definition switch.
 
-=== Azure Digital Twins API
+== Azure Digital Twins API
 
 https://learn.microsoft.com/en-us/rest/api/azure-digitaltwins/[Rest Api]
 
-There are currently two Azure Digital Twins data plane Postman collections available for you to choose from:
+There are currently two Azure Digital Twins Data Plane Postman collections available for you to choose from:
 
 * *Azure Digital Twins Postman Collection*
 ** https://github.com/microsoft/azure-digital-twins-postman-samples[postman_collection.json]
-* *Azure Digital Twins data plane Swagger*
+* *Azure Digital Twins Data Plane Swagger*
 ** https://github.com/Azure/azure-rest-api-specs/tree/master/specification/digitaltwins/data-plane/Microsoft.DigitalTwins[swagger file]
 
 To get the bearer token use the get-access-token command of the cli:
@@ -884,47 +884,48 @@ To get the bearer token use the get-access-token command of the cli:
 az account get-access-token --resource 0b07f429-9f4b-4714-9392-cc5e8e80c8b0
 ====
 
-=== Azure Digital Twins CLI
+== Azure Digital Twins CLI
 
 https://learn.microsoft.com/en-us/training/modules/examine-azure-digital-twins-solution-development-tools-processes/6-get-started-with-azure-cli-for-azure-digital-twins[Microsoft Learn]
 
-=== Azure Digital Twins SDK
+== Azure Digital Twins SDK
 
 https://learn.microsoft.com/en-us/training/modules/examine-azure-digital-twins-solution-development-tools-processes/7-examine-azure-digital-twins-sdks[Microsoft Learn Samples]
 
-=== Manage digital twins in the graph
+== Manage Digital Twins in the Graph
 
 https://learn.microsoft.com/en-us/training/modules/examine-azure-digital-twins-solution-development-tools-processes/8-manage-digital-twins-graph[Microsoft Learn Samples]
 
-=== Manage digital twin relationships in the graph
+== Manage Digital Twin Relationships in the Graph
 
 https://learn.microsoft.com/en-us/training/modules/examine-azure-digital-twins-solution-development-tools-processes/9-manage-digital-twin-relationships-graph[Microsoft Learn Samples]
 
-=== Azure Digital Twins queries
+== Azure Digital Twins Queries
 
 https://learn.microsoft.com/en-us/training/modules/examine-azure-digital-twins-solution-development-tools-processes/9-manage-digital-twin-relationships-graph[Microsoft Learn Samples]
 
-=== Azure Functions for Azure Digital Twins
+== Azure Functions for Azure Digital Twins
 
 https://learn.microsoft.com/en-us/training/modules/examine-azure-digital-twins-solution-development-tools-processes/11-get-started-with-azure-functions-for-azure-digital-twins[Microsoft Learn Samples]
 
-=== Azure Digital Twins event data
+== Azure Digital Twins Event data
 
 https://learn.microsoft.com/en-us/training/modules/examine-azure-digital-twins-solution-development-tools-processes/12-examine-azure-digital-twins-event-data[Microsoft Learn Samples]
 
-=== Data Ingress and Egress processes
+== Data Ingress and Egress Processes
 
 An Azure Digital Twins solution relies on external resources for data inputs and downstream services for analysis, storage, etc.
 
-==== Data ingress (upstream resources)
+=== Data Ingress (upstream resources)
 
 Data can be ingested into Azure Digital Twins through external compute resources such as an Azure Function.
 
-===== Ingress scenario
+==== Ingress Scenario
 
 IoT Hub is a common source for data input to Azure Digital Twins.
 
 Consider a scenario that includes the following items:
+
 * A thermostat device in IoT Hub, with a known device ID
 * A digital twin to represent the device, with a matching ID
 * When IoT hub receives telemetry containing temperature values from the device, you need to set a temperature Property of the corresponding digital twin.
@@ -940,15 +941,16 @@ In this case, an Azure Function receives the data from IoT hub's built-in Event 
 
 The Azure Function could also pass temperature telemetry to a Telemetry field of the digital twin.
 
-==== Data egress
+=== Data Egress
 
 To provide data to downstream resources, Azure Digital Twins uses digital twin change notification events as a trigger to route data to an Azure Digital Twins endpoint where the information can be accessed and used to accomplish a desired action.
 
-===== Egress scenario (in-service updates)
+==== Egress scenario (in-service updates)
 
 Although Azure Digital Twins relationships connect digital twins as parent and child, properties of a child are not automatically passed up to a parent in the case when a corresponding property is defined.
 
 Consider a scenario that includes the following items:
+
 * An Azure Digital Twins environment contains Room digital twins (such as Room_01, Room_02, etc.) and Thermostat digital twins (such as thermo_0001).
 * The Room digital twins have a rel_has_thermostat relationship and each Room has a Thermostat (establishing a Parent-Child relationship).
 * The Thermostat digital twins have Property and Telemetry fields for temperature data that is coming from IoT hub.
@@ -958,11 +960,12 @@ Consider a scenario that includes the following items:
 image::hhttps://learn.microsoft.com/en-us/training/wwl-azure/examine-azure-digital-twins-solution-development-tools-processes/media/m11-l03-adt-service-update-process-d64af8fb.png[]
 
 Whenever a Digital Twin Change Notification event occurs for a Thermostat digital twin, the following process is invoked:
+
 * Data is routed to an Event Grid endpoint.
 * The Event Grid uses an Event Subscription to specify an Azure Function "listener“, creates a new event message using the Azure Digital Twins notification, and uses the new event to pass the required information to the function.
 * The Azure Function extracts the event message data and uses it to obtain the twin's ID and Relationship information, uses the Relationship to find the parent Room digital twin, and then updates the currentTemp Property by applying a patch.
 
-===== Egress scenario (downstream services)
+==== Egress Scenario (downstream services)
 
 Azure Digital Twins feeds data to downstream services by using event notifications and routing.
 
