@@ -985,3 +985,392 @@ Whenever a Digital Twin Telemetry Messages event notification occurs for a Therm
 . The Event Hubs processes events and triggers an Azure Function.
 . The Azure Function creates a new event for TSI, adds a partition key, and then publishes the new event to another Event Hubs.
 . Azure TSI (subscribed to events from the second Event Hubs) processes the incoming events to perform the required data analysis.
+
+== Azure Digital Twins Metrics
+
+Metrics are enabled by default.
+
+You can view Azure Digital Twins metrics from the Azure portal.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/monitor-troubleshoot-adt/media/m11-l04-adt-metrics-portal-08c9bcb5.png[]
+
+You can configure these metrics to track when you are approaching a published service limit for some aspect of your solution.
+
+To set this up, use the alerts feature in Azure Monitor.
+
+You can define thresholds for these metrics so that you receive an alert when a metric reaches a certain percentage of its published limit.
+
+* *TwinCount* - Total number of twins in the ADT instance.
+** Use this metric to determine if you are approaching the service limit for max number of twins allowed per instance.
+* *ModelCount* - Total number of models in the Azure ADT instance.
+** Use this metric to determine if you are approaching the service limit for max number of models allowed per instance.
+
+=== Ingress Metrics
+Metrics having to do with data ingress.
+
+* *IngressEvents* - The number of incoming telemetry events into Azure Digital Twins.
+* *IngressEventsFailureRate* - The percentage of incoming telemetry events for which the service returns an internal error (500) response code.
+* *IngressEventsLatency* - The average time from when an event arrives to when it is egressed by Azure Digital Twins, at which point the service sends a success/fail result.
+
+=== Routing metrics
+Metrics having to do with routing.
+
+* *MessagesRouted* - The number of messages routed to an endpoint Azure service such as Event Hubs, Service Bus, or Event Grid.
+* *RoutingFailureRate* - The percentage of events that result in an error as they are routed from Azure Digital Twins to an endpoint Azure Service such as Event Hubs, Service Bus, or Event Grid.
+* *RoutingLatency* - Time elapsed between an event getting routed from Azure Digital Twins to when it is posted to the endpoint Azure Service such as Event Hubs, Service Bus, or Event Grid.
+
+=== Additional Metrics Categories
+Some more metrics the business may want to track:
+
+* *API request metrics* - Metrics having to do with API requests, such as the number of API requests, response latency, and the percentage of requests that result in an error message (failure rate).
+* *Billing metrics* - Metrics having to do with billing, such as the total number of API requests hitting the Azure Digital Twin Service, the number of messages sent to external endpoints, and the number of query units consumed.
+
+=== Dimensions
+Some of the routing metrics provide information per endpoint.
+
+[%header,cols=",1"]
+|===
+
+|Dimension
+|Value
+
+|Authentication
+|OAuth
+
+|Operation (for API Requests)
+|Microsoft.DigitalTwins/digitaltwins/delete, +
+Microsoft.DigitalTwins/digitaltwins/write, +
+Microsoft.DigitalTwins/digitaltwins/read, +
+Microsoft.DigitalTwins/eventroutes/read, +
+Microsoft.DigitalTwins/eventroutes/write, +
+Microsoft.DigitalTwins/eventroutes/delete, +
+Microsoft.DigitalTwins/models/read, +
+Microsoft.DigitalTwins/models/write, +
+Microsoft.DigitalTwins/models/delete, +
+Microsoft.DigitalTwins/query/action
+
+|Endpoint Type
+|Event Grid, Event Hubs, Service Bus
+
+|Protocol
+|HTTPS
+
+|Result
+|Success, Failure
+
+|Status Code
+|200, 404, 500, and so on.
+
+|Status Code Class
+|2xx, 4xx, 5xx, and so on.
+
+|Status Text
+|Internal Server Error, Not Found, and so on.
+
+|===
+
+== Azure Digital Twins Diagnostic Settings
+Azure Digital Twins can collect logs for your service instance to monitor its performance, access, and other data.
+
+You can configure diagnostic settings to start collecting logs from the Azure portal.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/monitor-troubleshoot-adt/media/m11-l04-adt-diagnostic-settings-portal-051b29e9.png[]
+
+Following are the categories of logs that Azure Digital Twins collects:
+
+* *ADTModelsOperation* - Log all API calls pertaining to Models.
+* *ADTQueryOperation* - Log all API calls pertaining to queries.
+* *ADTEventRoutesOperation* - Log all API calls pertaining to Event Routes as well as egress of events from Azure Digital Twins to an endpoint service like Event Grid, Event Hubs and Service Bus.
+* *ADTDigitalTwinsOperation*- Log all API calls pertaining to Azure Digital Twins.
+
+Each log category consists of operations of write, read, delete, and action.
+
+These map to REST API calls as follows:
+
+* *Write* - PUT and PATCH
+* *Read* - GET
+* *Delete* - DELETE
+* *Action* - POST
+
+Below is a comprehensive list of operations and corresponding Azure Digital Twins REST API calls that are logged in each category.
+
+[%header,cols="3*"]
+
+|===
+
+|Log Category
+|Operation
+|REST API calls and other events
+
+|ADTModelsOperation
+|Microsoft.DigitalTwins/models/write
+|Digital Twin Models Update API.
+
+|
+|Microsoft.DigitalTwins/models/read
+|Digital Twin Models Get By ID and List APIs.
+
+|
+|Microsoft.DigitalTwins/models/delete
+|Digital Twin Models Delete API.
+
+|
+|Microsoft.DigitalTwins/models/action
+|Digital Twin Models Add API.
+
+|ADTQueryOperation
+|Microsoft.DigitalTwins/query/action
+|Query Twins API.
+
+|ADTEventRoutesOperation
+|Microsoft.DigitalTwins/eventroutes/write
+|Event Routes Add API.
+
+|
+|Microsoft.DigitalTwins/eventroutes/read
+|Event Routes Get By ID and List APIs.
+
+|
+|Microsoft.DigitalTwins/eventroutes/delete
+|Event Routes Delete API.
+
+|
+|Microsoft.DigitalTwins/eventroutes/action
+|Failure while attempting to publish events to an endpoint service (not an API call).
+
+|ADTDigitalTwinsOperation
+|Microsoft.DigitalTwins/digitaltwins/write
+|Digital Twins Add, Add Relationship, Update, Update Component.
+
+|
+|Microsoft.DigitalTwins/digitaltwins/read
+|Digital Twins Get By ID, Get Component, Get Relationship by ID, List Incoming Relationships, List Relationships.
+
+|
+|Microsoft.DigitalTwins/digitaltwins/delete
+|Digital Twins Delete, Delete Relationship.
+
+|
+|Microsoft.DigitalTwins/digitaltwins/action
+|Digital Twins Send Component Telemetry, Send Telemetry.
+
+|===
+
+=== Log Schemas
+Each log category has a schema that defines how events in that category are reported.
+
+Each individual log entry is stored as text and formatted as JSON blob.
+
+[NOTE]
+====
+ADTDigitalTwinsOperation, ADTModelsOperation, and ADTQueryOperation use a consistent API log schema; ADTEventRoutesOperation has its own separate schema.
+====
+
+=== Api Log Schemas
+This log schema is consistent for ADTDigitalTwinsOperation, ADTModelsOperation, and ADTQueryOperation.
+
+It contains information pertinent to API calls to an Azure Digital Twins instance.
+
+Here are the field and property descriptions for API logs.
+
+[%header,cols="3*"]
+|===
+
+|Field name
+|Data type
+|Description
+
+|Time
+|DateTime
+|The date and time that this event occurred, in UTC.
+
+|ResourceID
+|String
+|The Azure Resource Manager ID for the resource where the event took place.
+
+|OperationName
+|String
+|The type of action being performed during the event.
+
+|OperationVersion
+|String
+|The API version utilized during the event.
+
+|Category
+|String
+|The type of resource being emitted.
+
+|ResultType
+|String
+|Outcome of the event.
+
+|ResultSignature
+|String
+|Http status code for the event.
+
+|ResultDescription
+|String
+|Additional details about the event.
+
+|DurationMs
+|String
+|How long it took to perform the event in milliseconds.
+
+|CallerIpAddress
+|String
+|A masked source IP address for the event.
+
+|CorrelationId
+|Guid
+|Customer provided unique identifier for the event.
+
+|Level
+|String
+|The logging severity of the event.
+
+|Location
+|String
+|The region where the event took place.
+
+|RequestUri
+|Uri
+|The endpoint utilized during the event.
+
+|===
+
+Here is an example of a JSON body for these types of logs.
+
+[source,json]
+----
+{
+"time": "2020-03-14T21:11:14.9918922Z",
+"resourceId": "/SUBSCRIPTIONS/BBED119E-28B8-454D-B25E-C990C9430C8F/RESOURCEGROUPS/MYRESOURCEGROUP/PROVIDERS/MICROSOFT.DIGITALTWINS/DIGITALTWINSINSTANCES/MYINSTANCENAME",
+"operationName": "Microsoft.DigitalTwins/digitaltwins/write",
+"operationVersion": "2020-10-31",
+"category": "DigitalTwinOperation",
+"resultType": "Success",
+"resultSignature": "200",
+"resultDescription": "",
+"durationMs": "314",
+"callerIpAddress": "13.68.244.*",
+"correlationId": "2f6a8e64-94aa-492a-bc31-16b9f0b16ab3",
+"level": "4",
+"location": "southcentralus",
+"uri": "https://myinstancename.api.scus.digitaltwins.azure.net/digitaltwins/factory-58d81613-2e54-4faa-a930-d980e6e2a884?api-version=2020-10-31"
+}
+----
+
+=== Egress log schemas
+
+This is the schema for ADTEventRoutesOperation logs.
+
+These contain details pertaining to exceptions and the API operations around egress endpoints connected to an Azure Digital Twins instance.
+
+[%header, cols="3*"]
+|===
+
+|Field name
+|Data type
+|Description
+
+|Time
+|DateTime
+|The date and time that this event occurred, in UTC.
+
+|ResourceId
+|String
+|The Azure Resource Manager resource ID for the resource where the event took place.
+
+|OperationName
+|String
+|The type of action being performed during the event.
+
+|Category
+|String
+|The type of resource being emitted.
+
+|ResultDescription
+|String
+|Additional details about the event.
+
+|Level
+|String
+|The logging severity of the event.
+
+|Location
+|String
+|The region where the event took place.
+
+|EndpointName
+|String
+|The name of egress endpoint created in Azure Digital Twins.
+
+|===
+
+Here is an example of a JSON body for these types of logs.
+
+[source,json]
+----
+{
+"time": "2020-11-05T22:18:38.0708705Z",
+"resourceId": "/SUBSCRIPTIONS/BBED119E-28B8-454D-B25E-C990C9430C8F/RESOURCEGROUPS/MYRESOURCEGROUP/PROVIDERS/MICROSOFT.DIGITALTWINS/DIGITALTWINSINSTANCES/MYINSTANCENAME",
+"operationName": "Microsoft.DigitalTwins/eventroutes/action",
+"category": "EventRoutesOperation",
+"resultDescription": "Unable to send EventGrid message to [my-event-grid.westus-1.eventgrid.azure.net] for event Id [f6f45831-55d0-408b-8366-058e81ca6089].",
+"correlationId": "7f73ab45-14c0-491f-a834-0827dbbf7f8e",
+"level": "3",
+"location": "southcentralus",
+"properties": {
+    "endpointName": "endpointEventGridInvalidKey"
+}
+}
+----
+
+== View and Query ADT Diagnostic Logs
+With diagnostic logs configured, custom queries can be used to troubleshoot issues and generate insights.
+
+Log queries are accessible from the Azure portal.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/monitor-troubleshoot-adt/media/m11-l04-adt-log-queries-portal-f1002ef4.png[]
+
+Prebuilt example queries have been written for various logs.
+
+You can select one of the queries to load it into the query editor and run it to see these logs for your instance.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/monitor-troubleshoot-adt/media/m11-l04-adt-log-query-editor-portal-516bb76a.png[]
+
+In the image above, the left pane includes the following tabs:
+
+* *Tables*: The Tables tab shows the different ADT log categories that are available to use in your queries.
+* *Queries*: The Queries tab contains the example queries that you can load into the editor.
+* *Filter*: The Filter tab lets you customize a filtered view of the data that the query returns.
+
+== Azure Digital Twins Alert
+Alerts proactively notify you when important conditions are found in your metrics data.
+
+They allow you to identify and address issues before the users of your system notice them.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/monitor-troubleshoot-adt/media/m11-l04-adt-alerts-portal-ae673195.png[]
+
+Selecting *New alert rule* opens the *Create alert rule* page.
+
+You can follow the prompts to define conditions, action to be triggered, and alert details.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/monitor-troubleshoot-adt/media/m11-l04-adt-create-alert-rule-portal-5b023528.png[]
+
+Referring to the Create alert rule image above:
+
+* Scope details should fill automatically with the details for your instance.
+* You will define Condition and Action group details to customize alert triggers and responses.
+* In the Alert rule details section, enter a name and optional description for your rule. You can select the Enable alert rule upon creation checkbox if you want the alert to become active as soon as it is created.
+** This is also where you select a resource group and Severity level.
+
+== Azure Resource Health support for ADT
+Azure Resource Health can help you monitor whether your Azure Digital Twins instance is up and running.
+
+You can also use it to learn whether a regional outage is impacting the health of your instance.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/monitor-troubleshoot-adt/media/m11-l04-adt-resource-health-portal-143a0427.png[]
+
+In the image above, the Azure Digital Twins instance is showing the current state as Available, and you can see that the resource has been available for the previous nine days.
+

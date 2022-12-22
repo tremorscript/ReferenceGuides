@@ -6,6 +6,1621 @@
 :icons: font
 :toc:
 
+== Features
 
-== Core Subsystems of IoT
-An IoT solution architectur
+=== Security
+IoT Hub is a managed service that acts as a central message hub for *bi-directional communication* between your IoT application and the devices it manages.
+
+Per-device authentication enables each device to connect securely to IoT hub and be managed securely by IoT hub.
+
+You can control user device access and per-device level connection.
+
+IoT Hub Device Provisioning Service automatically provisions devices to the correct IoT Hub when the device first boots up.
+
+* Multiple authentication types:
+** SAS token-based authentication.
+** Individual X.509 certificate authentication for secure, standards-based authentication.
+** X.509 CA authentication for simple, standards-based enrollment.
+
+=== Routing
+* IoT Hub has *built-in routing* and can setup automatic, rules-based message fan-out:
+** Use message routing to control where your hub sends device telemetry.
+** Can route messages to multiple endpoints at no extra cost.
+** No-code routing rules instead of writing custom message dispatcher code.
+
+=== Integration
+* IoT Hub can integrate with other services:-
+** Azure Event Grid to help your business to quickly react to critical events.
+** Azure Logic Apps to automate business processes.
+** Azure Machine Learning to add machine learning and AI models.
+** Azure Stream Analytics to run real-time analytic computations on the data.
+
+=== Device Management
+* IoT Hub can manage your devices:-
+** Store, synchronize, and query device metadata and state information for all your devices.
+** Set device state either per-device or based on some common characteristic.
+** Automatically respond to a device-reported state change.
+
+=== Developer
+* Use Azure IoT device SDK libraries to build applications that run on your devices and interact with IoT Hub.
+* There is a limit of 50 IoT hubs per subscription. You can request quota increases by contacting support.
+
+== Device Provisioning Service
+
+=== Provisioning Process
+* Provisioning is a two part process:
+** The first part is establishing the initial connection between the device and the IoT solution by registering the device.
+** The second part is applying the proper configuration to the device based on the requirements of the solution it was registered to.
+
+=== Features
+* Secure attestation support for both X.509 and TPM-based identities
+* Multiple allocation policies to control how the DPS assigns devices to IoT hubs.
+* Monitoring and diagnostic logging
+* Mult-hub support allows DPS to assign devices to more than one IoT hub across subscriptions.
+* Cross-region support to assign devices in other regions.
+
+=== When to use
+
+* Zero-touch provisioning to an IoT solution without hardcoding IoT Hub connection.
+* Load-balancing devices across multiple hubs.
+* Connecting devices to a particular IoT solution depending on use case.
+* Connecting a device to the IoT hub with the lowest latency.
+* Reprovisioning based on a change in the device.
+* Rolling the keys used by the device to connect to IoT Hub.
+
+
+== IoT Hub Tiers
+* To evaluate which IoT Hub tier is right for you solution, consider the following two questions:
+** What features do I plan to use?
+** How much data do I plan to move daily?
+
+=== Basic Tier
+* This tier enables features for solutions that only need uni-directional communication from devices to the cloud.
+* If your IoT solution is based around collecting data from devices and analyzing it centrally, then the basic tier is probably right for you.
+
+=== Standard Tier
+* This tier of IoT Hubs enables features for solutions that want to make use of the bi-directional communication capabilities.
+* If you would like to control IoT devices remotely or distribute some of your workloads onto the devices themselves, then you should consider the standard tier.
+
+
+== IoT Hub Message Throughtput
+* Message traffic is measured for your IoT hub on a per-unit basis.
+* When you create an IoT hub, you choose its tier and edition, and set the number of units available.
+* You can purchase up to 200 units for the B1, B2, S1, or S2 edition, or up to 10 units for the B3 or S3 edition.
+
+|===
+|Tier edition |Sustained throughput |Sustained send rate
+
+|B1, S1 
+|Up to 1111 KB/minute per unit (1.5 GB/day/unit) 
+|Average of 278 messages/minute per unit (400,000 messages/day per unit) 
+
+|B2, S2 
+|Up to 16 MB/minute per unit (22.8 GB/day/unit) 
+|Average of 4,167 messages/minute per unit (6 million messages/day per unit)
+
+|B3, S3 
+|Up to 814 MB/minute per unit (1144.4 GB/day/unit) 
+|Average of 208,333 messages/minute per unit (300 million messages/day per unit)
+|===
+
+== IoT Hub Partition
+
+* Partions can be used to reduce contentions that could occur when concurrently reading and writing to event streams. 
+* The partition limit is chosen when IoT hub is created.
+* The maximum partition limit is 32 but most IoT hubs only need 4 partitions.
+* The number of partitions is directly related to the number of concurrent readers you expect to have.
+* The default value of four partitions should be used unless specified by the architect.
+
+== IoT Hub Endpoint
+* An endpoint is a service that can retrieve data from other services.
+* Examples of endpoint types:
+** *Device-facing endpoints* that enables devices to perform operations such as sending device-to-cloud messages and receiving cloud-to-device messages.
+** *Service-facing management endpoints* that enable back-end apps to perform operations such as device identity management and device twin management.
+** *Service facing built-in endpoints* for reading device-to-cloud messages.
+** *Custom endpoints* to receive device-to-cloud messages dispatched by a routing rule.
+
+=== Built-in endpoints
+
+.Source Microsoft Learn
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-iot-hub-properties/media/m02-l04-iot-hub-endpoints-413257e2.png[]
+
+The IoT hub endpoints:
+
+* *Resource provider*. It exposes an Azure Resource Manager interface. This interface enables Azure subscription owners to create and delete IoT hubs, and to update IoT hub properties.
+* *Device identity management*. A set of Https REST endpoints to manage device identities. Device identities are used for device authentication and access control.
+* *Device twin management*. A set of Https REST endpoints to query and update device twins.
+* *Jobs management*. Https REST endpoint to query and manage jobs.
+* *Device endpoints*. For each device, a set of endpoints are exposed
+** Send device-to-cloud messages.
+** Receive cloud-to-device messages.
+** Initiate file uploads - a device uses this endpoint to receive an Azure storage SAS URI from IoT Hub to upload a file.
+** Retrieve and update device twin properties.
+** Receive direct method requests.
+* *Service endpoints*. Exposes a set of endpoints for your solution back end to communicate with your devices. With one exception, these endpoints are only exposed using the AMQP protocols. The method invocation endpoint is exposed over the Https protocol.
+** Receive device-to-cloud messages.
+** Send cloud-to-device messages and receive delivery acknowledgements.
+** Receive file notifications.
+** Direct method invocation.
+** Receive operation monitoring events.
+
+
+=== Custom endpoints
+* These endpoints act as service endpoints and are used as sinks for message routes.
+* Devices cannot write directly to these custom endpoints.
+* The following services are supported as custom endpoints.
+** Azure Storage containers
+** Event Hubs
+** Service Bus Queues
+** Service Bus Topics
+
+== IoT Hub Security
+There are three different ways for controlling access to IoT Hub:
+
+* *Azure AD* - It provides identity-based authentication and fine-grained authorization with Azure RBAC. It supports only IoT hub service api's.
+* *SAS* - It lets you group permissions and grant them to applications using access keys and signed security tokens.
+* *Per-device security credentials* - Each IoT Hub contains an identity registry. For each device in this registry, you can configure security credentials that grant DeviceConnect permissions scoped to the device's endpoints.
+
+=== Access Control and Permissions
+* Use shared access policies for IoT hub-level access.
+* Use the individual device credentials to scope access to that device only.
+
+=== Authentication
+* Azure IoT hub grants access to endpoints by verifying a token against the shared access policies and identity registry security credentials.
+
+=== Security tokens
+* IoT Hub uses security tokens to authenticate devices and services to avoid sending keys on the wire.
+* Security tokens are limited in time validity and scope.
+* Some scenarios do require you to use security tokens directly. Example:
+** The direct use of the MQTT, AMQP, or HTTPS surfaces.
+** The implementation of the token service pattern.
+* IoT hub also allows devices to authenticate with IoT Hub using X.509 certificates.
+
+=== Supported X.509 certificates
+* You can verify using X.509 certificates by uploading either a certificate thumbprint or a certificate authority (CA) to Azure IoT Hub.
+* Authentication using certificate thumbprints only verifies that the presented thumbprint matches the configured thumbprint.
+* Authentication using certificate authority validates the certificate chain.
+* Supported Certificates include:
+** *An existing X.509 certificate*. A device may already have a certificate that it can then use to authenticate. Works with either thumbprint or CA authentication.
+** *CA-signed X.509 certificate*. You can use a Certificate Authority signed certificate. Works with either thumbprint or CA authentication.
+** *A self generated and self-signed X.509 certificate*. A device manufacturer or in-house deployer can generate these certificates and store the corresponding private key (and certificate) on the device. You can use tools such as OpenSSL and Windows SelfSignedCertificate utility for this purpose. Only works with thumbprint authentication.
+* A device may either use an X.509 certificate or a security token for authentication, but not both.
+
+== IoT Hub Device Lifecycle Terms and Concepts
+For Azure IoT, there are five stages within the device lifecycle:
+
+* *Plan*: Enable operators to create a device metadata scheme that enables them to query for, and target a group of devices for bulk management operations. You can use the device twin to store this device metadata in the form of tags and properties.
+* *Provision*: Securely provision new devices to IoT Hub and enable operators to immediately discover device capabilities.
+* *Configure*: Facilitate bulk configuration changes and firmware updates to devices while maintaining both health and security.
+* *Monitor*: Monitor overall device collection health, the status of ongoing operations, and alert operators to issues that might require attention.
+* *Retire*: Replace or decommission devices after a failure, upgrade cycle, or at the end of the service lifetime.
+
+== IoT Hub Device Identity and Registration
+
+=== Identity Registry
+* A device must have an entry in the IoT Hub identity registry before it can connect to an IoT Hub.
+* The deviceID is case-sensitive.
+* The identity registry is a REST-capable collection of device identity resources.
+* IoT Hub creates a set of resources for every device in the identity registry such as the queue that contains in-flight cloud-to-device messages.
+* Use the identity registry when you need to:
+** Provision devices that connect to your IoT hub.
+** Control per-device access to your hub's device-facing endpoints.
+
+=== Module Identity
+* You can create module identities under a device identity.
+* Each module identity can be configured with an independent connection to IoT hub.
+* You can seperate access control permissions.
+* You can create up to 20 module identites under a device identity.
+
+=== Identity registry operations
+* Identity registry exposes the following operations:
+** Create device or module identity
+** Update device or module identity
+** Retreive device or module identity
+** Delete device or module identity
+** List up to 1000 identities
+** Export device identities to Azure blob storage
+** Import device identities from Azure blob storage
+
+=== Device Creation
+* You need to specify the Device ID and the authentication type when creating a new device.
+
+== IoT Hub Device Twins Concept
+* Device Twins are json documents managed by IoT Hub that store device state information associated with a physical device.
+* This information includes metadata, configurations, and conditions.
+* Azure IoT Hub maintains a device twin for each registered device.
+* Device twins are implicity created and deleted when a device identity is created or deleted in IoT Hub.
+* A device twin is a JSON document that includes:
+** _Tags_. A solution back end can read from and write to. Tags are not visible to device apps.
+** _Desired properties_. The solution back end can set desired properties, and the device app can read them. The device app can also receive notifications of changes in the desired properties.
+** _Reported properties_. The device app can set reported properties, and the solution back end can read and query them.
+** _Device identity properties_. The read-only properties from the corresponding device identity stored in the identity registry
+
+.Source Microsoft Learn
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-iot-device-lifecycle-concepts/media/m02-l01-device-twin-diagram-03c0f21f.png[]
+
+.Sample JSON
+[source,json]
+----
+{
+    "deviceId": "devA",
+    "etag": "AAAAAAAAAAc=",
+    "status": "enabled",
+    "statusReason": "provisioned",
+    "statusUpdateTime": "0001-01-01T00:00:00",
+    "connectionState": "connected",
+    "lastActivityTime": "2015-02-30T16:24:48.789Z",
+    "cloudToDeviceMessageCount": 0,
+    "authenticationType": "sas",
+    "x509Thumbprint": { 
+        "primaryThumbprint": null,
+        "secondaryThumbprint": null
+    },
+    "version": 2,
+    "tags": {
+        "$etag": "123",
+        "deploymentLocation": {
+            "building": "43",
+            "floor": "1"
+        }
+    },
+    "properties": {
+        "desired": {
+            "telemetryConfig": {
+                "sendFrequency": "5m"
+            },
+            "$metadata": {...},
+            "$version": 1
+        },
+        "reported": {
+            "telemetryConfig": {
+                "sendFrequency": "5m",
+                "status": "success"
+            },
+            "batteryLevel": 55,
+            "$metadata": {...},
+            "$version": 4
+        }
+    }
+}
+----
+
+=== Device Twins Usage
+Use device twins to:
+
+* Store device-specific metadata in the cloud. For example, the deployment location of a vending machine.
+* Report current state information such as available capabilities and conditions from your device app. For example, a device is connected to your IoT hub over cellular or WiFi.
+* Synchronize the state of long-running workflows between device app and back-end app. For example, when the solution back end specifies the new firmware version to install, and the device app reports the various stages of the update process.
+* Query your device metadata, configuration, or state.
+
+== IoT Hub Module Identity and Module Twins
+* Each module identity implicitly generates a module twin.
+* Module twins are JSON documents that store module information including metadata, configurations, and conditions.
+* SDKs enable you to create modules where each one opens an independent connection to IoT Hub.
+* For example, if your vending machine has 3 different sensors controlled by different departments in your company, you can create a module for each sensor.
+* This way, each department is only able to create jobs or direct methods for the sensor that they control, avoiding conflicts and user errors.
+
+== IoT Hub Device Monitoring
+* Device monitoring is used to track the overall device collection health, the status of ongoing operations, and to alert operators to issues that might require their attention.
+* Device twin desired and reported properties can be used to monitor a target condition, target content, or device metrics.
+** The Target condition defines the scope of device twins to be updated. It is specified as a query on twin tags and/or reported properties.
+** The Target content defines the desired properties to be added or updated in the targeted device twins. The content includes a path to the section of desired properties to be changed.
+** The Metrics define the summary counts of various configuration states such as Success, In Progress, and Error.
+
+
+== IoT Hub Device Retirements
+* Use the IoT Hub identity registry for securely revoking device identities and credentials.
+* You can disable devices by updating the status property of an identity in the identity registry.
+* The disable feature is not available for modules.
+
+
+== IoT Device Configuration and Communication Protocols
+
+=== Protocols
+
+|===
+|Protocol |When you should use this protocol.
+
+|MQTT MQTT over WebSocket 
+|Use with devices that have their own per-device credentials.
+
+|AMQP AMQP over websocket 
+|Use on field gateways and cloud gateways to take advantage of connection multiplexing across devices.
+
+|HTTPS 
+|Use for devices that support other protocols. 
+|===
+
+=== Ports
+
+|===
+|Protocol |Port
+|MQTT |8883
+|MQTT over WebSockets |443
+|AMQP |5671
+|AMQP over WebSockets |443
+|HTTPS |443 
+|===
+
+== IoT Devices and Device Provisioning
+
+=== Provisioning Process
+There are two phases in the provisioning/deployment process for a device:-
+
+* The manufacturing phase in which the device is created and prepared at the factory.
+* The cloud setup phase in which the Device Provisioning Service is configured for automated provisioning.
+
+==== Manufacturing Process Phase
+* In this phase, the device is programmed with the provisioning service information, 
+* This enables it to call the provisioning service to get its connection info/IoT solution assignment when it is switched on.
+* Also, in this phase, the manufacturer supplies the device deployer/operator with the identifying key information for the device.
+* This identifying information could be an X.509 certificate or the public portion of a trusted platform module.
+* These services are offered by many silicon manufacturers today.
+
+==== Cloud setup phase
+* This phase is about configuring the cloud for proper automatic provisioning.
+* There are two types of users involved
+** A device operator - someone who knows how devices are intially set up.
+** A solution operator - someonw who knows how devices are to be split among the IoT hubs.
+* A one-time initial setup of the provisioning service must occur.
+* It is done by the solution operator.
+* The device operator then needs to enroll the device.
+* The device operator takes the key identifying information from the manufacturer and adds it to the enrollment list.
+
+==== Linked IoT Hubs
+* The Device Provisioning Service can only provision devices to IoT hubs that have been linked to it.
+* Linking an IoT hub to an instance of the DPS gives the service read/write permissions to the IoT hub's device registry with the link.
+* A DPS can register a device ID and set the initial configuration in the device twin.
+* Linked IoT hubs may be in any Azure region.
+* You may link hubs in other subscriptions to your provisioning service.
+
+==== Allocation policy
+* The service level setting that determines how DPS assigns devices to an IoT hub.
+* There are there supported policies:
+** Evenly weighted distribution. The default setting. Linked IoT hubs are equally likely to have devices provisioned to them.
+** Lowest Latency. Devices are provisioned to an IoT hub with the lowest latency.
+** Static Configuration via the enrollment list: specification of the desired IoT hub in the enrollment list takes priority over the service-level allocation policy.
+** Custom (Use Azure Function): A custom allocation policy using custom code in an Azure function.
+
+==== Enrollment
+* An enrollment is the record of devices that may register through autoprovisioning.
+* Two types of enrollments are supported:
+** Group enrollment: Recommended for a large number of devices that share a desired initial configuration, or for devices all going to the same tenant.
+** Individual enrollment: Recommended for devices that require unique initial configurations, or for devices that can only authenticate using SAS tokens via TPM attestation.
+* Enrollment record contains information about the device or group of devices:
+** The attestation mechanism used by the device.
+** The optional intial desired configuration.
+** Desired IoT hub.
+** The desired device ID.
+
+==== Registration
+* A registration is the record of a device successfully registering/provisioning to an IoT Hub via the Device Provisioning Service.
+* Registration records are created automatically; they can be deleted, but they cannot be updated.
+
+==== Operations
+* Operations are the billing unit of the Device Provisioning Service.
+* One operation is the successful completion of one instruction to the service.
+* Operations include device registrations and re-registrations; service-side changes such as adding enrollment list entries, and updating enrollment list entries.
+
+== IoT Device Enrollment Concepts
+* The manufacturer is responsible for encoding the device identity info, and the Device Provisioning Service registration URL.
+
+=== ID Scope
+* The ID scope is assigned to a DPS when it is created by the user.
+* It is used to uniquely identify the specific provisioning service the device will register through.
+* The ID scope is generated by the service and is immutable, which guarantees uniquess.
+
+=== Registration ID
+* The registration ID uniquely identifies a device in the Device Provisioning Service.
+* The registration ID must be unique in the provisioning service ID scope.
+* Each device must have a registration ID.
+* The registration ID is alphanumeric, case insensitive, and may contain special characters including colon, period, underscore, and hyphen.
+* When TPM attestation is used, the registration ID is provided by the TPM itself.
+* When X.509-based attestation is used, the registration ID is provided by the subject name of the certificate.
+
+=== Device ID
+* The device ID is the ID as it appears in IoT Hub.
+* The desired ID may be set in the enrollment entry.
+* Setting the desired ID is only supported in individual enrollments.
+* If no desired device ID is specified in the enrollment list, the registration ID is used as the device ID when registering the device.
+
+=== Attestation mechanism
+* An attestation mechanism is a method used for confirming a device's identity.
+* IoT Hub uses "authentication scheme" for a similar concept in that service.
+* The DPS supports the following forms of attestation:
+** X.509 certificates based on the standard X.509 certificate authentication flow.
+** Trusted Platform Module (TPM) based on a nonce challenge, using the TPM standard for keys to present a signed Shared Access Signature (SAS) token. TPM attestation does not require a physical TPM on the device, but the service expects to attest using the endorsement key per the TPM spec.
+** Symmetric Key based on shared access signature (SAS) security tokens, which include a hashed signature and an embedded expiration.
+* A hardware Security Module (HSM) is recommended for secure, hardware-based storage of device secrets, and is the most secure form of secret storage.
+* Both X.509 certificates and SAS tokens can be stored in HSM.
+
+
+== IoT Device Enrollment Types
+
+=== Individual Enrollments
+* It is an entry for a single device that may register.
+* Individual enrollments may use X.509 certificates or SAS tokens as attestation mechanisms.
+* Individual enrollments may have the desired IoT hub device ID specified.
+* Individual enrollments are recommended for devices with unique initial configurations, or for devices that can only use SAS tokens via TPM or virtual TPM as the attestation mechanism.
+
+=== Group Enrollments
+* An enrollment group is a group of devices that share a specific attestation mechanism.
+* Enrollment groups support both X.509 and symmetric keys.
+* All devices in the X.509 enrollment group present X.509 certificates that have been signed by the same root or intermediate Certificate Authority(CA).
+* Each device in the symmetric key enrollment group present SAS tokens derived from the group symmetric key.
+* The enrollment group name and certificate name must be alphanumeric, lowercase, and may contain hyphens.
+
+
+== IoT Device X.509 Certificate Attestation Process
+* X.509 certificates are typically arranged in a certificate chain of trust in which each certificate in the chain is signed by the private key of the next higher certificate, and so on, terminating in a self-signed root certificate.
+* This arrangement establishes a delegated chain of trust from the root certificate generated by a trusted root certificate authority (CA) down through each intermediate CA to the end-entity "leaf" certificate installed on the device.
+* Often the certificate chain represents some logical or physical heirarchy associated with devices.
+* For example, a manufacturer may:
+** Issue a self-signed root CA certificate.
+** Use the root certificate to generate a unique intermediate CA certificate for each factory.
+** Use each factory's certificate to generate a unique intermediate CA certificate for each production line in the plant.
+** And finally, use the production line certificate to generate a unique device (end-entity) certificate for each device manufactured on the line.
+
+=== Root Certificate
+* A root certificate is a self-signed X.509 certificate representing a certificate authority (CA).
+* It is the terminus, or trust anchor, of the certificate chain.
+* Root certificates can be self-issued by an organization or purchased from a root certificate authority.
+* The root certificate can also be referred to as a root CA certificate.
+
+=== Intermediate Certificate
+* An intermediate certificate is an X.509 certificate, which has been signed by the root certificate (or by another intermediate certificate with the root certificate in its chain).
+* The last intermediate certificate in a chain is used to sign the leaf certificate.
+
+=== End-entity "leaf" certificate
+* The leaf certificate, or end-entity certificate, identifies the certificate holder.
+* It has the root certificate in its certificate chain and zero or more intermediate certificates.
+* The leaf certificate is not used to to sign any other certificates.
+* It uniquely identifies the device to the provisioning service and is sometimes referred to as the device certificate.
+* During authentication, the device uses the private key associated with its certificate to respond to a proof of possession challenge from the service.
+* Leaf certificates used with an Individual enrollment entry have a requirement that the Subject Name must be set to the registration ID of the Individual Enrollment entry.
+* Leaf certificates used with an Enrollment group entry should have the Subject Name set to the desired device ID, which will be shown in the Registration Records for the authenticated device in the enrollment group.
+
+== Controlling device access to the provisioning service with X.509 certificates
+* The provisioning service exposes two types of enrollment entry that you can use to control access for devices that use the X.509 attestation mechanism:
+** Individual enrollment entries are configured with the device certificate associated with a specific device. These entries control enrollments for specific devices.
+** Enrollment group entries are associated with a specific intermediate or root CA certificate. These entries control enrollments for all devices that have that intermediate or root certificate in their certificate chain.
+
+=== Process
+* When a device connects to a provisioning service, if an individual enrollment for the device exists, the provisioning service applies that entry.
+* If there is no individual enrollment for the device and an enrollment group for the first intermediate certificate in the device's certificate chain exists, the service applies that entry, and so on, up the chain to the root. 
+* The service applies the first applicable entry such that:
+** If the first enrollment entry found is enabled, the service provisions the device.
+** If the first enrollment entry found is disabled, the service does not provision the device.
+** If no enrollment entry is found for any of the certificates in the device's certificate chain, the service does not provision the device.
+* This mechanism and the hierarchical structure of certificate chains provides powerful flexibility in how you can control access for both individual devices and groups of devices.
+* For example, imagine five devices with the following certificate:
+** Device 1: root certificate -> certificate A -> device 1 certificate
+** Device 2: root certificate -> certificate A -> device 2 certificate
+** Device 3: root certificate -> certificate A -> device 3 certificate
+** Device 4: root certificate -> certificate B -> device 4 certificate
+** Device 5: root certificate -> certificate B -> device 5 certificate
+* Initially, you can create a single enabled group enrollment entry for the root certificate to enable access for all five devices.
+* If certificate B later becomes compromised, you can create a disabled enrollment group entry for certificate B to prevent Device 4 and Device 5 from enrolling.
+* If still later Device 3 becomes compromised, you can create a disabled individual enrollment entry for its certificate.
+* This revokes access for Device 3, but still allows Device 1 and Device 2 to enroll.
+
+== IoT Device Hardware Security Module
+* The hardware security module, or HSM, is used for secure, hardware based storage of device secrets, and is the most secure form of secret storage.
+* Both X.509 certificates and SAS tokens can be stored in the HSM.
+
+=== Trusted Platform Module
+* TPM refers to a standard for securely storing keys used to authenticate the platform.
+* TPM can also refer to the I/O interface used to interact with the modules implementing the standard.
+* TPMs can exist as discrete hardware, integrated hardware, firmware-based, or software-based.
+* Device Provisioning service only supports TPM 2.0.
+* TPM attestation is based on a nonce challenge, which uses the endorsement and storage root keys to present a signed Shared Access Signature (SAS) token.
+
+=== Endorsement key
+* The endorsement key is an asymmetric key contained inside the TPM.
+* It is internally generated or injected at manufacture time.
+* It is unique for every TPM.
+* It cannot be changed or removed.
+* The private key portion of the endorsement key is never released outside of the TPM.
+* The public portion of the endorsement key is used to recognize a genuine TPM.
+
+=== Storage root key
+* The storage root key is stored in the TPM.
+* It is used to protect the TPM keys created by applications.
+* These cannot be used without the TPM.
+* The storage root key is generated when you take ownership of the TPM.
+* When you clear the TPM so a new user can take ownership, a new storage root key is generated.
+
+== IoT Device Trusted Platform Module (TPM) Attestation Process
+* TPM attestation uses endorsement key (EK) as the secure root of trust.
+* The EK is unique to the TPM.
+* Changing the EK changes the device into a new one.
+* TPMs have another type of key called the storage root key (SRK).
+* An SRK may be generated by the TPMs owner after taking ownership.
+* Taking ownership is a way of saying "Someone sets a password on the HSM".
+* If a TPM device is sold to a new owner, the new owner can take ownership of the TPM to generate a new SRK.
+* The SRK provides a sandbox for the owner to store their keys and provide access revocability if the device or TPM is sold.
+* Once a device has been setup, it will have both an SRK and an EK available for use.
+* TPM ownership could mean many things, follow the instructions relevant to your system to take ownership.
+
+.Source Microsoft Learn
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-device-provisioning-service-trusted-platform-module-ownership-2e2f42a8.png[]
+
+=== High-level Attestation Process
+* The public part of the EK is used by the DPS for device enrollment.
+* The device vendor can read the EK_pub and upload it to the provisioning service.
+* The device will be recognized when it connects to the DPS.
+* The DPS does not check the SRK or owner.
+* Clearing the TPM erases customer data and not the EK.
+* The device will still be recognized by the DPS when it connects to provision.
+
+=== Detailed Attestation Process
+* The device connects to the DPS and requests to provision.
+* It provides the service its registration ID, an ID scope, and the EK_pub and SRK_pub from the TPM.
+* The service passes the encrypted nonce back to the device.
+* The device decrypts the encrypted nonce and uses that to sign a SAS token to connect again and finish provisioning.
+
+.Source Microsoft Learn
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/step-one-request-provisioning-78fb84b8.png[]
+
+=== Nonce challenge
+* The device takes the nonce and uses the private portion of the EK and SRK to decrypt the nonce into the TPM.
+* The order of nonce encryption delegates trust from the EK, which is immutable, to the SRK, which can change if a new owner takes ownership of the TPM.
+
+.Source Microsoft Learn
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/step-two-nonce-challenge-a87bd4ee.png[]
+
+=== Validate the nonce and receive credentials
+* The device then signs a SAS token using the decrypted nonce.
+* It reestablishes connection to the DPS using the signed SAS token.
+* With the Nonce challenge completed, the service allows the device to provision.
+
+.Source Microsoft Learn
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-device-provisioning-service-trusted-platform-module-attestation-step-three-validation-922a60fc.png[]
+
+== IoT Device Symmetric Key Attestation
+* Symmetric key attestation is a simple approach to authenticating a device with DPS.
+* Can be used if you do not have strict security requirements.
+* It is useful for legacy devices with limited security functionality.
+
+=== Symmetric Key Creation
+* The DPS creates new symmetric keys with a default length of 32 bytes when new enrollments are saved with the *Auto generate keys* option enabled.
+* You can also specify your own symmetric keys.
+* Your keys must have a key length between 16 bytes and 64 bytes.
+* The keys must be in valid Base64 format.
+
+=== SAS tokens
+SAS tokens have the following form:- +
+`SharedAccessSignature sig=\{signature}&se=\{expiry}&skn=\{policyName}&sr=\{URL-encoded-resourceURI}`
+
+* Signature is the HMAC-SHA256 signature string produced by using the symmetric key or the enrollment group key. The key must be decoded from base64 before being used to perform the sha256 computation. The signature result must be url encoded.
+* resourceURI is the uri registration endpoint that can be accessed by this token. It starts with the scope ID for the DPS. for example, `{scope ID}/registrations/{registration ID}`
+* expiry is the number of seconds since Jan 1970
+* url-encoded-resourceURI is the lower case URL-encoding of the lower case resource URI.
+* policyName is the name of the shared access policy to which this token refers. The policy name used when provisioning with symmetric key attestation is registration.
+
+== IoT Device Provisioning Process
+* The DPS automates many of the manual steps that are traditionally involved in provisioning devices.
+
+.Source Microsoft Learn
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-device-provisioning-service-provisioning-flow-a8e493e4.png[]
+
+. Device manufacturer adds the device registration information to the enrollment list in the Azure portal.
+. Device contacts the DPS set/embedded at the factory. The device passes identifying information to the DPS to prove its identity.
+. The DPS validates the identity of the device by validating the registration ID and key against the enrollment list entry using either a nonce challenge (TPM) or X.509 certificates.
+. The DPS registers the device with an IoT Hub and populates the device's twin state.
+. The IoT hub returns the deviceID information to the provisioning service.
+. The DPS returns the IoT hub connection information to the device. The device can now start sending data directly to the IoT hub.
+. The device connects to IoT hub.
+. The device gets the desired state from its device twin in IoT hub.
+
+== IoT Device Autoprovisioning Operation
+
+.Source Microsoft Learn
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-auto-provisioning-diagram-aac3c12a.png[]
+
+* *Encode identity and registration URL* - the manufacturer is responsible for encoding the device identity info, and the DPS registration URL
+* *Provide device identity* - the manufacturer is responsible for communicating it to the operator or directly enrolling it to the DPS.
+* *Configure autoprovisioning* - a one-time configuration of the Azure IoT Hub and IoT Hub Device Provisioning Service instances, establishing them and creating linkage between them.
+* *Enroll device identity* - Identity is based on the attestation mechanism the device is designed to use, which allows the provisioning service to attest to the device's authenticity during registration
+* *Build/Deploy registration software.* - The Developer is responsible for building and deploying the registration software to the device, using the appropriate SDK.
+* *Bootup and register.* - Initiated upon boot up by registration software, which is built using a Device Provisioning Service client SDK appropriate for the device and attestation mechanism. Upon successful registration, the device is provided with its IoT Hub unique device ID and connection information, allowing it to pull its initial configuration and begin the telemetry process.
+
+== IoT Device Reprovisioning Process
+
+=== Reprovisioning Scenarios
+
+[horizontal]
+Latency:: As a device moves between locations, network latency can be improved by having the device migrated closed to the IoT hub.
+Multi-tenancy:: A device may be reassigned to a new customer within an IoT solution. This new customer may use a different IoT hub.
+Solution change:: A device could be moved into a new or updated IoT solution. This may require an IoT hub change.
+Quarantine:: A device that is malfunctioning, compromised, or out-of-date may be reassigned to an IoT hub that can only update and get back in compliance. Once the device is functioning properly, it's then migrated back to its main hub.
+
+=== Device State Data
+* Device state data is composed of the device twin and device capabilities.
+* This data is stored in the Device Provisioning Service instance and the IoT hub that a device is assigned to
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-device-provisioning-service-reprovisioning-state-1-0f06266f.png[]
+
+When a device is initially provisioned with a DPS instance, the following steps are done:
+
+. The device sends a provisioning request to a DPS instance.
+.. The service instance authenticates the device identity based on an enrollment entry.
+.. It then creates the initial configuration of the device state data.
+.. The service instance assigns the device to an IoT hub based on the enrollment configuration.
+.. It then returns that IoT hub assignment to the device.
+. The provisioning service instance gives a copy of any intial device state data to the assigned IoT hub.
+.. The device connects to the assigned IoT hub and begins operations.
+
+[]
+* Over time, the device state data on the IoT hub may be updated by device operations and back-end operations.
+* The initial device state information stored in the DPS instance stays untouched.
+* This untouched device state data is the initial configuration.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-device-provisioning-service-reprovisioning-state-2-ccaf3d23.png[]
+
+* As a device moves between IoT hubs, it may also be necessary to migrate device state updated on the previous IoT hub over to the new IoT hub.
+* This migration is supported by reprovisioning policies in the DPS.
+
+=== Reprovisioning policies
+* A device usually supports a method to manually trigger provisioning on demand.
+* The reprovisioning policy on an enrollment entry determines how the DPS handles provisioning requests.
+* The policy also determines whether device state data should be migrated during reprovisioning.
+* The same policies are available for individual enrollments and enrollment groups:
+
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-device-provisioning-service-reprovisioning-state-3-499f65e7.png[]
+
+* Reprovision and migrate data:
+** This policy is the default for new enrollment entries.
+** This policy takes action when devices associated with the enrollment entry submint a new request (1).
+** The updated device state information from that initial IoT hub will be migrated over to the new IoT hub (2).
+** During migration, the device's status will be reported as Assigning.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-device-provisioning-service-terms-concepts/media/m03-l01-device-provisioning-service-reprovisioning-state-4-bb4ef6ea.png[]
+
+* Reprovision and reset to initial config:
+** This policy takes action when devices associated with the enrollment entry submit a new provisioning request (1).
+** The initial configuration data that the provisioning service instance received when the device was provisioned is provided to the new IoT hub (2).
+** During migration, the device's status will be reported as Assigning.
+** This policy is often used for a factory reset without changing IoT hubs.
+
+[]
+* Never reprovision: The device is never reassigned to a different hub. This policy is provided for managing backwards compatibility. 
+
+== IoT Device Provisioning Service Azure CLI Commands
+
+=== DPS Service Commands
+
+[cols="1,1"]
+|===
+|Service Commands
+|Description
+
+|az iot dps create
+|Create an Azure IoT Hub DPS instance.
+
+|az iot dps delete
+|Delete an Azure IoT Hub DPS instance.
+
+|az iot dps list
+|List Azure IoT Hub Device Provisioning Service instances.
+
+|az iot dps show
+|Get the details of an Azure IoT Hub Device Provisioning instance.
+
+|az iot dps update
+|Update an Azure IoT Hub Device Provisioning Service instance.
+|===
+
+
+=== Access Policy Commands
+
+[cols="1,1"]
+|===
+|Access Policy Commands
+|Description
+
+|az iot dps access-policy
+|Manage Azure IoT Hub DPS access policies.
+
+|az iot dps access-policy create
+|Create a new shared access policy in an Azure IoT Hub DPS instance.
+
+|az iot dps access-policy delete
+|Delete a shared access policies in an Azure IoT Hub DPS instance.
+
+|az iot dps access-policy list
+|List all shared access policies in an Azure IoT Hub DPS.
+
+|az iot dps access-policy show
+|Show details of a shared access policy in an Azure IoT Gub DPS instance.
+
+|az iot dps access-policy update
+|Update a shared access policy in an Azure IoT Hub DPS instance.
+
+|===
+
+=== Certificate Commands
+
+[cols="1,1"]
+|===
+|az iot dps certificate
+|Manage Azure IoT Hub DPS certificates.
+
+|az iot dps certificate create
+|Create/upload an Azure IoT Hub DPS certificate.
+
+|az iot dps certificate delete
+|Delete an Azure IoT Hub DPS certificate.
+
+|az iot dps certificate generate-verification-code
+|Generate a verification code for an Azure IoT Hub DPS certificate.
+
+|az iot dps certificate list
+|List all certificates contained within an Azure IoT Gub dps
+
+|az iot dps certificate show
+|Show information about a particular Azure IoT Hub DPS certificate.
+
+|az iot dps certificate update
+|Update an Azure IoT Hub DPS certificate
+
+|az iot dps certificate verify
+|Verify an Azure IoT Hub DPS certificate.
+
+|===
+
+
+
+=== Linked Hub Commands
+
+[cols="1,1"]
+|===
+|Linked Hub Commands
+|Descriptions
+
+|az iot dps linked-hub
+|Manage Azure IoT Hub DPS linked IoT hubs.
+
+|az iot dps linked-hub create
+|Create a linked IoT hub in an Azure IoT Hub DPS instance.
+
+|az iot dps linked-hub delete
+|Update (delete) a linked IoT hub in an Azure IoT Hub DPS instance.
+
+|az iot dps linked-hub list
+|List all linked IoT hubs in an Azure IoT DPS instance.
+
+|az iot dps linked-hub show
+|Show details of a linked IoT hub in an Azure IoT Hub DPS instance.
+
+|az iot dps linked-hub update
+|Update a linked IoT hub in an Azure IoT Hub DPS instance.
+
+|===
+
+
+== IoT Device Provisioning SDK
+
+The Azure Provisioning device and service SDKs for C# can be downloaded from NuGet as follows:
+
+* Provisioning Device Client SDK
+* Provisioning Service Client SDK
+
+=== Provisioning Device SDK
+* This SDK supports the following protocols: MQTT, MQTT-WS, AMQP, AMQP-WS, and HTTPS.
+* TPM Individual Enrollment:
+** This SDK supports connecting your device to the DPS via individual enrollment using TPM.
+** TPM over MQTT (and MQTT-WS) is currrently not supported by the DPS
+* X.509 Indivicual Enrollment:
+** This SDK supports connecting your device to the DPS via individual enrollment using X.509 root certificate.
+* X.509 Enrollment Group
+** This SDK supports connecting your device to the DPS via individual enrollment using X.509 leaf certificate.
+* WebSocket support for MQTT/AMQP is limited to .NET Framework 4.x
+
+=== Provisioning Service SDK
+* This SDK can be used to programmatically enroll devices.
+* CRUD Operation with TPM Individual Enrollment
+** Programmatically manage device enrollment using TPM with the service SDK.
+* Bulk CRUD Operation with TPM Individual Enrollment
+** Programmatically manage device enrollment using TPM with the service SDK.
+* CRUD Operation with X.509 Individual Enrollment
+** Programmatically manage device enrollment using X.509 individual enrollment with the service SDK.
+* CRUD Operation with X.509 Group Enrollment
+** Programmatically manage device enrollment using X.509 group enrollment with the service SDK.
+* Query enrollments
+** Programmatically query registration states with the service SDK.
+
+
+== IoT Device Trusted Platform Module (TPM) Simulator
+* In production, TPM is located on the device, either as discrete hardware, integrated hardware, or firmware-based.
+* In testing phase, a software-based TPM simulator is provided to developers.
+* This simulator is only available on the Windows platform for now.
+* Clone the Github repository: `git clone https://github.com/Azure/azure-iot-sdk-java.git`.
+* Navigate to the TPM simulator folder under `azure-iot-sdk-java/provisioning/provisioning-tool/tpm-simulator/`.
+* Run Simulator.exe prior to running any client application for provisioning device.
+* Let the simulator run in the background throughout the provisioning process to obtain registration ID and Endorsement Key. Both values are only valid for one instance of the run.
+
+== IoT Device X.509 certificate Generator
+* For production environment, purchase an X.509 CA certificate from a public root certificate authority.
+* For testing environment, you can generate an X.509 root certificate or X.509 certificate chain using:
+** OpenSSL: You can use scripts for certificate generation:
+*** Node.js
+*** Powershell or Bash
+** Device Identity Composition Engine (DICE) Enulator: DICE can be used for cryptographic device identity and attestation based on TLS protocol and X.509 client certificates.
+* https://learn.microsoft.com/en-us/azure/iot-hub/tutorial-x509-openssl
+
+== IoT Device Access control to DPS
+* The DPS uses permissions to grant access to each endpoint.
+* Permissions limit the access to a service instance based on functionality.
+* For example, a backend app must include a token that contains security credentials along with every message it sends to the service.
+* You can grant permissions in the following ways:
+** Shared access authorization policies. Shared access policies can grant any combination of permissions.
+** A newly created provisioning service has the `provisioningserviceowner` policy set as the default policy. It is a policy with all permissions.
+
+=== Authentication
+* DPS grants access to endpoints by verifying a token against the shared access policies.
+* Security credentials, such as symmetric keys, are never sent over the wire.
+
+=== Security tokens
+* The DPS uses security tokens to authenticate services to avoid sending keys on the wire.
+* Security tokens are limited in time validity and scope.
+* DPS SDKs automatically generate tokens without requiring any special configuration.
+
+=== Security Token Structure
+* Use security tokens to grant time-bounded access for services to specific functionality in IoT Device Provisioning Service.
+* To get authorization to connect to the provisioning service, services must send security tokens signed with either a shared access or symmetric key.
+* A token signed with a shared access key grants access to all the functionality associated with the shared access policy permissions.
+* The security token has the following format:
+** `SharedAccessSignature sig=\{signature}&se=\{expiry}&skn=\{policyName}&sr=\{URL-encoded-resourceURI}`
+
+=== Use security tokens from service components
+* Service components can only generate security tokens using shared access policies granting the appropriate permissions.
+
+[cols="1,1"]
+|===
+|Endpoint
+|Functionality
+
+|\{your-service}.azure-devices-provisioning.net/enrollments
+|Provides device enrollment operations with the Device Provisioning Service.
+
+|\{your-service}.azure-devices-provisioning.net/enrollmentGroups
+|Provides operations for managing device enrollment groups.
+
+|\{your-service}.azure-devices-provisioning.net/registrations/\{id}
+|Provides operations for retrieving and managing the status of device registrations.
+|===
+
+* As an example, a service generated using a pre-created shared access policy named `enrollmentread` would create a token with the following parameters:
+** resource URI: `\{mydps}.azure-devices-provisioning.net`,
+** signing key: one of the keys of the `enrollmentread` policy,
+** policy name: `enrollmentread`,
+** an expiration time
+
+The result, which would grant access to read all enrollment records, would be:
+
+`SharedAccessSignature sr=mydps.azure-devices-
+provisioning.net&sig=JdyscqTpXdEJs49elIUCcohw2DlFDR3zfH5KqGJo4r4%3D&se=1456973447&skn=enrollmentread`
+
+=== IoT Device Provisioning Service
+
+[cols="1,1"]
+|===
+
+|Permission
+|Notes
+
+|ServiceConfig
+|Grants access to change the service configurations. This permissions is used by backend cloud services.
+
+|EnrollmentRead
+|Grants read access to the device enrollments and enrollment groups. This permission is used by backend cloud services.
+
+|EnrollmentWrite
+|Grants write access to the device enrollments and enrollment groups. This permission is used by backend cloud services.
+
+|RegistrationStatusRead
+|Grants read access to the device registration status. This permission is used by backend cloud services.
+
+|RegistrationStatusWrite
+|Grants delete access to the device registration status. This permission is used by backend cloud services.
+
+|===
+
+
+== IoT Device Configure Verified CA Certificates
+
+* A verified X.509 Certificate Authority (CA) certificate is a CA certificate that has been uploaded and registered to your provisioning service and has gone through proof-of-possession with the service.
+
+=== Proof-of-Possession Process
+
+. Get a unique verification code generated by the provisioning service for your X.509 CA certificate. You can do this from the Azure portal.
+. Create an X.509 verification certificate with the verification code as its subject and sign the certificate with the private key associated with your X.509 certificate.
+. Upload the signed verification certificate to the service. The service validates the verification certificate using the public portion of the CA certificate to be verified, thus proving that you are in possession of the CA certificate's private key.
+
+[]
+* Verifying certificate ownership ensures the uploader of the certificate is in possession of the certificate's private key.
+* Verification prevents a malicious actor sniffing your traffic from extracting an intermediate certificate and using that certificate to create an enrollment group in their own provisioning service, effectively hijacking your devices.
+* By proving ownership of the root or an intermediate certificate in a certificate chain, you are proving that you have permission to generate leaf certificates for the devices that will be registering as part of that enrollment group.
+* For this reason, the root or intermediate certificate configured in an enrollment group must either be a verified certificate or must roll up to a verified certificate in the certificate chain a device presents when it authenticates with the service.
+
+=== Register and get the verification code
+
+. In the Azure portal, navigate to your provisioning service and open Certificates from the left-hand menu.
+. Select Add to add a new certificate.
+. Enter a friendly display name for your certificate.
+. Browse to your .cer or .pem file that represents the public part of your X.509 certificate.
+. Select Upload.
+. Once you get a notification that your certificate is successfully uploaded, Select Save.
+. Select the certificate that you added in the previous step.
+. In Certificate Details, select Generate Verification code.
+. The provisioning service creates a verification code that you can use to validate the certificate ownership.
+. Copy the code to your clipboard.
+
+=== Digitally sign the verification code to create a verification certificate
+
+* You need to sign the Verification Code with the private key associated with your X.509 CA certificate, which generates a signature.
+* This process is known as Proof of possession and results in a signed verification certificate.
+* The Azure IoT Hub C SDK provides Powershell (Windows) and Bash (Linux) scripts to help you create CA and leaf certificates for development and to perform proof-of-possession using a verification code.
+* You download the files relevant to your system to a working folder and follow the instructions in the Managing CA certificates readme to perform proof-of-possession on a CA certificate.
+* The Azure IoT Hub C# SDK contains the Group Certificate Verification Sample, which you can use to do proof-of-possession.
+* The Powershell and Bash scripts provided in the documentation and SDKs rely on OpenSSL.
+* You may also use OpenSSL or other third-party tools to help you do proof-of-possession.
+
+=== Upload the signed verification certificate
+
+* Upload the resulting signature as a verification certificate to your provisioning service in the portal.
+* In Certificate Details on the Azure portal, use the File Explorer icon next to the Verification Certificate .pem or .cer file field to upload the signed verification certificate from your system.
+* Once the certificate is successfully uploaded, select Verify. The STATUS of your certificate changes to Verified in the Certificate Explorer list.
+* Select Refresh if it does not update automatically.
+
+== IoT Device - Roll Certificates
+* During the lifecycle of your IoT solution, you will need to roll certificates.
+* It could be because of a security breach or certificate expirations.
+* Rolling device certificates will involve updating the certificate stored on the device and the IoT hub.
+* The device can then reprovision itself with the IoT hub using normal autoprovisioning with the DPS.
+
+=== Roll the certificate on the device
+* Certificates on a device should always be stored in a safe place like a HSM.
+* If you are managing your own device certificates, make sure both old and new leaf certificates have the same Common Name (CN).
+* By having the same CN, the device can reprovision itself without creating a duplicate registration record.
+* https://learn.microsoft.com/en-us/azure/iot-dps/how-to-roll-certificates
+
+== IoT Device - The Deprovisioning process
+* You may find it necessary to deprovision devices that were previously autoprovisioned through the DPS.
+* For example, a device may be sold or moved to a different IoT hub, or it may be lost, stolen, or otherwise compromised.
+
+Deprovisioning a device involves two steps:
+
+* Disenroll the device from your provisioning service, to prevent future autoprovisioning.
+** To learn how to disenroll a device, see https://learn.microsoft.com/en-us/azure/iot-dps/how-to-revoke-device-access-portal
+** To learn how to disenroll a device programmatically using one of the provisioning SDKs, see https://learn.microsoft.com/en-us/azure/iot-dps/quick-enroll-device-x509?pivots=programming-language-csharp
+** Deregister the device from your IoT Hub, to prevent future communications and data transfer.
+
+The exact steps you take to deprovision a device depends on its attestation mechanism and its applicable enrollment entry with your provisioning service.
+
+Deprovisioning enrollment groups requires you to consider two scenarios:
+
+* To deprovision all of the devices that have been provisioned through an enrollment group:
+  . Disable the enrollment group to blocklist its signing certificate.
+  . Use the list of provisioned devices for that enrollment group to disable or delete each device from the identity registry of its respective IoT hub
+  . After disabling or deleting all devices from their respective IoT hubs, you can optionally delete the enrollment group.
+  . Be aware, though, that, if you delete the enrollment group and there is an enabled enrollment group for a signing certificate higher up in the certificate chain of one or more of the devices, those devices can re-enroll.
+* To deprovision a single device from an enrollment group:
+  . Create a disabled individual enrollment for its leaf (device) certificate.
+  . This revokes access to the provisioning service for that device while still permitting access for other devices that have the enrollment group's signing certificate in their chain.
+  . Do not delete the disabled individual enrollment for the device.
+  . Doing so will allow the device to re-enroll through the enrollment group.
+  . Use the list of provisioned devices for that enrollment group to find the IoT hub that the device was provisioned to and disable or delete it from theat hub's identity registry.
+
+
+== IoT Device - Manage Disenrollment
+* Enrollment in the DPS enables a device to be autoprovisioned.
+* A provisioned device is one that has been registered with IoT Hub.
+* This allows it to receive its initial device twin state and begin reporting telemetry data.
+
+=== Blocklist devices by using an individual enrollment entry
+* Individual enrollments apply to a single device.
+* It can use either X.509 certificates or SAS tokens as the attestation mechanism.
+* Devices that use SAS tokens as their attestation mechanism can be provisioned only through an individual enrollment.
+* To blocklist a device that has an individual enrollment, you can either disable or delete its enrollment entry.
+
+To *temporarily* blocklist the device by disabling its enrollment entry:
+
+. Sign in to the Azure portal and select All resources from the left menu.
+. In the list of resources, select the provisioning service that you want to blocklist your device from.
+. In your provisioning service, select Manage enrollments, and then select the Individual Enrollments tab.
+. Select the enrollment entry for the device that you want to blocklist.
+. On your enrollment page, scroll to the bottom, and select Disable for the Enable entry switch, and then select Save.  
+
+To *permanently* blocklist the device by deleting its enrollment entry:
+
+. Sign in to the Azure portal and select All resources from the left menu.
+. In the list of resources, select the provisioning service that you want to blocklist your device from.
+. In your provisioning service, select Manage enrollments, and then select the Individual Enrollments tab.
+. Select the check box next to the enrollment entry for the device that you want to blocklist.
+. Select Delete at the top of the window, and then select Yes to confirm that you want to remove the enrollment.
+. After you finish the procedure, you should see your entry removed from the list of individual enrollments.
+
+=== Blocklist an X.509 intermediate or root CA certificate by using an enrollment group.
+* X.509 certificates are typically arranged in a certificate chain of trust.
+* If a certificate at any stage in a chain becomes compromised, trust is broken.
+* The certificate must be blocklisted to prevent Device Provisioning Service from provisioning devices downstream in any chain that contains that certificate.
+* An enrollment group is an entry for devices that share a common attestation mechanism of X.509 certificates signed by the same intermediate or root CA.
+* The enrollment group entry is configured with the X.509 certificate associated with the intermediate or root CA.
+* The entry is also configured with any configuration values, such as twin state and IoT hub connection, that are shared by devices with that certificate in their certificate chain.
+* To blocklist the certificate, you can either disable or delete its enrollment group. 
+
+=== Blocklist specific devices in an enrollment group
+* Devices that implement the X.509 attestation mechanism use the device's certificate chain and private key to authenticate.
+* When a device connects and authenticates with DPS, the service first looks for an individual enrollment that matches the device's credentials.
+* The service then searches enrollment groups to determine whether the device can be provisioned.
+* If the service finds a disabled individual enrollment for the device, it prevents the device from connecting.
+* The service prevents the connection even if an enabled enrollment group for an intermediate or root CA in the device's certificate chain exists.
+
+== IoT Hub - How to provision for multitenancy
+* The allocation policies defined by the provisioning service support various allocation scenarios.
+** Geolocation/GeoLatency: This policy causes the DPS to evaluate device latency and determine the closest IoT hub out of the group of IoT hubs.
+** Multi-tenancy: The solution may require all devices for a particular tenant to communicate with a specific group of IoT hubs.
+
+[]
+* Provisioning devices for the multitenant scenario across regions, involves the following:
+** Two (or more) regional IoT hubs.
+** An enrollment group that uses a multitenant enrollment and specifies assigning devices based on lowest latency.
+** Multiple devices provisioned in each region.
+
+* With this configuration in place, you will see that devices in each region are provisioned to the same tenant in the closest region.
+
+== IoT Hub - Common Message Format
+* To support seamleass interoperability across protocols, IoT Hub defines a common message format for all device-facing protocols.
+* This message format is used for both device-to-cloud and cloud-to-device messages.
+* IoT Hub implements device-to-cloud messaging using a streaming messaging pattern.
+* IoT Hub's device-to-cloud messages are more like Event Hubs events than Service Bus messages in that there is a high volume of events passing through the service that can be read by multiple readers.
+
+[]
+An IoT Hub message consists of:
+
+* A predetermined set of _system properties_ as listed below.
+* A set of _application properties_. A dictionary of string properties that the application can define and access, without needing to deserialize the message body. IoT Hub never modifies these properties.
+* An opaque binary body.
+
+[]
+* Property name and values can only contain ASCII alphanumeric characters.
+* `{'!', '#', '$', '%, '&', ''', '*', '+', '-', '.', '^', '_', '`', '|', '~'}` are also allowed.
+
+[]
+Device-to-cloud messaging with IoT Hub has the following characteristics:
+
+* Device-to-cloud messages are durable and retained in an IoT Hub's default messages/events endpoint for up to seven days.
+* Device-to-cloud messages can be at most 256 KB, and can be grouped in batches to optimize sends. Batches can be at most 256 KB.
+* IoT Hub does not allow arbitrary partitioning. Device-to-cloud messages are partitioned based on their originating *deviceID*.
+* IoT Hub enables per-device authentication and access control.
+* You can stamp messages with information that goes into the application properties.
+
+=== System properties of D2C IoT hub messages
+
+. *message-id*
++
+A user settable identifier for the message used for request-reply patterns. +
+A case-sensitive string (up to 128 characters long) of ASCII 7-bit alphanumeric characters. +
+Other characters allowed: ` {'-', ':', '.', '+', '%', '_', '#', '*', '?', '!', '(', ')', ',', '=', '@', ';', '$', '''}`
++
+It is user settable.
++
+The keyword for routing query is _messageId_.
+
+. *iothub-enqueuedtime*
++
+Date and time the Device-to-Cloud message was received by IoT Hub.
++
+It is not user settable.
++
+The keyword for routing query is _enqueuedTime_.
+
+. *user-id*
++
+An ID used to specify the origin of messages. +
+When messages are generated by IoT Hub, it is set to `{iot hub name}`.
++
+It is user settable.
++
+The keyword for routing query is _userId_.
+
+. *iothub-connection-device-id*
++
+An ID set by IoT Hub on device-to-cloud messages. +
+It contains the *deviceId* of the device that sent the message.
++
+It is not user settable.
++
+The keyword for routing query is _connectionDeviceId_.
+
+. *iothub-connection-module-id*
++
+And ID set by IoT Hub on device-to-cloud messages. +
+It contains the *moduleId* of the device that sent the message.
++
+It is not user settable.
++
+The keyword for routing query is _connectionModuleId_.
+
+. *iothub-connection-auth-generation-id*
++
+An ID set by IoT Hub on device-to-cloud messages. +
+It contains the *connectionDeviceGenerationId* of the device that sent the message.
++
+It is not user settable.
++
+The keyword for routing query is _connectionDeviceGenerationId_.
+
+. *iothub-connection-auth-method*
++
+An authentication method set by IoT Hub on device-to-cloud messages. +
+This property contains information about the authentication method used to authenticate the device sending the message.
++
+It is not user settable.
++
+The keyword for routing query is _connectionAuthMethod_.
+
+. *dt-dataschema*
++
+This value is set by IoT hub on device-to-cloud messages. +
+It contains the device model ID set in the device connection.
++
+It is not user settable.
++
+The keyword for routing query is _$dt-dataschema_.
+
+. *dt-subject*
++
+The name of the component that is sending the device-to-cloud messages.
++
+It is user settable.
++
+The keyword for routing query is _$dt-subject_.
+
+=== System Properties of C2D IoT hub messages
+
+. *message-id*
++
+A user settable identifier for the message used for request-reply patterns. +
+A case-sensitive string (up to 128 characters long) of ASCII 7-bit alphanumeric characters. +
+Other characters allowed: ` {'-', ':', '.', '+', '%', '_', '#', '*', '?', '!', '(', ')', ',', '=', '@', ';', '$', '''}`
++
+It is user settable.
++
+
+. *sequence-number*
++
+A number (unique per device-queue) assigned by IoT hub to each cloud-to-device message.
++
+It is not user settable.
+
+. *to*
++
+A destination specified in Cloud-to-Device messages.
++
+It is not user settable.
+
+. *absolute expiry time*
++
+Date and time of message expiration
++
+It is user settable.
+
+. *correlation-id*
++
+A string property in a response message that typically contains the MessageId of the request, in request-reply patterns.
++
+It is user settable.
+
+. *user-id*
++
+An ID used to specify the origin of messages. +
+When messages are generated by IoT Hub, it is set to `{iot hub name}`
++
+It is use settable.
+
+. *iothub-ack*
++
+A feedback message generator.
++
+This property is used in cloud-to-device messages to request IoT Hub to generate feedback messages as a result of the consumption of the message by the device.
++
+--
+Possible values:
+
+[horizontal]
+none(default):: no feedback message is generated. +
+positive:: receive a feedback message if the message was completed. +
+negative:: receive a feedback message if the message expired without being completed by the device. +
+full:: both positive and negative.
+--
+
+=== Message size
+IoT Hub measures message size in a protocol-agnostic way, considering only the actual payload.
+
+The size in bytes is calculated as the sum of the following values:
+
+* The body size in bytes.
+* The size in bytes of all the values of the message system properties.
+* The size in bytes of all user property names and values.
+
+Property names and values are limited to ASCII characters, so the length of the strings equals the size in bytes.
+
+=== Anti-spoofing properties
+To avoid device spoofing in device-to-cloud messages, IoT Hub stamps all messages with the following properties:
+
+* iothub-connection-device-id
+* iothub-connection-auth-generation-id
+* iothub-connection-auth-method
+
+The first two contain the *deviceId* and *generationId* of the originating device (device identity properties).
+
+The iothub-connection-auth-method property contains a json serialized object:-
+
+[source, json]
+----
+{
+  "scope": "{ hub | device }",
+  "type": "{ symkey | sas | x509 }",
+  "issuer": "iothub"
+}
+----
+
+
+== IoT Hub - Message Routing
+
+* IoT Hub Message Routing enables users to rout device-to-cloud messages to service-facing endpoints.
+* Routing also provides a querying capability to filter the data before routing it to the endpoints.
+
+=== Routing endpoints
+* An IoT hub has a default built-in messaging endpoint (messages/events).
+* Custom endpoints can be configured that link IoT hub to other services in your subscription.
+* IoT Hub currently supports the following custom endpoints:
+** Azure Storage containers
+** Event Hubs
+** Service Bus Queues
+** Service Bus Topics
+
+[]
+* There are two storage services IoT hub can route messages to: Azure Blob Storage and Azure Data Lake Storage Gen2.
+* Both of these use blobs for their storage.
+* Service Bus Queues and Service Bus Topics that have Sessions or Duplicate Detection enabled are not supported as custom endpoints.
+
+=== Routing queries
+* A single message may match the condition on multiple routing queries.
+* The IoT hub delivers the message to the endpoint associated with each matched query.
+* IoT hub automatically deduplicates message delivery.
+* So if a message matches multiple queries that have the same destination, it is only written once to that destination.
+* When you route message data to custom endpoints, messages are only delivered to the built-in endpoint if they do not match any query.
+* To deliver messages to both the built-in endpoint and to a custom endpoint, add a route that sends messages to the built-in events endpoint.
+
+[]
+* Each routing query you configure has the following properties:
+
+[horizontal]
+Name:: The unique name that identifies the query.
+Source:: The origin of the data stream to be acted upon. For example, device telemetry.
+Condition:: 
+  The query expression for the routing query that is run against the following to determine if it is a match for the endpoint:
+    * message application properties
+    * system properties 
+    * message body
+    * device twin tags
+    * device twin properties
+Endpoint::
+  * The name of the endpoint where IoT hub sends messages that match the query.
+  * We recommend that you choose an endpoint in the same region as your IoT hub.
+
+
+=== IoT Hub built-in endpoint
+* By default, messages are routed to the built-in service-facing endpoint which is compatible with Event Hubs.
+* This endpoint is currently only exposed using the AMQP protocol on port 5671 and AMQP over WebSockets on port 443.
+* An IoT hub exposes the following properties to enable you to control the built-in endpoint.
++
+Partition count:: Set this property at creation to define the number of partitions for device-to-cloud event ingestion.
+Retention time:: This property specifies how long in days messages are retained by IoT Hub. The default is one day, but it can be increased to seven days.
+* IoT Hub enables you to manage consumer groups on the built-in device-to-cloud receive endpoint.
+* You can have up to 20 consumer groups for each IoT Hub.
+* If you are using message routing and the fallback route is enabled, all messages that do not match a query on any route go to the built-in endpoint.
+* If you disable this fallback route, messages that don't match any query are dropped.
+* Retention time can modified programmatically or through the Azure portal.
+
+=== Reading from the Built-in endpoint
+* IoT Hub exposes the messages/events built-in endpoint for your back-end services to read the device-to-cloud messages.
+* This endpoint is Event Hubs-compatible, which enables you to use any of the mechanisms the Event Hubs service supports for reading messages.
+* For services that are aware of IoT Hub, you can use IoT hub service connection string to connect to the built-in endpoint.
+* For services that are not aware of IoT Hub, you need an Event Hubs-compatible endpoint and Event Hubs-compatible name.
+* You can retrieve these values from IoT hub service in the Azure portal by opening the *Built-in endpoints* blade.
+* You can use any shared access policy that has the ServiceConnect permissions to connect to the specified Event Hubs.
+* The following Azure products are aware of IoT Hub and you can easily create a service connection to them:
+** Azure Functions.
+** Azure Stream Analytics.
+** Time Series Insights.
+** Apache Storm spout.
+** Apache Spark integration.
+** Azure Databricks.
+
+=== Routing to multiple endpoints
+* Message routing can be used for:
+** Sending device telemetry messages and events, namely device lifecycle events and device twin change events, to the built-in-endpoint and custom endpoints.
+** Filtering data before routing it to various endpoints by applying queries.
+** Message routing allows you to query on the message properties and message body as well as device twin tags and device twin properties.
+
+[]
+* IoT Hub needs write access to these service endpoints for message routing to work.
+* If you configure your endpoints through the Azure portal, the necessary permissions are added for you.
+* Make sure you configure your services to support the expected throughput.
+* For example, if you are using Event Hubs as a custom endpoint, you must configure the throughput units for that Event Hubs so it handle the ingress of events from IoT Hub.
+* Similarly, when using a Service Bus Queue as an endpoint, you must configure the maximum size to ensure the queue can hold all the data ingressed.
+* You many need to monitor your endpoints and make any necessary adjustments for the actual load.
+
+[]
+* If a message matches multiple routes that point to the same endpoint, IoT Hub delivers the message to that endpoint only once.
+* You do not need to configure deduplication on your Service Bus queue or topic.
+* In partitioned queues, partition affinity guarantees message ordering.
+
+=== Custom endpoint
+* IoT hub supports Azure Storage containers, Event Hubs, Service Bus queues and Service Bus topics as custom endpoint.
+** Azure Storage
+*** These are two storage services IoT Hub can route messages to -- Azure Blob Storage and Azure Data Lake Storage Gen2 accounts.
+*** Both of these use blobs for their storage.
+** Event Hubs
+*** Event Hubs is a service that processes large amounts of event data (telemetry) from devices and applications.
+*** After you collect data into Event Hubs, you can store the data using a storage cluster or transform it using a real-time analytics provider
+** Service Bus Queues and Service Bus Topics
+*** Service Bus Queues and Topics must not have Sessions or Duplicate Detection enabled. If either of those options are enabled, the endpoint appears as Unreachable in the Azure portal.
+
+=== Fallback route
+* The fallback route sends all the messages that don't satisfy query conditions on any of the existing routes to the built-in endpoint (message/events) that is compatible with Event Hubs.
+* If message routing is turned on, you can enable the fallback route capability.
+* Once a route is created, data stops flowing to the built-in endpoint, unless a route is created to that endpoint.
+* If there are no routes to the built-in-endpoint and a fallback route is enabled, only messages that don't match any query conditions on routes will be sent to the built-in-endpoint.
+* Also, if all existing routes are deleted, fallback route must be enabled to receive all data the built-in-endpoint.
+* You can enable/disable the fallback route in the Azure portal -> Message Routing blade.
+* You can also use Azure Resource Manager for FallbackRouteProperties to use a custom endpoint for fallback route.
+
+=== Non-telemetry events
+* In additon to device telemetry, message routing also enables sending device twin change events, device lifecycle events, and digital twin change events.
+* For example, if a route is created with data source set to device twin change events, IoT Hub sends messages to the endpoint that contain the change in the device twin.
+* Similarly, if a route is created with data source set to device lifecycle events, IoT hub send a message indicating whether the device was deleted or created.
+
+=== Latency
+* When you route device-to-cloud telemetry messages using built-in endpoints, there is a slight increase in the end-to-end latency after the creation of the first route. 
+* In most cases, the average increase in latency is less than 500ms.
+* You can monitor the latency using `Routing: message latency for messages/events` or `d2c.endpoints.latency.builtIn.events` IoT Hub metric.
+* Creating or deleting any route after the first one does not impact the end-to-end latency.
+
+=== IoT Hub - Monitoring and Troubleshooting
+
+* https://learn.microsoft.com/en-us/azure/iot-hub/monitor-iot-hub[IoT Hub metrics] lists all the metrics that are enabled by default for your IoT Hub.
+* The Rest Api https://learn.microsoft.com/en-us/rest/api/iothub/iot-hub-resource/get-endpoint-health?tabs=HTTP[Get Endpoint Health] can be used to get the health status of the endpoints.
+
+
+== IoT Hub - Message Routing Query Syntax
+* Message routing allows you to query on the message properties and message body as well as device twin tags and device twin properties.
+* If the message body is not JSON, message routing can still route the message, but queries cannot be applied to the message body.
+* Queries are boolean expression where a Boolean true makes the query succeed or fail.
+* If the expression evaluates to null or undefined, it is treated as false and an error will be generated in diagnostic logs if there is a routing failure.
+* The query syntax must be correct for the route to be saved and evaluated.
+
+=== Message properties based routing
+* The IoT Hub defines a common format for all device-to-cloud messaging for interoperability across protocols.
+* IoT Hub assumes the following JSON representation of the message.
+* System properties are added for all users and identify content of the message.
+* Users can selectively add appplication properties to the message.
+* IoT Hub device-to-cloud messaging is not case-sensitive.
+* If you have multiple properties with the same name, IoT Hub will only send one of the properties.
+
+[source, json]
+----
+{ 
+  "message": { 
+    "systemProperties": { 
+      "contentType": "application/json", 
+      "contentEncoding": "UTF-8", 
+      "iothub-message-source": "deviceMessages", 
+      "iothub-enqueuedtime": "2017-05-08T18:55:31.8514657Z" 
+    }, 
+    "appProperties": { 
+      "processingPath": "{cold | warm | hot}", 
+      "verbose": "{true, false}", 
+      "severity": 1-5, 
+      "testDevice": "{true | false}" 
+    }, 
+    "body": "{\"Weather\":{\"Temperature\":50}}" 
+  } 
+}
+----
+
+[]
+* *System properties* help identify contents and source of the messages.
+* *Application properties* are user-defined strings that can be added to the message. These fields are optional.
+
+==== Query expressions
+* A query on message system properties needs to be prefixed with the `$` symbol.
+* Queries on application properties are accessed with their name and should not be prefixed with the `$` symbol.
+* If an application property name begins with `$`, then IoT Hub will search for it in the system properties, and if it is not found, then it will look in the application properties.
+
+To query on system property contentEncoding:
+
+[source,sql]
+----
+$contentEncoding = 'UTF-8'
+----
+
+To query on application property processingPath:
+
+[source,sql]
+----
+processingPath = 'hot'
+----
+
+To combine these queries, you can use Boolean expressions and functions:
+
+[source,sql]
+----
+$contentEncoding = 'UTF-8' AND processingPath = 'hot'
+----
+
+=== Message body based routing
+* To enable querying on message body, the message should be a JSON encoded in either UTF-8, UTF-16 or UTF-32.
+* The `contentType` must be set to `application/JSON` and `contentEncoding` to one of the supported UTF encodings in the system properties.
+* If these properties are not specified, IoT Hub will not evaluate the query expression on the message body.
+
+==== Query expressions
+* A query on the message body needs to be prefixed with the $body.
+
+Following are all valid query expressions:
+
+[source,sql]
+----
+$body.Weather.HistoricalData[0].Month = 'Feb'
+----
+
+[source,sql]
+----
+$body.Weather.Temperature = 50 AND $body.Weather.IsEnabled
+----
+
+[source,sql]
+----
+length($body.Weather.Location.State) = 2
+----
+
+[source,sql]
+----
+$body.Weather.Temperature = 50 AND processingPath = 'hot'
+----
+
+
+=== Device Twin based routing
+* Message routing enables you to query on Device Twin tags and properties, which are JSON objects.
+* Querying on module twin is not supported.
+* A sample of Device Twin tags and properties is shown below:
+
+[source, json]
+----
+{
+    "tags": { 
+        "deploymentLocation": { 
+            "building": "43", 
+            "floor": "1" 
+        } 
+    }, 
+    "properties": { 
+        "desired": { 
+            "telemetryConfig": { 
+                "sendFrequency": "5m" 
+            }, 
+            "$metadata" : {...}, 
+            "$version": 1 
+        }, 
+        "reported": { 
+            "telemetryConfig": { 
+                "sendFrequency": "5m", 
+                "status": "success" 
+            },
+            "batteryLevel": 55, 
+            "$metadata" : {...}, 
+            "$version": 4 
+        } 
+    } 
+}
+----
+
+==== Query expressions
+* A query on device twin properties needs to be prefixed with the $twin.
+* Use unique names in tags and properties as the query is not case-sensitive.
+* Refrain from using twin, $twin, body, or $bosy, as a property names.
+* Following are all valid query expressions:
+
+[source,sql]
+----
+$twin.properties.desired.telemetryConfig.sendFrequency = '5m'
+----
+
+[source,sql]
+----
+$body.Weather.Temperature = 50 AND $twin.properties.desired.telemetryConfig.sendFrequency = '5m'
+----
+
+[source,sql]
+----
+$twin.tags.deploymentLocation.floor = 1
+----
+
+
+== IoT Device Message processing options and constraints
+
+=== Message Enrichments
+* Message enrichment is the ability of the IoT Hub to stamp messages with additional information before the messages are sent to the designated endpoint.
+* One reason to use message enrichments is to include data that can be used to simplify downstream processing.
+* For example, enriching device telemetry messages with a device twin tag can reduce load on customers to make device twin API calls for this information.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/consider-message-processing-options-constraints/media/m04-l01-message-enrichments-flow-804be88e.png[]
+
+[]
+* A message enrichment has three key elements:
+** Enrichment name or key
+** A value
+** One or more endpoints for which the enrichment should be applied.
+
+[]
+* The key is a string.
+* A key can only contain alphanumeric characters or these special characters: hyphen(-), underscore (_), and period (.).
+
+The value can be any of the following examples:
+
+* Any static string.
+* The name of the IoT hub sending the message. This value is $iothubname.
+* Information from the device twin, such as its path. Example would `$twin.tags.field` and `$twin.tags.latitude`.
+
+[NOTE]
+====
+At this time, only `$iothubname`, `$twin.tags`, `$twin.properties.desired`, and `$twin.properties.reported` are supported variables for message enrichment.
+====
+
+[]
+* Message enrichments are added as application properties to messages sent to chosen endpoint(s).
+* Enrichments are applied per endpoint.
+* If you specify five enrichments to be stamped for a specific endpoint, all messages going to that endpoint are stamped with the same five enrichments.
+
+[]
+.Limitations
+* You can add up to 10 enrichments per IoT Hub. In the case of the free tier, only 2 enrichments are allowed.
+* If you are applying an enrichment with a value set to a tag or property in the device twin, the value will be stamped as a string value.
+* For example, if an enrichment value is set to `$twin.tags.field`, the messages will be stamped with the string "`$twin.tags.field`" rather than the value of that field from the twin.
+* This happens in the following cases:
+** Your IoT Hub is in the basic tier. Basic tier IoT hubs do not support device twins.
+** Your IoT Hub is in the Standard tier, but the device sending the message has no device twin.
+** Your IoT Hub is in the standared tier, but the device twin path used for the value of the enrichment does not exist.
+*** For example, if the enrichment value is set to `$twin.tags.location`, and the device twin does not have a `location` property under `tags`, the message is stamped with the string `$twin.tags.location`.
+* Updates to a device twin can take up to five minutes to be reflected in the corresponding enrichment value.
+* The total message size, including the enrichments, can't exceed 256KB.
+** If the message size exceeds 256 KB, the IoT Hub will drop the message.
+** You can use IoT Hub metrics to identify and debug errors when messages are dropped. For example, you can monitor `d2d.telemetry.egress.invalid`.
+* Message enrichments don't apply to digital twin change events.
+
+[]
+.Pricing
+* Message enrichments are available at no extra charge.
+* Currently, you are charged when you send a message to an IoT hub.
+* You are only charged once for that message, even if the message goes to multiple endpoints.
+
+
+== IoT Hub quotas and throttling
+
+* Each Azure subscription can have at most 50 IoT hubs, and at most one Free hub.
+* Each IoT hub is provisioned with one or more units in a specific tier.
+* The tier and number of units determine the maximum daily quota of messages that you send
+* The message size used to calculate the daily quota is 0.5 KB for a free tier hub and 4 KB for all other tiers.
+* The tier also determines the throttling limits that IoT Hub enforces on all operations.
+
+.Operation throttles
+* Operation throttles are rate limitations that are applied in minute ranges and are intended to prevent abuse.
+* They are also subject to traffic shaping.
+* Check this link to get the details of the https://learn.microsoft.com/en-us/training/modules/consider-message-processing-options-constraints/4-iot-hub-quotas-throttle[throttles] 
+
