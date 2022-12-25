@@ -6,7 +6,7 @@
 :icons: font
 :toc:
 
-== Features
+== IoT Hub Features
 
 === Security
 IoT Hub is a managed service that acts as a central message hub for *bi-directional communication* between your IoT application and the devices it manages.
@@ -17,50 +17,55 @@ You can control user device access and per-device level connection.
 
 IoT Hub Device Provisioning Service automatically provisions devices to the correct IoT Hub when the device first boots up.
 
-* Multiple authentication types:
-** SAS token-based authentication.
-** Individual X.509 certificate authentication for secure, standards-based authentication.
-** X.509 CA authentication for simple, standards-based enrollment.
+Multiple authentication types:
+
+* SAS token-based authentication.
+* Individual X.509 certificate authentication for secure, standards-based authentication.
+* X.509 CA authentication for simple, standards-based enrollment.
 
 === Routing
-* IoT Hub has *built-in routing* and can setup automatic, rules-based message fan-out:
-** Use message routing to control where your hub sends device telemetry.
-** Can route messages to multiple endpoints at no extra cost.
-** No-code routing rules instead of writing custom message dispatcher code.
+IoT Hub has *built-in routing* and can setup automatic, rules-based message fan-out:
+
+* Use message routing to control where your hub sends device telemetry.
+* Can route messages to multiple endpoints at no extra cost.
+* No-code routing rules instead of writing custom message dispatcher code.
 
 === Integration
-* IoT Hub can integrate with other services:-
-** Azure Event Grid to help your business to quickly react to critical events.
-** Azure Logic Apps to automate business processes.
-** Azure Machine Learning to add machine learning and AI models.
-** Azure Stream Analytics to run real-time analytic computations on the data.
+IoT Hub can integrate with other services:-
+
+* Azure Event Grid to help your business to quickly react to critical events.
+* Azure Logic Apps to automate business processes.
+* Azure Machine Learning to add machine learning and AI models.
+* Azure Stream Analytics to run real-time analytic computations on the data.
 
 === Device Management
-* IoT Hub can manage your devices:-
-** Store, synchronize, and query device metadata and state information for all your devices.
-** Set device state either per-device or based on some common characteristic.
-** Automatically respond to a device-reported state change.
+IoT Hub can manage your devices:-
+
+* Store, synchronize, and query device metadata and state information for all your devices.
+* Set device state either per-device or based on some common characteristic.
+* Automatically respond to a device-reported state change.
 
 === Developer
-* Use Azure IoT device SDK libraries to build applications that run on your devices and interact with IoT Hub.
-* There is a limit of 50 IoT hubs per subscription. You can request quota increases by contacting support.
+Use Azure IoT device SDK libraries to build applications that run on your devices and interact with IoT Hub.
 
-== Device Provisioning Service
+There is a limit of 50 IoT hubs per subscription. You can request quota increases by contacting support.
+
+== IoT Hub Device Provisioning Service
 
 === Provisioning Process
-* Provisioning is a two part process:
-** The first part is establishing the initial connection between the device and the IoT solution by registering the device.
-** The second part is applying the proper configuration to the device based on the requirements of the solution it was registered to.
+Provisioning is a two part process:
+
+* The first part is establishing the initial connection between the device and the IoT solution by registering the device.
+* The second part is applying the proper configuration to the device based on the requirements of the solution it was registered to.
 
 === Features
-* Secure attestation support for both X.509 and TPM-based identities
+* Secure attestation support for both X.509 and TPM-based identities.
 * Multiple allocation policies to control how the DPS assigns devices to IoT hubs.
-* Monitoring and diagnostic logging
-* Mult-hub support allows DPS to assign devices to more than one IoT hub across subscriptions.
+* Monitoring and diagnostic logging.
+* Multi-hub support allows DPS to assign devices to more than one IoT hub across subscriptions.
 * Cross-region support to assign devices in other regions.
 
 === When to use
-
 * Zero-touch provisioning to an IoT solution without hardcoding IoT Hub connection.
 * Load-balancing devices across multiple hubs.
 * Connecting devices to a particular IoT solution depending on use case.
@@ -70,23 +75,28 @@ IoT Hub Device Provisioning Service automatically provisions devices to the corr
 
 
 == IoT Hub Tiers
-* To evaluate which IoT Hub tier is right for you solution, consider the following two questions:
-** What features do I plan to use?
-** How much data do I plan to move daily?
+To evaluate which IoT Hub tier is right for you solution, consider the following two questions:
+
+* What features do I plan to use?
+* How much data do I plan to move daily?
 
 === Basic Tier
-* This tier enables features for solutions that only need uni-directional communication from devices to the cloud.
-* If your IoT solution is based around collecting data from devices and analyzing it centrally, then the basic tier is probably right for you.
+This tier enables features for solutions that only need uni-directional communication from devices to the cloud.
+
+If your IoT solution is based around collecting data from devices and analyzing it centrally, then the basic tier is probably right for you.
 
 === Standard Tier
-* This tier of IoT Hubs enables features for solutions that want to make use of the bi-directional communication capabilities.
-* If you would like to control IoT devices remotely or distribute some of your workloads onto the devices themselves, then you should consider the standard tier.
+This tier of IoT Hubs enables features for solutions that want to make use of the bi-directional communication capabilities.
+
+If you would like to control IoT devices remotely or distribute some of your workloads onto the devices themselves, then you should consider the standard tier.
 
 
 == IoT Hub Message Throughtput
-* Message traffic is measured for your IoT hub on a per-unit basis.
-* When you create an IoT hub, you choose its tier and edition, and set the number of units available.
-* You can purchase up to 200 units for the B1, B2, S1, or S2 edition, or up to 10 units for the B3 or S3 edition.
+Message traffic is measured for your IoT hub on a per-unit basis.
+
+When you create an IoT hub, you choose its tier and edition, and set the number of units available.
+
+You can purchase up to 200 units for the B1, B2, S1, or S2 edition, or up to 10 units for the B3 or S3 edition.
 
 |===
 |Tier edition |Sustained throughput |Sustained send rate
@@ -106,19 +116,24 @@ IoT Hub Device Provisioning Service automatically provisions devices to the corr
 
 == IoT Hub Partition
 
-* Partions can be used to reduce contentions that could occur when concurrently reading and writing to event streams. 
-* The partition limit is chosen when IoT hub is created.
-* The maximum partition limit is 32 but most IoT hubs only need 4 partitions.
-* The number of partitions is directly related to the number of concurrent readers you expect to have.
-* The default value of four partitions should be used unless specified by the architect.
+Partions can be used to reduce contentions that could occur when concurrently reading and writing to event streams. 
+
+The partition limit is chosen when IoT hub is created.
+
+The maximum partition limit is 32 but most IoT hubs only need 4 partitions.
+
+The number of partitions is directly related to the number of concurrent readers you expect to have.
+
+The default value of four partitions should be used unless specified by the architect.
 
 == IoT Hub Endpoint
-* An endpoint is a service that can retrieve data from other services.
-* Examples of endpoint types:
-** *Device-facing endpoints* that enables devices to perform operations such as sending device-to-cloud messages and receiving cloud-to-device messages.
-** *Service-facing management endpoints* that enable back-end apps to perform operations such as device identity management and device twin management.
-** *Service facing built-in endpoints* for reading device-to-cloud messages.
-** *Custom endpoints* to receive device-to-cloud messages dispatched by a routing rule.
+An endpoint is a service that can retrieve data from other services.
+
+Examples of endpoint types:
+* *Device-facing endpoints* that enables devices to perform operations such as sending device-to-cloud messages and receiving cloud-to-device messages.
+* *Service-facing management endpoints* that enable back-end apps to perform operations such as device identity management and device twin management.
+* *Service facing built-in endpoints* for reading device-to-cloud messages.
+* *Custom endpoints* to receive device-to-cloud messages dispatched by a routing rule.
 
 === Built-in endpoints
 
@@ -146,13 +161,15 @@ The IoT hub endpoints:
 
 
 === Custom endpoints
-* These endpoints act as service endpoints and are used as sinks for message routes.
-* Devices cannot write directly to these custom endpoints.
-* The following services are supported as custom endpoints.
-** Azure Storage containers
-** Event Hubs
-** Service Bus Queues
-** Service Bus Topics
+These endpoints act as service endpoints and are used as sinks for message routes.
+
+Devices cannot write directly to these custom endpoints.
+
+The following services are supported as custom endpoints.
+* Azure Storage containers
+* Event Hubs
+* Service Bus Queues
+* Service Bus Topics
 
 == IoT Hub Security
 There are three different ways for controlling access to IoT Hub:
@@ -1624,3 +1641,92 @@ At this time, only `$iothubname`, `$twin.tags`, `$twin.properties.desired`, and 
 * They are also subject to traffic shaping.
 * Check this link to get the details of the https://learn.microsoft.com/en-us/training/modules/consider-message-processing-options-constraints/4-iot-hub-quotas-throttle[throttles] 
 
+
+== IoT Solution Business Integration
+
+=== Roles and responsibilities
+
+* *Solution Architects* - Envision and plan the IoT solution.
+* *Data Analysts and Engineers* - Process the data generated by the IoT solution 
+* *IoT hardware manufacturer/integrator*
+** Manufacturers of IoT hardware, integrators assembling hardware from various manufacturers, or suppliers providing hardware for an IoT deployment manufactured or integrated by other suppliers.
+**  Involved in development and integration of firmware, embedded operating systems, and embedded software.
+* *IoT solution developer*
+** The development of an IoT solution is typically done by a solution developer.
+** The IoT solution developer can develop various components of the IoT solution from scratch or integrate various standard or open-source components.
+* *IoT solution operator*
+** After the IoT solution is deployed, it requires long-term operations, monitoring, upgrades, and maintenance.
+** These tasks can be done by an in-house team that consists of information technology specialists, hardware operations and maintenance teams, and domain specialists who monitor the correct behavior of the overall IoT infrastructure.
+
+=== Downstream Messaging
+
+Azure provides four services that assist IoT hub in delivering event and message data to downstream locations within a solution. These services are:
+
+* Event Grid
+* Event Hubs
+* Service Bus
+* Azure Storage Queues
+
+==== Event vs. message services
+
+===== Event
+* An event is a lightweight notification of a condition or a state change. 
+* The publisher of the event has no expectation about how the event is handled.
+* The consumer of the event decides what to do with the notification.
+* Events can be discrete units or part of a series.
+
+[]
+* Discrete events report state change and are actionable. 
+* To take the next step, the consumer only needs to know that something happened.
+* The event data has information about what happened but doesn't have the data that triggered the event.
+* For example, an event notifies consumers that a file was created.
+* It may have general information about the file, but it doesn't have the file itself. 
+* Discrete events are ideal for serverless solutions that need to scale.
+
+[]
+* Series events report a condition and are analyzable.
+* The events are time-ordered and interrelated.
+* The consumer needs the sequenced series of events to analyze what happened.
+
+===== Message
+* A message is raw data produced by a service to be consumed or stored elsewhere.
+* The message contains the data that triggered the message pipeline.
+* The publisher of the message has an expectation about how the consumer handles the message.
+* A contract exists between the two sides.
+* For example, the publisher sends a message with the raw data, and expects the consumer to create a file from that data and send a response when the work is done.
+
+==== Comparison of services
+
+[%header,cols="4*"]
+|===
+
+|Service
+|Purpose
+|Type
+|When to use
+
+|Event Grid
+|Reactive programming
+|Event distribution (discrete)
+|React to status changes.
+
+|Event Hubs
+|Big data pipeline
+|Event streaming (series)
+|Telemetry and distributed data streaming.
+
+|Service Bus
+|High-value enterprise messaging
+|Message
+|Order processing and financial transactions.
+
+|Azure Storage Queues
+|Simple, reliable, persistent messaging within and between services
+|Message
+|Very large message stores (over 80 GB), unreliable consumers.
+
+|===
+
+==== Event Grid
+* Event Grid is an eventing backplane that enables event-driven, reactive programming.
+* 
