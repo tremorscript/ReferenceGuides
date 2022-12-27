@@ -1,0 +1,660 @@
+= IoT Monitoring and Logging 
+:title: IoT Monitoring and Logging 
+:navtitle: IoT Monitoring and Logging
+:source-highlighter: highlight.js
+:highlightjs-languages: shell, console, json, sql, csharp
+:icons: font
+:toc:
+
+
+== Azure Monitor
+
+=== Overview
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-azure-iot-solution-monitoring-logging/media/m09-l01-monitoring-logging-azure-monitor-overview-7616d1b6.png[]
+
+
+* The above diagram gives a high-level view of Azure Monitor. 
+* At the center of the diagram are the data stores for metrics and logs, which are the two fundamental types of data used by Azure Monitor.
+* On the left are the sources of monitoring data that populate these data stores.
+* On the right are the different functions that Azure Monitor performs with this collected data such as analysis, alerting, and streaming to external systems.
+
+=== What data does Azure Monitor collect?
+
+* *Application monitoring data*: Data about the performance and functionality of the code you have written, regardless of its platform.
+* *Guest OS monitoring data*: Data about the operating system on which your application is running. This OS could be running in Azure, another cloud, or on-premises.
+* *Azure resource monitoring data*: Data about the operation of an Azure resource.
+* *Azure subscription monitoring data*: Data about the operation and management of an Azure subscription, as well as data about the health and operation of Azure itself.
+* *Azure tenant monitoring data*: Data about the operation of tenant-level Azure services, such as Azure Active Directory.
+
+[]
+* As soon as you create an Azure subscription and start adding resources such as virtual machines and web apps, Azure Monitor starts collecting data. 
+* Activity logs record when resources are created or modified. 
+* Metrics tell you how the resource is performing and the resources that it's consuming.
+
+=== Alerts
+
+* Alerts in Azure Monitor proactively notify you of critical conditions and potentially attempt to take corrective action.
+
+The diagram below represents the flow of alerts.
+
+image::https://learn.microsoft.com/en-us/training/wwl-azure/examine-azure-iot-solution-monitoring-logging/media/m09-l01-monitoring-logging-alerts-flow-52464b0e.png[]
+
+Alert rules are separated from alerts and the actions taken when an alert fires.
+
+The alert rule captures the target and criteria for alerting.
+
+The alert rule can be in an enabled or a disabled state.
+
+Alerts only fire when enabled.
+
+The following are key attributes of an alert rule:
+
+* Target Resource 
+** Defines the scope and signals available for alerting.
+** A target can be any Azure resource.
+** Example targets: a virtual machine, a storage account, a virtual machine scale set, a Log Analytics workspace, or an Application Insights resource
+** For certain resources (like virtual machines), you can specify multiple resources as the target of the alert rule.
+* Signal
+** Emitted by the target resource.
+** Signals can be of the following types: metric, activity log, Application Insights, and log.
+* Criteria
+**  A combination of signal and logic applied on a target resource. Examples:
+*** Percentage CPU > 70%
+*** Server Response Time > 4 ms
+*** Result count of a log query > 100
+* Alert Name
+** A specific name for the alert rule configured by the user.
+* Alert Description
+** A description for the alert rule configured by the user.
+* Severity
+**  The severity of the alert after the criteria specified in the alert rule is met. Severity can range from 0 to 4.
+*** Sev 0 = Critical
+*** Sev 1 = Error
+*** Sev 2 = Warning
+*** Sev 3 = Informational
+*** Sev 4 = Verbose
+* Action
+** A specific action taken when the alert is fired.
+
+=== IoT Hub metrics
+
+https://learn.microsoft.com/en-us/training/modules/examine-azure-iot-solution-monitoring-logging/3-iot-hub-metrics
+
+=== IoT Hub Service Limits
+
+https://learn.microsoft.com/en-us/training/modules/examine-azure-iot-solution-monitoring-logging/6-quotas-throttling
+
+=== Resource Logs and Content
+
+You can send the resource logs that Azure Monitor generates to Azure Monitor logs, Event Hubs, or Azure Storage for custom processing.
+
+Choose where you want to send the logs. You can select any combination of the three options:
+
+* Archive to a storage account
+* Stream to an Event Hubs
+* Send to Log Analytics
+
+Azure Monitor tracks different operations that occur in IoT Hub.
+
+Each category has a schema that defines how events in that category are reported.
+
+* Connections
+** The connections category tracks device connect and disconnect events from an IoT hub and errors.
+** This category is useful for identifying unauthorized connection attempts and/or alerting you when the connection to devices is lost.
++
+[source,json]
+----
+{
+  "records":
+  [
+        {
+            "time": " UTC timestamp",
+            "resourceId": "Resource Id",
+            "operationName": "deviceConnect",
+            "category": "Connections",
+            "level": "Information",
+            "properties": "{\"deviceId\":\"<deviceId>\",\"protocol\":\"<protocol>\",\"authType\":\"{\\\"scope\\\":\\\"device\\\",\\\"type\\\":\\\"sas\\\",\\\"issuer\\\":\\\"iothub\\\",\\\"acceptingIpFilterRule\\\":null}\",\"maskedIpAddress\":\"<maskedIpAddress>\"}",
+            "location": "Resource location"
+        }
+    ]
+}
+----
+* Cloud-to-device commands
+** The cloud-to-device commands category tracks errors that occur at the IoT hub and are related to the cloud-to-device message pipeline.
+** This category includes errors that occur from:
+*** Sending cloud-to-device messages (like unauthorized sender errors).
+*** Receiving cloud-to-device messages (like delivery count exceeded errors).
+*** Receiving cloud-to-device message feedback (like feedback expired errors).
+** This category does not catch errors when the cloud-to-device message is delivered successfully but then improperly handled by the device.
++
+[source,json]
+----
+{
+    "records":
+    [
+        {
+            "time": " UTC timestamp",
+            "resourceId": "Resource Id",
+            "operationName": "messageExpired",
+            "category": "C2DCommands",
+            "level": "Error",
+            "resultType": "Event status",
+            "resultDescription": "MessageDescription",
+            "properties": "{\"deviceId\":\"<deviceId>\",\"messageId\":\"<messageId>\",\"messageSizeInBytes\":\"<messageSize>\",\"protocol\":\"Amqp\",\"deliveryAcknowledgement\":\"<None, NegativeOnly, PositiveOnly, Full>\",\"deliveryCount\":\"0\",\"expiryTime\":\"<timestamp>\",\"timeInSystem\":\"<timeInSystem>\",\"ttl\":<ttl>, \"EventProcessedUtcTime\":\"<UTC timestamp>\",\"EventEnqueuedUtcTime\":\"<UTC timestamp>\", \"maskedIpAddress\": \"<maskedIpAddress>\", \"statusCode\": \"4XX\"}",
+            "location": "Resource location"
+        }
+    ]
+}
+----
+* Device identity operations
+** The device identity operations category tracks errors that occur when you attempt to create, update, or delete an entry in your IoT hub's identity registry.
+** Tracking this category is useful for provisioning scenarios.
++
+[source,json]
+----
+{
+    "records":
+    [
+        {
+            "time": "UTC timestamp",
+            "resourceId": "Resource Id",
+            "operationName": "get",
+            "category": "DeviceIdentityOperations",
+            "level": "Error",
+            "resultType": "Event status",
+            "resultDescription": "MessageDescription",
+            "properties": "{\"maskedIpAddress\":\"<maskedIpAddress>\",\"deviceId\":\"<deviceId>\", \"statusCode\":\"4XX\"}",
+            "location": "Resource location"
+        }
+    ]
+}
+----
+* Routes
+** The message routing category tracks errors that occur during message route evaluation and endpoint health as perceived by IoT Hub.
+** This category includes events such as:
+*** A rule evaluates to "undefined".
+*** IoT Hub marks an endpoint as dead.
+*** Any errors received from an endpoint.
+** This category does not include specific errors about the messages themselves (like device throttling errors), which are reported under the "device telemetry" category.
++
+[source,json]
+----
+{
+    "records":
+    [
+        {
+            "time": "UTC timestamp",
+            "resourceId": "Resource Id",
+            "operationName": "endpointUnhealthy",
+            "category": "Routes",
+            "level": "Error",
+            "properties": "{\"deviceId\": \"<deviceId>\",\"endpointName\":\"<endpointName>\",\"messageId\":<messageId>,\"details\":\"<errorDetails>\",\"routeName\": \"<routeName>\"}",
+            "location": "Resource location"
+        }
+    ]
+}
+----
+* Device Telemetry
+** The device telemetry category tracks errors that occur at the IoT hub and are related to the telemetry pipeline.
+** This category includes errors that occur when sending telemetry events (such as throttling) and receiving telemetry events (such as unauthorized reader).
+** This category cannot catch errors caused by code running on the device itself.
++
+[source,json]
+----
+{
+    "records":
+    [
+        {
+            "time": "UTC timestamp",
+            "resourceId": "Resource Id",
+            "operationName": "ingress",
+            "category": "DeviceTelemetry",
+            "level": "Error",
+            "resultType": "Event status",
+            "resultDescription": "MessageDescription",
+            "properties": "{\"deviceId\":\"<deviceId>\",\"batching\":\"0\",\"messageSizeInBytes\":\"<messageSizeInBytes>\",\"EventProcessedUtcTime\":\"<UTC timestamp>\",\"EventEnqueuedUtcTime\":\"<UTC timestamp>\",\"partitionId\":\"1\"}",
+            "location": "Resource location"
+        }
+    ]
+}
+----
+* File upload operations
+** The file upload category tracks errors that occur at the IoT hub and are related to file upload functionality.
+** This category includes:
+*** Errors that occur with the SAS URI, such as when it expires before a device notifies the hub of a completed upload.
+*** Failed uploads reported by the device.
+*** Errors that occur when a file is not found in storage during IoT Hub notification message creation.
+** This category cannot catch errors that directly occur while the device is uploading a file to storage.
++
+[source,json]
+----
+{
+    "records":
+    [
+        {
+            "time": "UTC timestamp",
+            "resourceId": "Resource Id",
+            "operationName": "ingress",
+            "category": "FileUploadOperations",
+            "level": "Error",
+            "resultType": "Event status",
+            "resultDescription": "MessageDescription",
+            "durationMs": "1",
+            "properties": "{\"deviceId\":\"<deviceId>\",\"protocol\":\"<protocol>\",\"authType\":\"{\\\"scope\\\":\\\"device\\\",\\\"type\\\":\\\"sas\\\",\\\"issuer\\\":\\\"iothub\\\",\\\"acceptingIpFilterRule\\\":null}\",\"blobUri\":\"http//bloburi.com\"}",
+            "location": "Resource location"
+        }
+    ]
+}
+----
+* Cloud-to-device twin operations
+** The cloud-to-device twin operations category tracks service-initiated events on device twins.
+** These operations can include get twin, update or replace tags, and update or replace desired properties.
++
+[source,json]
+----
+{
+    "records":
+    [
+        {
+            "time": "UTC timestamp",
+            "resourceId": "Resource Id",
+            "operationName": "read",
+            "category": "C2DTwinOperations",
+            "level": "Information",
+            "durationMs": "1",
+            "properties": "{\"deviceId\":\"<deviceId>\",\"sdkVersion\":\"<sdkVersion>\",\"messageSize\":\"<messageSize>\"}",
+            "location": "Resource location"
+        }
+    ]
+}
+----
+* Device-to-cloud twin operations
+** The device-to-cloud twin operations category tracks device-initiated events on device twins.
+** These operations can include get twin, update reported properties, and subscribe to desired properties.
++
+[source,json]
+----
+{
+    "records":
+    [
+        {
+            "time": "UTC timestamp",
+            "resourceId": "Resource Id",
+            "operationName": "update",
+            "category": "D2CTwinOperations",
+            "level": "Information",
+            "durationMs": "1",
+            "properties": "{\"deviceId\":\"<deviceId>\",\"protocol\":\"<protocol>\",\"authenticationType\":\"{\\\"scope\\\":\\\"device\\\",\\\"type\\\":\\\"sas\\\",\\\"issuer\\\":\\\"iothub\\\",\\\"acceptingIpFilterRule\\\":null}\"}",
+            "location": "Resource location"
+        }
+    ]
+}
+----
+* Twin queries
+** The twin queries category reports on query requests for device twins that are initiated in the cloud.
++
+[source,json]
+----
+{
+    "records":
+    [
+        {
+            "time": "UTC timestamp",
+            "resourceId": "Resource Id",
+            "operationName": "query",
+            "category": "TwinQueries",
+            "level": "Information",
+            "durationMs": "1",
+            "properties": "{\"query\":\"<twin query>\",\"sdkVersion\":\"<sdkVersion>\",\"messageSize\":\"<messageSize>\",\"pageSize\":\"<pageSize>\", \"continuation\":\"<true, false>\", \"resultSize\":\"<resultSize>\"}",
+            "location": "Resource location"
+        }
+    ]
+}
+----
+* Jobs operations
+** The jobs operations category reports on job requests to update device twins or invoke direct methods on multiple devices.
+** These requests are initiated in the cloud.
++
+[source,json]
+----
+{
+    "records":
+    [
+        {
+            "time": "UTC timestamp",
+            "resourceId": "Resource Id",
+            "operationName": "jobCompleted",
+            "category": "JobsOperations",
+            "level": "Information",
+            "durationMs": "1",
+            "properties": "{\"jobId\":\"<jobId>\", \"sdkVersion\": \"<sdkVersion>\",\"messageSize\": <messageSize>,\"filter\":\"DeviceId IN ['1414ded9-b445-414d-89b9-e48e8c6285d5']\",\"startTimeUtc\":\"Wednesday, September 13, 2017\",\"duration\":\"0\"}",
+            "location": "Resource location"
+        }
+    ]
+}
+----
+* Direct methods
+** The direct methods category tracks request-response interactions sent to individual devices. 
+** These requests are initiated in the cloud.
++
+[source,json]
+----
+{
+    "records":
+    [
+        {
+            "time": "UTC timestamp",
+            "resourceId": "Resource Id",
+            "operationName": "send",
+            "category": "DirectMethods",
+            "level": "Information",
+            "durationMs": "1",
+            "properties": "{\"deviceId\":<messageSize>, \"RequestSize\": 1, \"ResponseSize\": 1, \"sdkVersion\": \"2017-07-11\"}",
+            "location": "Resource location"
+        }
+    ]
+}
+----
+
+=== Read logs from Azure Event Hubs
+After you set up event logging through diagnostics settings, you can create applications that read out the logs so that you can take action based on the information in them.
+
+This sample code retrieves logs from an Event Hubs:
+
+[source,csharp]
+----
+class Program
+{
+    static string connectionString = "{your AMS eventhub endpoint connection string}";
+    static string monitoringEndpointName = "{your AMS Event Hubs endpoint name}";
+    static EventHubClient eventHubClient;
+    //This is the Diagnostic Settings schema
+    class AzureMonitorDiagnosticLog
+    {
+        string time { get; set; }
+        string resourceId { get; set; }
+        string operationName { get; set; }
+        string category { get; set; }
+        string level { get; set; }
+        string resultType { get; set; }
+        string resultDescription { get; set; }
+        string durationMs { get; set; }
+        string callerIpAddress { get; set; }
+        string correlationId { get; set; }
+        string identity { get; set; }
+        string location { get; set; }
+        Dictionary<string, string> properties { get; set; }
+    };
+
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Monitoring. Press Enter key to exit.\n");
+        eventHubClient = EventHubClient.CreateFromConnectionString(connectionString, monitoringEndpointName);
+        var d2cPartitions = eventHubClient.GetRuntimeInformationAsync().PartitionIds;
+        CancellationTokenSource cts = new CancellationTokenSource();
+        var tasks = new List<Task>();
+        foreach (string partition in d2cPartitions)
+        {
+            tasks.Add(ReceiveMessagesFromDeviceAsync(partition, cts.Token));
+        }
+        Console.ReadLine();
+        Console.WriteLine("Exiting...");
+        cts.Cancel();
+        Task.WaitAll(tasks.ToArray());
+    }
+
+    private static async Task ReceiveMessagesFromDeviceAsync(string partition, CancellationToken ct)
+    {
+        var eventHubReceiver = eventHubClient.GetDefaultConsumerGroup().CreateReceiver(partition, DateTime.UtcNow);
+        while (true)
+        {
+            if (ct.IsCancellationRequested)
+            {
+                await eventHubReceiver.CloseAsync();
+                break;
+            }
+            EventData eventData = await eventHubReceiver.ReceiveAsync(new TimeSpan(0,0,10));
+            if (eventData != null)
+            {
+                string data = Encoding.UTF8.GetString(eventData.GetBytes());
+                Console.WriteLine("Message received. Partition: {0} Data: '{1}'", partition, data);
+                var deserializer = new JavaScriptSerializer();
+                //deserialize json data to azure monitor object
+                AzureMonitorDiagnosticLog message = new JavaScriptSerializer().Deserialize<AzureMonitorDiagnosticLog>(result);
+            }
+        }
+    }
+}
+----
+
+=== IoT Hub Service Health Monitoring
+
+Use Azure Resource Health to monitor whether your IoT hub is up and running.
+
+You can also learn whether a regional outage is impacting the health of your IoT hub.
+
+== Device Connection State and Lifecycle Notifications
+
+Device events enable you to keep your solution healthy.
+
+=== Device heartbeat
+
+* Knowing whether a device is connected at a particular moment is not as easy as you may think. 
+* Continuously testing the connection would be a waste of resources and in some cases, such as low power devices that enter a sleep mode for extended intervals, could be impossible.
+* The IoT Hub identity registry contains a field called *connectionState*, but IoT solutions should not query this field at run time.
+* Only use the connectionState field during development and debugging.
+* For example, do not query the *connectionState* field to check if a device is connected before you send a cloud-to-device message or an SMS.
+* We recommend subscribing to the device disconnected event on Event Grid to get alerts and monitor the device connection state.
+* If your IoT solution needs to know if a device is connected, you can implement the _heartbeat_ pattern.
+* In the heartbeat pattern, the device sends device-to-cloud messages at least once every fixed amount of time (for example, at least once every hour)
+* When this pattern is implemented, even if a device does not have any data to send, it still sends an empty device-to-cloud message (usually with a property that identifies it as a heartbeat).
+* On the service side, the solution maintains a map with the last heartbeat received for each device.
+* If the solution does not receive a heartbeat message within the expected time from the device, it assumes that there is a problem with the device.
+* A more complex implementation could include the information from Azure Monitor and Azure Resource Health to identify devices that are trying to connect or communicate but failing.
+* When you implement the heartbeat pattern, make sure to check IoT Hub Quotas and Throttles.
+
+=== Device and module lifecycle notifications
+
+* IoT Hub can notify your IoT solution when an identity is created or deleted by sending lifecycle notifications.
+* To do so, your IoT solution needs to create a route and to set the Data Source equal to *DeviceLifecycleEvents* or *ModuleLifecycleEvents*.
+* By default, no lifecycle notifications are sent, that is, no such routes pre-exist.
+* The notification message includes properties, and body.
+* Properties: Message system properties are prefixed with the /$ symbol.
+
+Notification message for device:
+
+[%header,cols="2*"]
+|===
+
+|Name
+|Value
+
+|$content-type
+|application/json
+
+|$iothub-enqueuedtime
+|Time when the notification was sent.
+
+|$iothub-message-source
+|deviceLifecycleEvents
+
+|$content-encoding
+|utf-8
+
+|opType
+|createDeviceIdentity or deleteDeviceIdentity
+
+|hubName
+|Name of IoT Hub
+
+|deviceId
+|ID of the device
+
+|operationTimestamp
+|ISO8601 timestamp of operation
+
+|iothub-message-schema
+|deviceLifecycleNotification
+
+|===
+
+* Body: This section is in JSON format and represents the twin of the created device identity. For example,
++
+[source,json]
+----
+{
+    "deviceId":"11576-ailn-test-0-67333793211",
+    "etag":"AAAAAAAAAAE=",
+    "properties": {
+        "desired": {
+            "$metadata": {
+                "$lastUpdated": "2016-02-30T16:24:48.789Z"
+            },
+            "$version": 1
+        },
+        "reported": {
+            "$metadata": {
+                "$lastUpdated": "2016-02-30T16:24:48.789Z"
+            },
+            "$version": 1
+        }
+    }
+}
+----
+
+=== Device Identity Properties
+
+Device identities are represented as JSON documents with the following properties:
+
+[%header,cols="3*"]
+|===
+
+|Property
+|Options
+|Description
+
+|deviceId
+|required, read-only on updates
+|A case-sensitive string (up to 128 characters long) of ASCII 7-bit alphanumeric characters plus certain special characters: - . + % _ # * ? ! ( ) , = @ $ '
+
+|generationId
+|required, read-only
+|An IoT hub-generated, case-sensitive string up to 128 characters long. This value is used to distinguish devices with the same deviceId, when they have been deleted and re-created.
+
+|etag
+|required, read-only
+|A string representing a weak ETag for the device identity, as per RFC7232.
+
+|auth
+|optional
+|A composite object containing authentication information and security materials.
+
+|auth.symkey
+|optional
+|A composite object containing a primary and a secondary key, stored in base64 format.
+
+|status
+|required
+|An access indicator. Can be Enabled or Disabled. If Enabled, the device is allowed to connect. If Disabled, this device cannot access any device-facing endpoint.
+
+|statusReason
+|optional
+|A 128 character-long string that stores the reason for the device identity status. All UTF-8 characters are allowed.
+
+|statusUpdateTime
+|read-only
+|A temporal indicator, showing the date and time of the last status update.
+
+|connectionState
+|read-only
+a|
+* A field indicating connection status: either Connected or Disconnected. 
+* This field represents the IoT Hub view of the device connection status.
+* _Important_: This field should be used only for development/debugging purposes. 
+* The connection state is updated only for devices using MQTT or AMQP. 
+* Also, it is based on protocol-level pings (MQTT pings, or AMQP pings), and it can have a maximum delay of only 5 minutes. 
+* For these reasons, there can be false positives, such as devices reported as connected but that are disconnected.
+
+|connectionStateUpdatedTime
+|read-only
+|A temporal indicator, showing the date and last time the connection state was updated.
+
+|lastActivityTime
+|read-only
+|A temporal indicator, showing the date and last time the device connected, received, or sent a message.
+
+|===
+
+=== Module Identity Properties
+
+Module identities are represented as JSON documents with the following properties:
+
+[%header,cols="3*"]
+|===
+
+|Property
+|Options
+|Description
+
+|deviceId
+|required, read-only on updates
+|A case-sensitive string (up to 128 characters long) of ASCII 7-bit alphanumeric characters plus certain special characters: - . + % _ # * ? ! ( ) , = @ $ '
+
+|moduleId
+|required, read-only on updates
+|A case-sensitive string (up to 128 characters long) of ASCII 7-bit alphanumeric characters plus certain special characters: - . + % _ # * ? ! ( ) , = @ $ '
+
+|generationId
+|required, read-only
+|An IoT hub-generated, case-sensitive string up to 128 characters long. This value is used to distinguish devices with the same deviceId, when they have been deleted and re-created.
+
+|etag
+|required, read-only
+|A string representing a weak ETag for the device identity, as per RFC7232
+
+|auth
+|optional
+|A composite object containing authentication information and security materials.
+
+|auth.symkey
+|optional
+|A composite object containing a primary and a secondary key, stored in base64 format.
+
+|status
+|required
+|An access indicator. Can be Enabled or Disabled. If Enabled, the device is allowed to connect. If Disabled, this device cannot access any device-facing endpoint.
+
+|statusReason
+|optional
+|A 128 character-long string that stores the reason for the device identity status. All UTF-8 characters are allowed.
+
+|statusUpdateTime
+|read-only
+|A temporal indicator, showing the date and time of the last status update.
+
+|connectionState
+|read-only
+a|
+* A field indicating connection status: either Connected or Disconnected. 
+* This field represents the IoT Hub view of the device connection status.
+* _Important_: This field should be used only for development/debugging purposes. 
+* The connection state is updated only for devices using MQTT or AMQP. 
+* Also, it is based on protocol-level pings (MQTT pings, or AMQP pings), and it can have a maximum delay of only 5 minutes. 
+* For these reasons, there can be false positives, such as devices reported as connected but that are disconnected.
+
+|connectionStateUpdatedTime
+|read-only
+|A temporal indicator, showing the date and last time the connection state was updated.
+
+|lastActivityTime
+|read-only
+|A temporal indicator, showing the date and last time the device connected, received, or sent a message.
+
+|===
+
+[NOTE]
+====
+Currently the device SDKs do not support using the \+ and \# characters in the **deviceId** and **moduleId**.
+====
+
