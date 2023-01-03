@@ -2,3 +2,5 @@
 ** xref:iothub.adoc[]
 ** xref:azuredigitaltwins.adoc[]
 ** xref:iotmonitoring.adoc[]
+** xref:questions.adoc[]
+** xref:vimcommand.adoc[]
