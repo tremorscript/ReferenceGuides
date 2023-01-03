@@ -38,16 +38,22 @@
 * `^` will move to the first non blank character on the current line.
 * `$` will move to the end of the current line.
 * `%` will move to the matching bracket when the cursor is already on the bracket.
-* `f<character>` will find a character after your cursor.
-* `F<character>` will find a character before your cursor.
-* `t<character>` will move to a character after your cursor.
-* `T<character>` will move to a character before your cursor.
-* `;` will move on the character to go forward.
-* `,` will move on the character to go backward.
+
+[]
+* `f<character>` will find a character after your cursor on the current line.
+* `F<character>` will find a character before your cursor on the current line.
+* `t<character>` will move to a character after your cursor on the current line.
+* `T<character>` will move to a character before your cursor on the current line.
+* `;` will move on the character to go forward on the current line.
+* `,` will move on the character to go backward on the current line.
+
+[]
 * `<line_number>G` will move the cursor to the beginning of the arbitrary line.
 ** `10G` will move the cursor to line 10.
 * `G` will move the cursor to the last line of the file.
 * `1G` or `gg` will move the cursor to the first line of the file.
+
+[]
 * `Ctrl+e` will scroll the window downwards.
 * `Ctrl+u` will move your cursor upward half the screen.
 * `Ctrl+d` will move your cursor downward half the screen.
@@ -74,12 +80,16 @@
 * `:set no<option>` - Unset the option.
 * `:set <option>!` - Toggle the option.
 * `:set <option>?` - Return the option's value.
-* `:set <option> = <value>` - Set a `<value` (string or number).
-* `:set <option>+=<value>` - Add the value `<value` for a number option, append a string `<value` for a string option.
-* `:set <option>-=<value>` - Subtract the value `<value` for a number option, delete the string `<value>` for a string option.
+* `:set <option> = <value>` - Set a `<value>` (string or number).
+* `:set <option>+=<value>` - Add the value `<value>` for a number option, append a string `<value>` for a string option.
+* `:set <option>-=<value>` - Subtract the value `<value>` for a number option, delete the string `<value>` for a string option.
 * `:set <option>&` - Reset the option to its default value.
 * `:set filetype?` - display the filetype of the current open file.
+
+[]
 * Drop the prefix `:` to set these options in your vimrc file.
+
+[]
 * `:help options` - displays the help file for options
 * `:help option-list` - displays the help file for the list of options.
 
@@ -88,14 +98,14 @@
 * A buffer is an open file in memory.
 * If you close a buffer, it does not close the file, the buffer is still there, _hidden_.
 * It can have three different states.
-  * active - The buffer is displayed in the window.
-  * hidden - The buffer is not displayed, but it exists and the file is still open.
-  * inactive - The buffer is not displayed and empty. It is not linked to any file.
+** active - The buffer is displayed in the window.
+** hidden - The buffer is not displayed, but it exists and the file is still open.
+** inactive - The buffer is not displayed and empty. It is not linked to any file.
 
 []
  * `:buffers` displays the buffer list. Each line contains:
  ** The buffer id.
- ** Indicators. `a` for active. `h` for hidden. (space) for inactive.
+ ** Indicators - `a` for active. `h` for hidden. `(space)` for inactive.
  ** The name of the buffer. It can be the filepath of the file linked to the buffer.
  ** The line number where the cursor is.
 
@@ -117,17 +127,20 @@
 ** You can specify more than one ID or name (comma-seperated)
 * `:1,10bdelete` - Delete buffers from ID 1 to 10 included.
 * `%bdelete` - Delete all buffers.
+
+[]
 * `:help buffers` - displays the help file for buffers
 * `:help :buffers` - displays the help file for buffers.
 
 
 == Windows
 
+.Concept
 * A window is a space you can use to display the contents of a buffer.
 * When you close the window, the buffer stays open.
 * When you open vim, one window with one empty buffer is automatically created.
 
-[]
+.Commands
 * `Ctrl+W s` - Split the current window horizontally.
 * `Ctrl+Alt+W v` - Split the current window vertically.
 * `Ctrl+W n` - Split the current window horizontally and edit a new file.
