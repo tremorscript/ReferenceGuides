@@ -2,12 +2,14 @@
 
 == Moving between modes
 
+.Key Mappings
 * `Ctrl+c` or `Ctrl+[` or `Esc` to exit from insert mode or visual mode to normal mode.
 * `Shift+v` to start visual mode line wise.
 * `Ctrl+v` or `Ctrl+Alt+v` to start visual mode block wise.
 
 == Working with the buffer window
 
+.Commands
 * `:help` to open Vim's help.
 * `:q` to quit the current window.
 * `:q!` to quit without saving.
@@ -17,21 +19,22 @@
 
 == Searching
 
+.Key Mappings
 * `/` for searching. 
 * `n` for the next found occurence.
 * `N` for the previous found occurence.
-
-[]
 * `*` in normal mode searches the word under the cursor forwards.
 * `#` in normal mode searches the word under the cursor backwards.
 
 == Undo-Redo
 
+.Key Mappings
 * `u` will undo your last edit.
 * `Ctrl+r` will redo.
 
 == Cursor movement
 
+.Basic movements
 * `w` will move forward to the next word.
 * `b` will move back your cursor to the previous word.
 * `0` will move to the beginning of the current line.
@@ -39,7 +42,7 @@
 * `$` will move to the end of the current line.
 * `%` will move to the matching bracket when the cursor is already on the bracket.
 
-[]
+.Find character inline
 * `f<character>` will find a character after your cursor on the current line.
 * `F<character>` will find a character before your cursor on the current line.
 * `t<character>` will move to a character after your cursor on the current line.
@@ -47,19 +50,20 @@
 * `;` will move on the character to go forward on the current line.
 * `,` will move on the character to go backward on the current line.
 
-[]
+.Jump movement
 * `<line_number>G` will move the cursor to the beginning of the arbitrary line.
 ** `10G` will move the cursor to line 10.
 * `G` will move the cursor to the last line of the file.
 * `1G` or `gg` will move the cursor to the first line of the file.
 
-[]
+.Scrolling
 * `Ctrl+e` will scroll the window downwards.
 * `Ctrl+u` will move your cursor upward half the screen.
 * `Ctrl+d` will move your cursor downward half the screen.
 
 == Operators and Text Objects
 
+.Key Mappings
 * `d` is the operator for delete.
 * `c` is the operator for change.
 * `y` is the operator for yank (copy).
@@ -69,14 +73,15 @@
 * `dgg` will delete everything from your cursor to the beginning of the file.
 * `ggdG` will delete everything in the file.
 
-[]
+.Concept
 * In Vim, a `word` is a text object, as well as a `sentence` or a `paragraph`.
-* `diw` will delete inside the word. It will delete the current word under the cursor.
-* `ciw` will change inside the word. It will delete the current word under the cursor and switch to insert mode.
-* `dip` will delete inside the paragraph.
+** `diw` will delete inside the word. It will delete the current word under the cursor.
+** `ciw` will change inside the word. It will delete the current word under the cursor and switch to insert mode.
+** `dip` will delete inside the paragraph.
 
 == Options
 
+.Commands
 * `:set no<option>` - Unset the option.
 * `:set <option>!` - Toggle the option.
 * `:set <option>?` - Return the option's value.
@@ -86,15 +91,16 @@
 * `:set <option>&` - Reset the option to its default value.
 * `:set filetype?` - display the filetype of the current open file.
 
-[]
-* Drop the prefix `:` to set these options in your vimrc file.
+.Vimrc
+Drop the prefix `:` to set these options in your vimrc file.
 
-[]
+.Help Commands
 * `:help options` - displays the help file for options
 * `:help option-list` - displays the help file for the list of options.
 
 == Buffers
 
+.Concept
 * A buffer is an open file in memory.
 * If you close a buffer, it does not close the file, the buffer is still there, _hidden_.
 * It can have three different states.
@@ -102,15 +108,16 @@
 ** hidden - The buffer is not displayed, but it exists and the file is still open.
 ** inactive - The buffer is not displayed and empty. It is not linked to any file.
 
-[]
- * `:buffers` displays the buffer list. Each line contains:
- ** The buffer id.
- ** Indicators - `a` for active. `h` for hidden. `(space)` for inactive.
- ** The name of the buffer. It can be the filepath of the file linked to the buffer.
- ** The line number where the cursor is.
+.Commands
+* `:buffers` displays the buffer list. Each line contains:
+** The buffer id.
+** Indicators - `a` for active. `h` for hidden. `(space)` for inactive.
+** The name of the buffer. It can be the filepath of the file linked to the buffer.
+** The line number where the cursor is.
 
 === Navigation
 
+.Key Mappings
 * `:buffer <ID_or_name>` - Move to the buffer using its ID or its name.
 * `:bnext` or `:bn` - Move to the next buffer.
 * `:bprevious` or `:bp` - Move to the previous buffer.
@@ -128,7 +135,7 @@
 * `:1,10bdelete` - Delete buffers from ID 1 to 10 included.
 * `%bdelete` - Delete all buffers.
 
-[]
+.Help Commands
 * `:help buffers` - displays the help file for buffers
 * `:help :buffers` - displays the help file for buffers.
 
@@ -140,7 +147,7 @@
 * When you close the window, the buffer stays open.
 * When you open vim, one window with one empty buffer is automatically created.
 
-.Commands
+.Key Mappings
 * `Ctrl+W s` - Split the current window horizontally.
 * `Ctrl+Alt+W v` - Split the current window vertically.
 * `Ctrl+W n` - Split the current window horizontally and edit a new file.
@@ -170,7 +177,7 @@
 * `:q` - to quit the current window.
 * `:q!` - to quit the current window with an unsaved buffer.
 
-[]
+.Help commands
 * `:help windows` - opens the help file for windows.
 * `:help opening-window` - opens the help file for opening windows.
 * `:help window-move-cursor` - opens the help file for moving the cursor between windows.
@@ -179,16 +186,19 @@
 
 == Tabs
 
+.Concept
 * Tabs is a container for a bunch of windows.
 * It's very different from the concept of tabs in a standard IDE.
 
-[]
+.Key Mappings
 * `:tabnew` or `:tabe` - Opens a new tab.
 * `:tabclose` or `:tabc` - Close the current tab.
 * `:tabonly` or `:tabo` - Close every other tab except the current one.
 * `gt` - go to the next tab.
 * `gT` - go to the previous tab.
 ** `1gT` - go to the first tab.
+
+.Help Commands
 * `:help tab-page` - opens the help file for tab page.
 
 == Argument List
