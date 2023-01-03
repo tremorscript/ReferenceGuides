@@ -585,9 +585,9 @@ It will output the unnamed register by default.
 
 What happens when you add the line `clipboard+=unnamedplus` to your vimrc?::
 In this case, the content you change, delete, or yank will go directly in the unnamed register and the `+` register. 
-
++
 Using the put commands will directly output the `+` register too.
-
++
 Many find it useful to access the OS clipboard more easily, without the need to specify the `+` register for reading and writing it.
 
 How can you append to your macro recording?::
@@ -600,7 +600,6 @@ How can you append to your macro recording?::
 
 How can you paste or use the content of a register in INSERT mode or COMMAND LINE mode?::
 `Ctrl+R<reg>` to put the content of `<reg>` in your current buffer.
-
 
 What is an expression register?::
 It can evaluate custom functions that you have defined while staying in insert mode.
