@@ -11,3 +11,4 @@ nav:
 - modules/azure_iot/nav.adoc
 - modules/azure_security_engineer/nav.adoc
 - modules/CSharp/nav.adoc
+- modules/Neovim/nav.adoc
