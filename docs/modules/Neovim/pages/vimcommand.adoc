@@ -1,0 +1,482 @@
+= Vim Commands
+
+== Moving between modes
+
+.Key Mappings
+* `Ctrl+c` or `Ctrl+[` or `Esc` to exit from insert mode or visual mode to normal mode.
+* `Shift+v` to start visual mode line wise.
+* `Ctrl+v` or `Ctrl+Alt+v` to start visual mode block wise.
+
+== Working with the buffer window
+
+.Commands
+* `:help` to open Vim's help.
+* `:q` to quit the current window.
+* `:q!` to quit without saving.
+* `:w` to write.
+* `:wq` to write and quit or just use `:x` a character after your cursor.
+* `:e <path>` to edit a file.
+
+== Searching
+
+.Key Mappings
+* `/` for searching. 
+* `n` for the next found occurence.
+* `N` for the previous found occurence.
+* `*` in normal mode searches the word under the cursor forwards.
+* `#` in normal mode searches the word under the cursor backwards.
+
+== Undo-Redo
+
+.Key Mappings
+* `u` will undo your last edit.
+* `Ctrl+r` will redo.
+
+== Cursor movement
+
+.Basic movements
+* `w` will move forward to the next word.
+* `b` will move back your cursor to the previous word.
+* `0` will move to the beginning of the current line.
+* `^` will move to the first non blank character on the current line.
+* `$` will move to the end of the current line.
+* `%` will move to the matching bracket when the cursor is already on the bracket.
+
+.Find character inline
+* `f<character>` will find a character after your cursor on the current line.
+* `F<character>` will find a character before your cursor on the current line.
+* `t<character>` will move to a character after your cursor on the current line.
+* `T<character>` will move to a character before your cursor on the current line.
+* `;` will move on the character to go forward on the current line.
+* `,` will move on the character to go backward on the current line.
+
+.Jump movement
+* `<line_number>G` will move the cursor to the beginning of the arbitrary line.
+** `10G` will move the cursor to line 10.
+* `G` will move the cursor to the last line of the file.
+* `1G` or `gg` will move the cursor to the first line of the file.
+
+.Scrolling
+* `Ctrl+e` will scroll the window downwards.
+* `Ctrl+u` will move your cursor upward half the screen.
+* `Ctrl+d` will move your cursor downward half the screen.
+
+== Operators and Text Objects
+
+.Key Mappings
+* `d` is the operator for delete.
+* `c` is the operator for change.
+* `y` is the operator for yank (copy).
+* `p` or `P` is the operator for pasting what you copied (yanked).
+* `d$` will delete from your cursor to the end of the line.
+* `D` will do the same as above.
+* `dgg` will delete everything from your cursor to the beginning of the file.
+* `ggdG` will delete everything in the file.
+
+.Concept
+* In Vim, a `word` is a text object, as well as a `sentence` or a `paragraph`.
+** `diw` will delete inside the word. It will delete the current word under the cursor.
+** `ciw` will change inside the word. It will delete the current word under the cursor and switch to insert mode.
+** `dip` will delete inside the paragraph.
+
+== Options
+
+.Commands
+* `:set no<option>` - Unset the option.
+* `:set <option>!` - Toggle the option.
+* `:set <option>?` - Return the option's value.
+* `:set <option> = <value>` - Set a `<value>` (string or number).
+* `:set <option>+=<value>` - Add the value `<value>` for a number option, append a string `<value>` for a string option.
+* `:set <option>-=<value>` - Subtract the value `<value>` for a number option, delete the string `<value>` for a string option.
+* `:set <option>&` - Reset the option to its default value.
+* `:set filetype?` - display the filetype of the current open file.
+
+.Vimrc
+Drop the prefix `:` to set these options in your vimrc file.
+
+.Help Commands
+* `:help options` - displays the help file for options
+* `:help option-list` - displays the help file for the list of options.
+
+== Buffers
+
+.Concept
+* A buffer is an open file in memory.
+* If you close a buffer, it does not close the file, the buffer is still there, _hidden_.
+* It can have three different states.
+** active - The buffer is displayed in the window.
+** hidden - The buffer is not displayed, but it exists and the file is still open.
+** inactive - The buffer is not displayed and empty. It is not linked to any file.
+
+.Commands
+* `:buffers` displays the buffer list. Each line contains:
+** The buffer id.
+** Indicators - `a` for active. `h` for hidden. `(space)` for inactive.
+** The name of the buffer. It can be the filepath of the file linked to the buffer.
+** The line number where the cursor is.
+
+.Key Mappings
+* `:buffer <ID_or_name>` - Move to the buffer using its ID or its name.
+* `:bnext` or `:bn` - Move to the next buffer.
+* `:bprevious` or `:bp` - Move to the previous buffer.
+* `:bfirst` or `:bf` - Move to the first buffer.
+* `:blast` or `:bl` - Move to the last buffer.
+* `:Ctrl+^` - switch to alternate buffer. It is indicated in your buffer list with the symbol `#`.
+* `<ID>Ctrl+^` - switch to a specific buffer with ID `<ID>`.
+** For example, `75Ctrl+^` switch to the buffer with ID 75.
+* `:bufdo <command>` - applies a command to all buffers.
+* `:buffers!` or `:ls!` - displays unlisted buffers
+** `u` is displayed as an indicator for an unlisted buffer.
+* `:badd <filename>` - Add a filename to a buffer. Creates a file if it does not exist.
+* `:bdelete <ID_or_name>` - Delete a buffer by ID or name.
+** You can specify more than one ID or name (comma-seperated)
+* `:1,10bdelete` - Delete buffers from ID 1 to 10 included.
+* `%bdelete` - Delete all buffers.
+
+.Help Commands
+* `:help buffers` - displays the help file for buffers
+* `:help :buffers` - displays the help file for buffers.
+
+
+== Windows
+
+.Concept
+* A window is a space you can use to display the contents of a buffer.
+* When you close the window, the buffer stays open.
+* When you open vim, one window with one empty buffer is automatically created.
+
+.Key Mappings
+* `Ctrl+W s` - Split the current window horizontally.
+* `Ctrl+Alt+W v` - Split the current window vertically.
+* `Ctrl+W n` - Split the current window horizontally and edit a new file.
+* `Ctrl+W ^` - Split the current window with the alternate file.
+** The alternate file is the file with the `#` indicator in the buffer list.
+* `<buffer_id>Ctrl+W ^` Split window with buffer of id `<ID>`. 
+** For example, `75 Ctrl+W ^` will open a window with the buffer of ID 75.
+
+[]
+* `Ctrl+W j` - moves the cursor to the bottom window.
+* `Ctrl+W k` - moves the cursor to the top window.
+* `Ctrl+W h` - moves the cursor to the left window.
+* `Ctrl+W l` - moves the cursor to the right window.
+
+[]
+* `Ctrl+W r` - Rotate the windows.
+* `Ctrl+W x` - Exchange with the next window.
+
+[]
+* `Ctrl+W =` - Resize windows for them to fit on the screen with the same size.
+* `Ctrl+W -` - Decrease windows's height.
+* `Ctrl+W +` - Increase windows's height.
+* `Ctrl+W <` - Decrease windows's width.
+* `Ctrl+W >` - Increase window's width.
+
+[]
+* `:q` - to quit the current window.
+* `:q!` - to quit the current window with an unsaved buffer.
+
+.Help commands
+* `:help windows` - opens the help file for windows.
+* `:help opening-window` - opens the help file for opening windows.
+* `:help window-move-cursor` - opens the help file for moving the cursor between windows.
+* `:help window-moving` - opens the help file for moving the windows.
+* `:help window-resize` - opens the help file for resizing windows.
+
+== Tabs
+
+.Concept
+* Tabs is a container for a bunch of windows.
+* It's very different from the concept of tabs in a standard IDE.
+
+.Key Mappings
+* `:tabnew` or `:tabe` - Opens a new tab.
+* `:tabclose` or `:tabc` - Close the current tab.
+* `:tabonly` or `:tabo` - Close every other tab except the current one.
+* `gt` - go to the next tab.
+* `gT` - go to the previous tab.
+** `1gT` - go to the first tab.
+
+.Help Commands
+* `:help tab-page` - opens the help file for tab page.
+
+== Argument List
+
+* The argument list is the fourth and last container allowing you to organize your open files.
+* It is a stable subset of the buffer list.
+* It follows these two rules:
+** Every file in the arglist will be in the buffer list.
+** Some buffers in the buffer list won't be in the arg list.
+* The arglist can be useful to isolate some files from the buffer list to do some operations on them.
+
+[]
+* `:args` - Display the arglist.
+* `:argsadd` - Add file to the arglist.
+* `:argdo` - Execute a command on every file in the arglist.
+* `:next` - Move to the next file in the arglist for editing.
+* `:prev` - Move to the previous file in the arglist for editing.
+* `:first` - Move to the first file in the arglists.
+* `:help arglist` - opens the help file for arglists.
+
+== Mapping Keystrokes
+
+* `:nmap` - Create a new mapping for NORMAL mode.
+* `:imap` - Create a new mapping for INSERT mode.
+* `:xmap` - Create a new mapping for VISUAL mode.
+* `:cmap` - Create a new mapping for COMMAND-LINE mode.
+
+[]
+* `:nmap w dd` - This will map `dd` which deletes a line in normal mode to `w`.
+* `:nmap v w` - Now `v` will also delete line. `v` maps to `w` which maps to `dd`. This is called a recursive mapping.
+
+It would be nice to:
+* Map `w` to `dd`
+* Map `v` to the motion made by `w` before its mapping with `dd`.
+
+* `:nnoremap` - Create mapping for NORMAL mode (non recursive).
+* `:inoremap` - Create mapping for INSERT mode (non recursive).
+* `:vnoremap` - Create mapping for VISUAL mode (non recursive).
+* `:cnoremap` - Create mapping for COMMAND-LINE mode (non recursive).
+
+* `:nnoremap w dd`
+* `:nnoremap v w`
+* This time, `w` deletes a line and `v` moves from word to word.
+
+You can use special characters in your mapping
+* `<space>` for Space.
+* `c-w` for Ctrl+W.
+* `<cr>` for carriage return (Enter).
+* `<esc>` for escape.
+* `:help key-notation` - opens the help file that gives more information of the keys.
+
+[]
+* As a best practice, do not change the default key mappings.
+* To create new mappings, use a special key called the _leader_ key.
+* It is a way to create mapping namespaces.
+* First, you use your leader key, then you use your keystroke.
+* Thanks to the leader key, the new keystroke will never conflict with the default Vim keystrokes.
+
+* `:let mapleader = "<space"` - set the variable mapleader to your leader key.
+* `:nnoremap <leader>bn :bn<cr>` - `<space> bn` will move to the next buffer.
+* `:nnoremap <leader>tn gt` - `<space> tn` will move to the next tab.
+
+When you want to map a keystroke to a command, you need to add `<cr>` at the end exactly like you would type `ENTER`.
+
+* `:help mapping` - opens the help file for more information on mapping.
+* `:help leader` - opens the help file for more information on leader.
+
+== Jump Motion
+
+=== Jump List
+
+Each time we use a jump motion, the position of the cursor before the jump is saved in the _jump list_.
+
+* `Ctrl+o` - Go to the previous cursor position.
+* `Ctrl+i` - Go to the next cursor position.
+* `:jumps` - Displays your jump list.
+
+=== Change List
+
+Each time you insert something the position of your cursor is saved in the change list.
+
+* `g;` - Jump to the next change.
+* `g,` - Jump to the previous change.
+
+=== Methods Jumping
+
+* `[m` - move to start of a method.
+* `]m` - move to the end of a method.
+
+[]
+* `:help jump-motions`
+* `:help jump-list`
+* `:help changelist`
+
+== Repeating Keystrokes
+
+=== Single Repeat
+
+* `.` - Repeat the last change.
+* `@:` - Repeat the last command executed.
+* `:help single-repeat`
+
+=== Macro
+
+. `q<lowercase_letter>` - Begin recording keystrokes in a register.
+. Every keystroke you do onwards will be saved.
+. `q` - Stop the recording.
+. `@<lowercase_letter>` - Execute the keystrokes you have recorded.
+
+Example:
+
+. Hit `qa`.
+. Do what you have to do. For example: `^cawhello<esc>`
+. Hit `q` again.
+. To execute your series of keystrokes, hit `@a`. For the example above, go on a new line. 
+
+* `@@` - repeats your previous `@` command.
+
+== Command Line Window
+
+* `q:` - Open command line history
+* `q/` and `q?` - Open search history
+* `Ctrl+f` - Open command line history while in COMMAND LINE mode.
+* `:history` - Also opens command line history
+* `:help cmdline-window` - opens the help for the command line window.
+* `:help 'history'` - opens the help for the history command.
+
+
+== Undo Tree
+
+Vim allows you to save all undos in a file, for each file you modify.
+
+It means that even after closing vim, you will have access to your last change by "undoing" them.
+
+You need to configure it in you vimrc file, by adding the following:
+
+[source]
+----
+"save undo trees in files
+set undofile
+set undodir=~/.vim/undo
+
+"number of undo saved
+set undolevels=10000
+----
+
+The option `undolevels=10000` saves a maximum of 10,000 undos per file.
+
+Vim not only saves a list of undos, it saves a whole undo tree.
+
+
+* `:help undo-redo`
+* `:help undo-persistence`
+* `:help undo-tree`
+
+
+== Useful "g" keystrokes
+
+* `gf` - Edit the file located at the filepath under your cursor.
+** You can use `Ctrl+W Ctrl+F` to open the file in a new window.
+** It can open the url under your cursor if you have the plugin `netrw`.
+* `gx` - Open the file located at the filepath under your cursor.
+** It will use the default application used by your OS for this filetype.
+** It will also open the file in your favourite browser and load the website, if you have the `netrw` plugin.
+* `gi` - Move to the last insertion you did and switch to INSERT mode.
+** Pretty useful if you stopped editing to look at some other file.
+* `gv` - Start VISUAL mode and use the selection made during the last VISUAL mode.
+* `gn` - Select the match of your last search:
+** Move to the last searched match.
+** Switch to VISUAL mode.
+** Select the match.
+** Continue to hit `n` (or `gn`) to select the area between the current match and the next match.
+* `gI` - Insert text at the beginning of the line, no matter what the first characters are.
+* `ga` - Print the ascii value of the character under the cursor in decimal, hexadecimal or octal.
+* `gu` - Lowercase using a motion.
+** for example, `guiw`.
+* `gU` - Uppercase using a motion.
+** for example, `gUiw`.
+* `:help reference`
+* `:help g`
+
+
+== Ranges
+
+* `:1,40d` - Delete line 1 to 40 included.
+* `:2,$d` - Delete every line from the second one till the end of the file.
+* `:.,$d` - Delete every line from the current one till the end of the file.
+* `:%d` - Delete every line.
+* `:help [range]` - opens the help file for range.
+* `:help v_:` - opens the help file for range.
+* `:help '<` - opens the help file for visual range.
+* `:help '>` - opens the help file for visual range.
+
+
+== Quickfix Lists
+
+* `:cl` or `:clist` - Display all valid entries of the current quickfix list.
+** You can add a range as an argument (only numbers).
+* `:cc <number>` - Move to the `<number>` entry of the current quickfix list.
+* `:cnext` or `:cn` - Move to the next entry of the current quickfix list.
+* `:cprevious` or `:cp` - Move to the previous entry of the current quickfix list.
+* `:cfirst` or `:cfir` - Move to the first entry of the current quickfix list.
+* `:clast` or `:clas` - Move to the last entry of the current quickfix list.
+* `:cdo <cmd>` - Execute a command `<cmd>` on each valid entry of the current quickfix list.
+* `:cexpr <expr>` or `:cex <expr>` - Create a quickfix list using the result of evaluating the Vimscript expression `<expr>`.
+** for example, `:cex []` will empty the current quickfix list.
+** for example, `:cex system("<cmd>")` will populate your quickfix list with any shell command `<cmd>` like `ls`. 
+* `:caddexpr <expr>` or `:cadde <expr>` - Appends the result of evaluating the Vimscript expression `<expr>` to the current quickfix list.
+* `:copen` or `:cope` - Opens the current quickfix list in a new buffer window.
+
+== Location Lists
+
+* `:lli` or `:llist` - Display all valid entries of the current location list.
+** You can add a range as an argument (only numbers).
+* `:ll <number>` - Move to the entry `<number>` of the current location list.
+* `:lnext` or `:lne` - Move to the next entry of the current quickfix list.
+* `:lvimgrep` or `:lmake` - will populate the location lists.
+
+Vim users will use the quickfix list for errors in their codebase, and the location list for search results.
+
+* `:help quickfix`
+* `:help quickfix-window`
+* `:help location-list`
+* `:help location-list-window`
+* `:help expr`
+* `:help system()`
+
+
+== Registers
+
+* Registers are places where you can read and write some text.
+* Think of them as Vim's clipboard.
+
+[]
+* `:registers` or `:reg` - Display the content of your registers.
+* `"<reg>` - This keystroke specifies the register `<reg>` to be read  
+or written.
+
+[]
+* To write to register `a`:
+** Hit `"a` in NORMAL mode to specify what register you want to write on.
+** Yank, change or delete some content to write it to register `a`.
+*** for example, by using `dd` in normal mode.
+
+[]
+* To read from a register `a`:
+** Hit `"a` in NORMAL mode to specify what register you want to read.
+** Use a put keystroke in NORMAL mode to spit out the content of the register in your current buffer.
+*** An example of a put keystroke is a `P` or `p` command.
+
+[]
+* `Ctrl+R<reg>` - to paste the content of register `<reg>` in insert mode or command line mode.
+
+== Expression Register
+
+* `Ctrl+r =` - In insert mode, you will move to the command line where you can execute vimscript expressions.
+
+[]
+* `qaq` - clears a register.
+
+[]
+* `:help registers`
+* `:help clipboard`
+* `:help clipboard-unnamed`
+* `:help clipboard-unnamedplus`
+
+== Substitute Commands
+
+* `:s/pattern/replacement/` - Substitute the first occurrence of *pattern* on the current line with *replacement*.
+* `:s#pattern#replacement#` - Equivalent substitution to the one above. Handy if you have some urls in your *pattern* or your *replacement*.
+* `:s/pattern/` - Delete the first occurence of *pattern* on the current line.
+* `:s/pattern/replacement/g` - Substitute every occurrence of pattern on the current line.
+* `:%s/pattern/replacement/` - Substitute every _first_ occurrence of *pattern* on each line of the current buffer.
+* `:%s/pattern/replacement/g` - Substitute every of *pattern* on each line of the current buffer.
+* `:1,10s/pattern/replacement/` - Substitute every _first_ occurrence of *pattern* on the first ten lines of the current buffer.
+* `:s/pattern/replacement/ 10` - Substitute every _first_ occurrence of *pattern* for the current line and the 10 next lines.
+* `:1,10s/pattern/replacement/ 5` - Substitute every _first_ occurrence of *pattern* on the first ten lines and on the five lines below.
+* `:s g 10` - Repeat the last substitution without its flag, and add a new flag `g`. It will affect the 10 lines after the last line of the last substitute command.
+
+== Vim patterns
+
+
+
