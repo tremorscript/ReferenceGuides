@@ -115,8 +115,6 @@ Drop the prefix `:` to set these options in your vimrc file.
 ** The name of the buffer. It can be the filepath of the file linked to the buffer.
 ** The line number where the cursor is.
 
-=== Navigation
-
 .Key Mappings
 * `:buffer <ID_or_name>` - Move to the buffer using its ID or its name.
 * `:bnext` or `:bn` - Move to the next buffer.
